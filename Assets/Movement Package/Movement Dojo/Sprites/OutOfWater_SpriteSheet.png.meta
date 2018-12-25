@@ -1,0 +1,1305 @@
+fileFormatVersion: 2
+guid: bd4cddf774416cd4ca1cce61348bb03b
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: OutOfWater_SpriteSheet_0
+    21300002: OutOfWater_SpriteSheet_1
+    21300004: OutOfWater_SpriteSheet_2
+    21300006: OutOfWater_SpriteSheet_3
+    21300008: OutOfWater_SpriteSheet_4
+    21300010: OutOfWater_SpriteSheet_5
+    21300012: OutOfWater_SpriteSheet_6
+    21300014: OutOfWater_SpriteSheet_7
+    21300016: OutOfWater_SpriteSheet_8
+    21300018: OutOfWater_SpriteSheet_9
+    21300020: OutOfWater_SpriteSheet_10
+    21300022: OutOfWater_SpriteSheet_11
+    21300024: OutOfWater_SpriteSheet_12
+    21300026: OutOfWater_SpriteSheet_15
+    21300028: OutOfWater_SpriteSheet_16
+    21300030: OutOfWater_SpriteSheet_17
+    21300032: OutOfWater_SpriteSheet_18
+    21300034: OutOfWater_SpriteSheet_19
+    21300036: OutOfWater_SpriteSheet_20
+    21300038: OutOfWater_SpriteSheet_21
+    21300040: OutOfWater_SpriteSheet_22
+    21300042: OutOfWater_SpriteSheet_23
+    21300044: OutOfWater_SpriteSheet_24
+    21300046: OutOfWater_SpriteSheet_25
+    21300048: OutOfWater_SpriteSheet_26
+    21300050: OutOfWater_SpriteSheet_27
+    21300052: OutOfWater_SpriteSheet_28
+    21300054: OutOfWater_SpriteSheet_29
+    21300056: OutOfWater_SpriteSheet_30
+    21300058: OutOfWater_SpriteSheet_31
+    21300060: OutOfWater_SpriteSheet_32
+    21300062: OutOfWater_SpriteSheet_33
+    21300064: OutOfWater_SpriteSheet_34
+    21300066: OutOfWater_SpriteSheet_35
+    21300068: OutOfWater_SpriteSheet_36
+    21300070: OutOfWater_SpriteSheet_37
+    21300072: OutOfWater_SpriteSheet_38
+    21300074: OutOfWater_SpriteSheet_39
+    21300076: OutOfWater_SpriteSheet_40
+    21300078: OutOfWater_SpriteSheet_41
+    21300080: OutOfWater_SpriteSheet_42
+    21300082: OutOfWater_SpriteSheet_43
+    21300084: OutOfWater_SpriteSheet_44
+    21300086: OutOfWater_SpriteSheet_45
+    21300088: OutOfWater_SpriteSheet_46
+    21300090: OutOfWater_SpriteSheet_47
+    21300092: OutOfWater_SpriteSheet_48
+    21300094: OutOfWater_SpriteSheet_49
+    21300096: OutOfWater_SpriteSheet_50
+    21300098: OutOfWater_SpriteSheet_51
+    21300100: OutOfWater_SpriteSheet_52
+    21300102: OutOfWater_SpriteSheet_60
+    21300104: OutOfWater_SpriteSheet_61
+    21300106: OutOfWater_SpriteSheet_62
+    21300108: OutOfWater_SpriteSheet_63
+  externalObjects: {}
+  serializedVersion: 5
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 200
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: tvOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_0
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1250
+        width: 365
+        height: 135
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b6e185568014d846941fadcfc81eb6a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_1
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 1250
+        width: 359
+        height: 165
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee69996e53004ac4ea4a7136e47242d8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_2
+      rect:
+        serializedVersion: 2
+        x: 1026
+        y: 1250
+        width: 354
+        height: 180
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d8eaa19ba052864590aceb5d6428ea7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_3
+      rect:
+        serializedVersion: 2
+        x: 1578
+        y: 1222
+        width: 305
+        height: 232
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0118117a3263b64389916d89e764c06
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_4
+      rect:
+        serializedVersion: 2
+        x: 2074
+        y: 1218
+        width: 305
+        height: 236
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53c6c4974b5380040b43399445bacac4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_5
+      rect:
+        serializedVersion: 2
+        x: 2706
+        y: 1083
+        width: 287
+        height: 371
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 944af2b5e087bfb45958251c7cc69250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_6
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 1196
+        width: 13
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9709881aca65dd4185e23b28fe29a75
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_7
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 1196
+        width: 12
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28f711bcab9c9014bba9f988050ba0c8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_8
+      rect:
+        serializedVersion: 2
+        x: 1259
+        y: 1196
+        width: 12
+        height: 27
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd23d3c60c7728847a095ed2185a1186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_9
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 1119
+        width: 12
+        height: 7
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 601a093b83dfcd94791d89da6f9a94c7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_10
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 1097
+        width: 44
+        height: 58
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37d4097b2628ee348b9de34d3f6650d0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_11
+      rect:
+        serializedVersion: 2
+        x: 777
+        y: 1119
+        width: 12
+        height: 7
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55f865753d3903d4684e4e8c0714c37f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_12
+      rect:
+        serializedVersion: 2
+        x: 1266
+        y: 1119
+        width: 12
+        height: 7
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b22e89718bfe84744b860d28b4c902d0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_15
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 1107
+        width: 12
+        height: 6
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d54f77d634905d74ca02c5a65d056a72
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_16
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 1107
+        width: 12
+        height: 6
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c77460a690616594ea9c2482a046ff09
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_17
+      rect:
+        serializedVersion: 2
+        x: 1200
+        y: 1107
+        width: 12
+        height: 6
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c8b92e84da43ad44955bd38cd19b27b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_18
+      rect:
+        serializedVersion: 2
+        x: 2098
+        y: 1109
+        width: 6
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be865db31f1d6fd41ba85cfc22f27f18
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_19
+      rect:
+        serializedVersion: 2
+        x: 2587
+        y: 1109
+        width: 7
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c54bb549e9b16e40a681c6c79188229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_20
+      rect:
+        serializedVersion: 2
+        x: 3218
+        y: 1109
+        width: 6
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 129bd524b0281184d8d5957c79dc5ca7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_21
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 1097
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab379eabbee701643840404506bda007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_22
+      rect:
+        serializedVersion: 2
+        x: 1580
+        y: 1097
+        width: 7
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22a6e5b7d5d10cf4cb0ec97bf6b86f2c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_23
+      rect:
+        serializedVersion: 2
+        x: 1770
+        y: 1092
+        width: 9
+        height: 11
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7057dc4aa06a4b47af9066ce155f6cd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_24
+      rect:
+        serializedVersion: 2
+        x: 1855
+        y: 1097
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3487372eaa1c99041a29a80a1d85b346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_25
+      rect:
+        serializedVersion: 2
+        x: 2260
+        y: 1092
+        width: 8
+        height: 11
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 16799c36d082d0643ad99e5719089307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_26
+      rect:
+        serializedVersion: 2
+        x: 2344
+        y: 1097
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40fb643c8b476774eb608d35abceb570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_27
+      rect:
+        serializedVersion: 2
+        x: 2975
+        y: 1097
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f3a8161d580e3843b62338fe1fde9a2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_28
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 1085
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7f7640938ae4804db048776fe0e8445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_29
+      rect:
+        serializedVersion: 2
+        x: 848
+        y: 1085
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 020776b3b4bc06b4cbcd43f26b7e595a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_30
+      rect:
+        serializedVersion: 2
+        x: 1337
+        y: 1085
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 534444f4c023cdd4dbccef189e833c22
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_31
+      rect:
+        serializedVersion: 2
+        x: 1760
+        y: 1078
+        width: 8
+        height: 19
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31888da246cfc67439d9ed94a41b449e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_32
+      rect:
+        serializedVersion: 2
+        x: 2249
+        y: 1079
+        width: 8
+        height: 9
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc6c4d0f09e6fca448394b86c61c1e1b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_33
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1071
+        width: 5
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 115de1cd3ef32c44a9bb0fbddacf8f24
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_34
+      rect:
+        serializedVersion: 2
+        x: 214
+        y: 1070
+        width: 8
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36d2ce8176fa3884a96b1396c8d3470d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_35
+      rect:
+        serializedVersion: 2
+        x: 691
+        y: 1071
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4c8d3a83bc266d4cbaa5e5cb8c7bf13
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_36
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 1070
+        width: 8
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 117c09094750d164cbfc8436dfd8afe5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_37
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 1071
+        width: 5
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5006a39192b88774b8b682b7bad64e23
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_38
+      rect:
+        serializedVersion: 2
+        x: 1190
+        y: 1070
+        width: 8
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bfc5d981094b9224e82904bce3dd0344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_39
+      rect:
+        serializedVersion: 2
+        x: 2347
+        y: 821
+        width: 14
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce8bd5ce8e849ea4e88b0dae490d5d98
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_40
+      rect:
+        serializedVersion: 2
+        x: 2351
+        y: 774
+        width: 67
+        height: 49
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32a8e09db151b6344a77e5bceb187f65
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_41
+      rect:
+        serializedVersion: 2
+        x: 2411
+        y: 795
+        width: 42
+        height: 57
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1a629aef9fdb7a4a8beaaf45f0b91c2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_42
+      rect:
+        serializedVersion: 2
+        x: 1965
+        y: 670
+        width: 95
+        height: 90
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d8a88ed04c542f4a8c3a94f7ab4101e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_43
+      rect:
+        serializedVersion: 2
+        x: 2094
+        y: 738
+        width: 61
+        height: 60
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4cedca2f27cdcd40a9d3e8bb82e6c83
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_44
+      rect:
+        serializedVersion: 2
+        x: 2158
+        y: 750
+        width: 84
+        height: 58
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3994c75791946e4c849a039bdb9b8f5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_45
+      rect:
+        serializedVersion: 2
+        x: 2279
+        y: 711
+        width: 73
+        height: 102
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcc1975abc5a9a5439a5f20c79a97d12
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_46
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 218
+        width: 287
+        height: 485
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cce1144148bc0be499e44350b0644e95
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_47
+      rect:
+        serializedVersion: 2
+        x: 553
+        y: 271
+        width: 287
+        height: 432
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1afbb498525cfe4abceda827d8d1e63
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_48
+      rect:
+        serializedVersion: 2
+        x: 1061
+        y: 368
+        width: 287
+        height: 335
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cf1f5ccf786fb3498943ac2cc723c1e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_49
+      rect:
+        serializedVersion: 2
+        x: 1548
+        y: 381
+        width: 286
+        height: 327
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a79330ae172c9ce4fbd0a1b74e670b5b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_50
+      rect:
+        serializedVersion: 2
+        x: 2110
+        y: 615
+        width: 76
+        height: 92
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cbcb8697e4097ff4392f9992cb539d86
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_51
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 697
+        width: 14
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e71183d5643ccba40a8789f7bb7e2fad
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_52
+      rect:
+        serializedVersion: 2
+        x: 2218
+        y: 610
+        width: 190
+        height: 113
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67517052d9b4a8e47b7789e988b3ee80
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_60
+      rect:
+        serializedVersion: 2
+        x: 2060
+        y: 363
+        width: 7
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4adb0385493b8d47afc2b27fb63bc31
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_61
+      rect:
+        serializedVersion: 2
+        x: 1065
+        y: 358
+        width: 6
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 521fed57efcabe14ea468c1cf2ef799d
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_62
+      rect:
+        serializedVersion: 2
+        x: 1573
+        y: 358
+        width: 6
+        height: 4
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 948fb2acef36d0a4c8bc8c9f340a9a61
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: OutOfWater_SpriteSheet_63
+      rect:
+        serializedVersion: 2
+        x: 1817
+        y: 351
+        width: 6
+        height: 5
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc7d81102e147dc4c95c210f8fdc4fcf
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: cba67c7213afc04449d5943736d727c1
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
