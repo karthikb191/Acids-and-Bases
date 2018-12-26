@@ -28,7 +28,7 @@ public class NextScene : MonoBehaviour {
 
     void Nextscene()
     {
-        StartCoroutine(GameManager.Instance.GoToLevelWithFade(1));
         Debug.Log("startthegame");
+        StartCoroutine(GameManager.Instance.IncreaseLevelWithFade());
     }
 }
