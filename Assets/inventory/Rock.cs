@@ -20,4 +20,10 @@ public class Rock : ItemBase {
 
         Debug.Log("Item used:" + itemProperties.name);
     }
+    public override void Use(Character c)
+    {
+        base.Use(c);
+        c.Heal(itemProperties.HealthRestore);
+        c.TakeDamage(itemProperties.damageDealt);
+    }
 }

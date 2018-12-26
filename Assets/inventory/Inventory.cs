@@ -33,7 +33,7 @@ public class Slot
                 itemCount++;
                 itemlist.Add(l_itemBase);
                 
-                Debug.Log(this.itemCount + "___" + itemStored.name);
+                //Debug.Log(this.itemCount + "___" + itemStored.name);
 
             }
         }

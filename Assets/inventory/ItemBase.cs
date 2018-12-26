@@ -165,6 +165,7 @@ public class ItemBase : MonoBehaviour {
     {
         Debug.Log("Use called");
     }
+
     //Overload use function for interaction with environment
     public virtual void Use(GameObject g)
     {
@@ -255,13 +256,14 @@ public class ItemBase : MonoBehaviour {
             if(elapse_time > 0.1f)
             {
                // Debug.Log("Casting");
-                Collider2D hit = Physics2D.OverlapCircle(new Vector2(this.transform.position.x, this.transform.position.y), transform.localScale.x, LayerMask.GetMask("",""));
+                Collider2D hit = Physics2D.OverlapCircle(new Vector2(this.transform.position.x, this.transform.position.y), transform.localScale.x, LayerMask.GetMask("Character","Platform"));
                // Debug.Log("overlap circel" , hit);
               if (hit != null)
               {
                    // Debug.Log("Hit on : " + hit.gameObject.name);
                     if(hit.GetComponent<Character>())
                     {
+                        Debug.Log("Character hit");
                         Use(hit.GetComponent<Character>());
                     }
 

@@ -12,7 +12,7 @@ public class Healer : ItemBase {
         Debug.Log("Healer used");
         if(this.itemProperties.isConsumable)
         {
-            c.HealHealth(itemProperties.HealthRestore);
+            c.Heal(itemProperties.HealthRestore);
             gameObject.SetActive(false);
         }
     }

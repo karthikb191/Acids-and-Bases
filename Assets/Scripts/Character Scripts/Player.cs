@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public abstract class Character : MonoBehaviour, ICharacter
@@ -63,6 +64,8 @@ public abstract class Character : MonoBehaviour, ICharacter
 
     //Inventory variables
     protected Inventory inventory;
+
+    
 
     //Chemical the character carrying
     public Chemical chemical;
@@ -135,7 +138,6 @@ public abstract class Character : MonoBehaviour, ICharacter
 
     public void SetSoundEffect(AudioClip clipToPlay = null, bool loop = false, bool playOneShot = false, float delay = 0.0f)
     {
-
         //Debug.Log("Sound effet set");
         if (clipToPlay == null && audioSource.isPlaying && audioSource.loop == false)
             return;
@@ -201,24 +203,25 @@ public abstract class Character : MonoBehaviour, ICharacter
     }
 
     #region health variables and functions
-    public float health = 50;
+    [HideInInspector]
+    public float Health { get; set; }
 
     public float maxHealth = 100;
 
-    public void HealHealth(float healValue)
+    public virtual void Heal(float healValue)
     {
-        health += healValue;
+        Health += healValue;
 
-        health = Mathf.Clamp(health, 0, 100);
+        Health = Mathf.Clamp(Health, 0, 100);
     }
 
-    public void TakeDamage(float damageValue)
+    public virtual void TakeDamage(float damageValue)
     {
-        if (health > damageValue)
+        if (Health > damageValue)
         {
-            health -= damageValue;
-            Debug.Log("Player health decreased" + health);
-            health = Mathf.Clamp(health, 0, 100);
+            Health -= damageValue;
+            Debug.Log("Player health decreased" + Health);
+            Health = Mathf.Clamp(Health, 0, 100);
         }
         else
         {
@@ -228,9 +231,52 @@ public abstract class Character : MonoBehaviour, ICharacter
         }
 
     }
+
     #endregion
+    
+}
+struct PlayerStatus
+{
+    public PlayerStatus(Canvas statusCanvas)
+    {
+        playerStatusCanvas = statusCanvas;
+        healthImage = playerStatusCanvas.transform.Find("Health").GetChild(0).GetComponent<RawImage>();
 
+        if (healthImage != null)
+            heightOfHealthImage = healthImage.rectTransform.rect.height;
+        
+        else
+            heightOfHealthImage = 0.0f;
+        Debug.Log("Height of health image: " + heightOfHealthImage);
 
+        currentHealth = 0.0f;
+        maxHealth = 100.0f;
+
+        ratioBetweenMaxHealthAndImageHeight = heightOfHealthImage / maxHealth;
+    }
+
+    public Canvas playerStatusCanvas;
+    public RawImage healthImage;
+    public float heightOfHealthImage;
+
+    public float maxHealth;
+    public float currentHealth;
+    float ratioBetweenMaxHealthAndImageHeight;
+
+    public void Heal(float healAmount)
+    {
+        currentHealth += healAmount;
+    }
+    public void TakeDamage(float DamageAmount)
+    {
+        currentHealth -= DamageAmount;
+    }
+
+    public void SetHealthBar(float amount)
+    {
+        float result = amount * ratioBetweenMaxHealthAndImageHeight;
+        healthImage.rectTransform.sizeDelta = new Vector2(healthImage.rectTransform.rect.width, result);
+    }
 
 }
 
@@ -238,6 +284,10 @@ public abstract class Character : MonoBehaviour, ICharacter
 public class Player : Character
 {
     Collider2D[] info;
+
+    //Player Status Canvas
+    PlayerStatus playerStatus;
+
     private void Start()
     {
         Debug.Log("script is working");
@@ -249,14 +299,19 @@ public class Player : Character
         playerSprite = transform.Find("Sprite").gameObject;
         Hand = playerSprite.transform.Find("Hand").gameObject;
 
+        //Initializing the player status variables
+        playerStatus = new PlayerStatus(transform.GetComponentInChildren<Canvas>());
+        
+
         playerAudio = GetComponent<PlayerAudio>();
         audioSource = GetComponent<AudioSource>();
 
         StateList = new List<States>();
         StateList.Add(new IdleState());
 
-        //Debug.Log("reaction dictionary: " + Reactions.hclDictionary[Chemical.NaOH]);
-        //Debug.Log("reaction dictionary: " + Reactions.reactionDictionary[chemical][Chemical.NaOH]);
+        //Add health to player initially
+        Heal(100);
+        
     }
     
     private void Update()
@@ -389,8 +444,58 @@ public class Player : Character
                 }
             }
         }
-        
     }
+
+    #region health Functions and variables
+    Coroutine healthCoroutine;
+
+    public override void Heal(float healValue)
+    {
+        if (healthCoroutine == null)
+            healthCoroutine = StartCoroutine(HealthAnimation(Health, Health + healValue));
+        else
+        {
+            StopCoroutine(healthCoroutine);
+            playerStatus.SetHealthBar(playerStatus.currentHealth);
+            healthCoroutine = StartCoroutine(HealthAnimation(Health, Health + healValue));
+        }
+
+        playerStatus.Heal(healValue);
+        //base.Heal(healValue);
+    }
+    public override void TakeDamage(float damageValue)
+    {
+        if (healthCoroutine == null)
+            healthCoroutine = StartCoroutine(HealthAnimation(playerStatus.currentHealth, playerStatus.currentHealth - damageValue));
+        else
+        {
+            StopCoroutine(healthCoroutine);
+            playerStatus.SetHealthBar(playerStatus.currentHealth);
+            healthCoroutine = StartCoroutine(HealthAnimation(playerStatus.currentHealth, playerStatus.currentHealth + damageValue));
+        }
+
+        playerStatus.TakeDamage(damageValue);
+        //base.TakeDamage(damageValue);
+    }
+
+    IEnumerator HealthAnimation(float currentHealth, float targetHealth)
+    {
+        float ch = currentHealth; float th = targetHealth;
+        float speed = 3.0f;
+        while(Mathf.Abs(th - ch) > 1.0f)
+        {
+            float diff = ((th - ch) / th) * speed;
+            Debug.Log("diff is: " + diff);
+            ch += diff;
+            playerStatus.SetHealthBar(ch);
+            yield return new WaitForFixedUpdate();
+        }
+
+        healthCoroutine = null;
+    }
+
+    #endregion
+
 
     void ItemButtonLogic(Collider2D info)
     {
@@ -408,6 +513,7 @@ public class Player : Character
         }
     }
 
+    //TODO: consider putting this functiong in the virtual joystick class
     void ResetButtons()
     {
         for(int i = 0; i < VirtualJoystick.activeDynamicButtons.Count; i++)
