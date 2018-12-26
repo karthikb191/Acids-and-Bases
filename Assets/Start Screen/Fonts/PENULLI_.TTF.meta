@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: e8ceaab6c525eef45800fd630436d944
+timeCreated: 1521381037
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: PenultimateLight
+  fontNames:
+  - PenultimateLight
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 849f6665c65d21145a7ee9633abc28ba
+timeCreated: 1508308830
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Vampire Calligraphy
+  fontNames:
+  - Vampire Calligraphy
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
