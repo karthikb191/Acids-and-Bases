@@ -103,17 +103,24 @@ public class GameManager : MonoBehaviour {
                                                                                             player.transform.position.z));
         }
 
-        if (Application.isPlaying)
-        {
-            //Debug.Log("sddds: " + SceneManager.GetActiveScene().buildIndex);
-            //Debug.Log("sddds: " + virtualJoystick.gameObject.name);
-            
+        
+        //Debug.Log("sddds: " + SceneManager.GetActiveScene().buildIndex);
+        //Debug.Log("sddds: " + virtualJoystick.gameObject.name);
+        
 
-            //Instantiate the fade canvas
+        //Instantiate the fade canvas
+        if(fadeCanvasPrefab != null)
+        {
             fadeCanvas = Instantiate(fadeCanvasPrefab);
             fadeCanvas.SetActive(true);
             Debug.Log("Fade canvas instantiated");
-            //Instantiate the global canvas
+
+            DontDestroyOnLoad(fadeCanvas);
+            
+        }
+        //Instantiate the global canvas
+        if(globalCanvasPrefab != null)
+        {
             globalCanvas = Instantiate(globalCanvasPrefab);
             globalCanvas.SetActive(true);
             DeactivatePausePanel();
@@ -126,22 +133,22 @@ public class GameManager : MonoBehaviour {
             globalCanvas.transform.GetChild(1).GetChild(1).GetComponent<Button>().onClick.AddListener(RestartLevel);
             globalCanvas.transform.GetChild(1).GetChild(2).GetComponent<Button>().onClick.AddListener(GoToMainMenu);
             globalCanvas.GetComponent<Canvas>().sortingOrder = 25;  //TODO: This needs to change to more intuitive method of representation
-
-            if (SceneManager.GetActiveScene().buildIndex == 0)
-            {
-                if(virtualJoystick != null)
-                    virtualJoystick.gameObject.SetActive(false);
-                if(globalCanvas!=null)
-                    globalCanvas.SetActive(false);
-            }
-
-            DontDestroyOnLoad(fadeCanvas);
             DontDestroyOnLoad(globalCanvas);
-            //Set up a function that is called everytime a scene is loaded
-            SceneManager.sceneLoaded += OnSceneLoad;
-            //Deactivate the fade canvas.
-
         }
+
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            if(virtualJoystick != null)
+                virtualJoystick.gameObject.SetActive(false);
+            if(globalCanvas!=null)
+                globalCanvas.SetActive(false);
+        }
+
+        //Set up a function that is called everytime a scene is loaded
+        //Deactivate the fade canvas.
+
+        
+        SceneManager.sceneLoaded += OnSceneLoad;
         SetCameraBounds();
     }
     
@@ -160,15 +167,15 @@ public class GameManager : MonoBehaviour {
 
     void OnSceneLoad(Scene scene, LoadSceneMode scenMode)
     {
-        mainCam = Camera.main;
-        
+        Debug.Log("New scene loaded");
         //Whenever a new level is loaded, the old camera is destroyed. So, we must assign a new camera
         mainCam = Camera.main;
 
         //When a scene is loaded, if the fade canvas is activated, then deacticate it
-        if (fadeCanvas.activeSelf)
+        if (fadeCanvas != null)
         {
-            StartCoroutine(DeactivateFadeCanvas());
+            if(fadeCanvas.activeSelf)
+                StartCoroutine(DeactivateFadeCanvas());
         }
 
         //If the player is null, try to grab the player
@@ -280,9 +287,12 @@ public class GameManager : MonoBehaviour {
     public IEnumerator IncreaseLevelWithFade()
     {
         //set fade canvas to true
-        fadeCanvas.SetActive(true);
-        fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
-        yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
+        if (fadeCanvas != null)
+        {
+            fadeCanvas.SetActive(true);
+            fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
+            yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
+        }
 
         //The flag must be set properly to increase the level
       /*  while (!Goal.gameManagerCanIncreaseLevel)

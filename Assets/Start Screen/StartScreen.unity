@@ -1748,9 +1748,10 @@ MonoBehaviour:
   camHalfHeight: 0
   camHalfWidth: 0
   currentZValue: 0
-  keyboardControls: 0
+  keyboardControls: 1
   paused: 0
-  fadeCanvasPrefab: {fileID: 0}
+  fadeCanvasPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
+    type: 2}
   fadeCanvas: {fileID: 0}
   globalCanvasPrefab: {fileID: 0}
   virtualJoystick: {fileID: 0}
@@ -2057,7 +2058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
