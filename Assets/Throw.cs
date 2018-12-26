@@ -2,66 +2,105 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Throw : MonoBehaviour {
 
-    public GameObject target;
+   // LineRenderer lr;
+    public float lineVelocity;
+    public float lineAngle;
+    public int numOfLineSeg;
 
-    Vector3 direction;
-    bool released = false;
+    float radianAngle;
 
-    public float angle;
-    public float time = 1.5f;
+    public bool activated;
 
-    Vector3 originalPosition;
-	// Use this for initialization
-	void Start () {
-        direction = target.transform.position - gameObject.transform.position;
-        originalPosition = gameObject.transform.position;
-        //angle *= Mathf.Deg2Rad;
-	}
-    
+    public Vector3 Target;
+    public float firingAngle = 45.0f;
+    public float gravity = 19.8f;
 
-    Vector3 t = Vector3.zero;
-    float velocity = 0;
+    public Transform Projectile;
+    private Transform myTransform;
 
-    float timeElapsed = 0;
+    void Awake()
+    {
+        myTransform = transform;
+      //  lr = GetComponent<LineRenderer>();
+    }
 
-    Vector3 previousDirection = Vector3.zero;
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+       // StartCoroutine(SimulateProjectile());
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            activated = true;
+        }
+
+        if(activated)
+        {
+             Target = Camera.main.ScreenToWorldPoint( Input.mousePosition);
+
+        }
+    }
+
+
+
+
+
+    IEnumerator SimulateProjectile()
+    {
         
-        if (Input.GetMouseButtonDown(0))
+        
+
+        // Move projectile to the position of throwing object + add some offset if needed.
+        Projectile.position = myTransform.position + new Vector3(0, 0.0f, 0);
+
+        // Calculate distance to target
+        float target_Distance = Vector3.Distance(Projectile.position, Target);
+
+        // Calculate the velocity needed to throw the object to the target at specified angle.
+        float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / gravity);
+
+        // Extract the X  Y componenent of the velocity
+        float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
+        float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
+
+        // Calculate flight time.
+        float flightDuration = target_Distance / Vx;
+
+        // Rotate projectile to face the target.
+
+        Quaternion rotation = Quaternion.LookRotation(Target - Projectile.position);
+
+        rotation.y = 0;
+        rotation.x = 0;
+        Projectile.rotation = rotation;
+
+        float elapse_time = 0;
+
+        while (elapse_time < flightDuration)
         {
-            direction = target.transform.position - gameObject.transform.position;
-            velocity = direction.magnitude / time;
+            Projectile.Translate(Vx * Time.deltaTime,(Vy - (gravity * elapse_time)) * Time.deltaTime,0 );
 
-            t = Quaternion.AngleAxis(angle, Vector3.forward) * direction;
-            previousDirection = t;
+            elapse_time += Time.deltaTime;
 
-            released = true;
+            yield return null;
         }
-        if (released)
+
+        if(elapse_time > flightDuration + 1f)
         {
-            timeElapsed += Time.deltaTime;
-            if(timeElapsed > time / 3.0f)
-            {
-                t = target.transform.position - gameObject.transform.position;
-            }
-
-            //gameObject.transform.position += Vector3.Lerp(gameObject.transform.position, t.normalized * velocity * Time.deltaTime, 0.4f);
-            //Vector3 pos = gameObject.transform.position + t.normalized * velocity * Time.deltaTime;
-            Vector3 direction = Vector3.Lerp(previousDirection.normalized, t.normalized, 0.1f);
-            gameObject.transform.position += direction.normalized * velocity * Time.deltaTime;
-
-            previousDirection = direction;
-
-            if(timeElapsed > time + 0.3f)
-            {
-                gameObject.transform.position = originalPosition;
-                released = false;
-                timeElapsed = 0;
-            }
-            
+            transform.position = myTransform.position;
         }
-	}
+    }
+
+
+
+
+
+
+
+
 }

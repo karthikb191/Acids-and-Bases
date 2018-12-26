@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 482959f0c22a17d4c8125081ee4ce25f, type: 3}
+  m_Name: Healer 1
+  m_EditorClassIdentifier: 
+  name: Healer
+  maxHoldingCapacity: 0
+  imageSprite: {fileID: 21300004, guid: f70e63e89cc75184f85f90e096fec3be, type: 3}
+  isEquipable: 1
+  isAnInventoryItem: 1
+  isAssignedToSlot: 0
+  isActiveItem: 0
+  isConsumable: 1
+  slotIn: 0
+  itemLifeTime: 0
+  damageDealt: 0
+  HealthRestore: 10
+  itemSound: {fileID: 0}
+  isThrowable: 0
