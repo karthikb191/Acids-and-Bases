@@ -355,6 +355,18 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c39248e5d399e34bb16741a07a8f4c1, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &113478436 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114479796375110566, guid: 5c39248e5d399e34bb16741a07a8f4c1,
+    type: 2}
+  m_PrefabInternal: {fileID: 113478435}
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+--- !u!114 &113478437 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114376819135020196, guid: 5c39248e5d399e34bb16741a07a8f4c1,
+    type: 2}
+  m_PrefabInternal: {fileID: 113478435}
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!114 &154939456 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114177006242638836, guid: 5774546787809d44eb3aa53f06f481ae,
@@ -2453,6 +2465,16 @@ Prefab:
       propertyPath: ParentPanel
       value: 
       objectReference: {fileID: 320360148}
+    - target: {fileID: 114177006242638836, guid: 5774546787809d44eb3aa53f06f481ae,
+        type: 2}
+      propertyPath: leftButton
+      value: 
+      objectReference: {fileID: 113478436}
+    - target: {fileID: 114177006242638836, guid: 5774546787809d44eb3aa53f06f481ae,
+        type: 2}
+      propertyPath: rightButton
+      value: 
+      objectReference: {fileID: 113478437}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5774546787809d44eb3aa53f06f481ae, type: 2}
   m_IsPrefabAsset: 0

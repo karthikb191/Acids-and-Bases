@@ -8,13 +8,14 @@ using UnityEngine.SceneManagement;
 
 public class Buttongen : MonoBehaviour
 {
-	public GameObject prefabButton;
-	public RectTransform ParentPanel;
+    public GameObject prefabButton;
+    public RectTransform ParentPanel;
 
     public int levelsPerPanel;
-	private int sc_number;
+    private int sc_number;
     int clearedLevels;
 
+    int screenCount = 0;
 
     public RectTransform[] levelSelectPanels;
 
@@ -25,6 +26,8 @@ public class Buttongen : MonoBehaviour
     public Vector3 initialPosition;
     int numOfPanels;
 
+    public Button rightButton;
+    public Button leftButton;
 
     bool rightMoveFlag;
     bool leftMoveFlag;
@@ -33,20 +36,21 @@ public class Buttongen : MonoBehaviour
 
     void Awake()
     {
-       // sc_number = SceneManager.sceneCountInBuildSettings;
+        // sc_number = SceneManager.sceneCountInBuildSettings;
         sc_number = 100;
         numOfPanels = sc_number / 9 + 1;
         Debug.Log("number of scenes in build settings: " + sc_number);
     }
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         //The scene unlocker function that runs every time a new scene is loaded
         SceneManager.sceneLoaded += SceneUnlocker;
 
         levelSelectPanels = new RectTransform[numOfPanels];
         targetPositions = new Vector3[numOfPanels];
+
         //If the player prefs has no key that is called LevelCounter, create it
         if (!PlayerPrefs.HasKey("LevelCounter"))
         {
@@ -55,20 +59,21 @@ public class Buttongen : MonoBehaviour
 
             clearedLevels = (PlayerPrefs.GetInt("LevelCounter"));
             //first level is unlocked, every other level is locked
-            //    CreateButtons(PlayerPrefs.GetInt("LevelCounter"));
+
         }
         //If it has the key, then instantiate the buttons
-        else {
+        else
+        {
 
             clearedLevels = PlayerPrefs.GetInt("LevelCounter");
-          //  CreateButtons(PlayerPrefs.GetInt("LevelCounter"));
+
 
         }
 
         LevelPanelCreate();
         CreatingButtons();
-       
-	}
+
+    }
 
     void SceneUnlocker(Scene scene, LoadSceneMode load)
     {
@@ -84,11 +89,11 @@ public class Buttongen : MonoBehaviour
         int tempButtonCreated = 0;
         for (int i = 0; i < levelSelectPanels.Length; i++)
         {
-            for (int j = 0; j < levelsPerPanel; j++,tempButtonCreated++)
-            { 
-                if(tempButtonCreated < sc_number)
+            for (int j = 0; j < levelsPerPanel; j++, tempButtonCreated++)
+            {
+                if (tempButtonCreated < sc_number)
                 {
-                    CreateButtons(levelSelectPanels[i], levelsPerPanel, clearedLevels,tempButtonCreated);
+                    CreateButtons(levelSelectPanels[i], levelsPerPanel, clearedLevels, tempButtonCreated);
                 }
                 else
                 {
@@ -102,12 +107,12 @@ public class Buttongen : MonoBehaviour
 
 
 
-    public void CreateButtons(RectTransform parentObject, int levelPerPanel, int clearedNum,int buttonsCreated)
-{
-      //  for (int i = 0; i < levelPerPanel; i++)
+    public void CreateButtons(RectTransform parentObject, int levelPerPanel, int clearedNum, int buttonsCreated)
+    {
+        //  for (int i = 0; i < levelPerPanel; i++)
         {
             if (buttonsCreated < clearedNum)
-              {
+            {
                 //These buttons are interactable and are assigned with a scene function each
                 GameObject goButton = (GameObject)Instantiate(prefabButton);
                 goButton.transform.SetParent(parentObject.transform, false);
@@ -121,7 +126,8 @@ public class Buttongen : MonoBehaviour
                 goButton.GetComponent<Button>().onClick.AddListener(() => { ButtonClicked(n); });
                 goButton.GetComponent<Button>().transform.GetChild(0).GetComponent<Text>().text = n.ToString();
             }
-            else {
+            else
+            {
                 //These buttons are not interactable
                 GameObject goButton = (GameObject)Instantiate(prefabButton);
                 goButton.transform.SetParent(parentObject.transform, false);
@@ -135,28 +141,28 @@ public class Buttongen : MonoBehaviour
         }
     }
 
-	public void ButtonClicked(int index)
-	{
+    public void ButtonClicked(int index)
+    {
         Debug.Log("button number is: " + index);
         StartCoroutine(GameManager.Instance.GoToLevelWithFade(index));
-	}
+    }
 
-///////////////////////////////////////////////////////////level panel/////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////level panel/////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////level panel/////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////level panel/////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////level panel/////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////level panel/////////////////////////////////////////////////////////////////////////
 
 
     void LevelPanelCreate()
     {
-        for(int i = 0; i< numOfPanels;i++)
+        for (int i = 0; i < numOfPanels; i++)
         {
-            
+
             GameObject temp = Instantiate(levelPanelPrefab) as GameObject;
             levelSelectPanels[i] = temp.GetComponent<RectTransform>();
-            
-            
+
+
             levelSelectPanels[i].gameObject.transform.position = new Vector3(initialPosition.x + i * (offset), initialPosition.y, initialPosition.z);
-            levelSelectPanels[i].gameObject.transform.SetParent(ParentPanel,false);
+            levelSelectPanels[i].gameObject.transform.SetParent(ParentPanel, false);
         }
     }
 
@@ -170,87 +176,127 @@ public class Buttongen : MonoBehaviour
             for (int i = 0; i < levelSelectPanels.Length; i++)
             {
 
-                
-                    if (levelSelectPanels[i].transform.localPosition.x < targetPositions[i].x)
-                    {
-                        levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.1f);
-                        Vector3 direction = targetPositions[i] - levelSelectPanels[i].transform.localPosition;
 
-                        if (levelSelectPanels[i].transform.localPosition.x >= targetPositions[i].x)
-                        {
-                            levelSelectPanels[i].transform.localPosition = targetPositions[i];
-                            targetReachCount++;
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                }
-
-                if (targetReachCount == levelSelectPanels.Length - 1)
+                if (levelSelectPanels[i].transform.localPosition.x < targetPositions[i].x)
                 {
-                    leftMoveFlag = false;
-                    targetReachCount = 0;
+                    levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.5f);
+                    Vector3 direction = targetPositions[i] - levelSelectPanels[i].transform.localPosition;
+
+                    if (Vector3.Distance(levelSelectPanels[i].transform.localPosition, targetPositions[i]) < 0.5f)
+                    {
+                        levelSelectPanels[i].transform.localPosition = targetPositions[i];
+                        targetReachCount++;
+                        Debug.Log("Left move" + targetReachCount);
+                    }
                 }
-    
+                else
+                {
+                    continue;
+                }
+
+            }
+
+            if (targetReachCount >= levelSelectPanels.Length)
+            {
+
+                leftMoveFlag = false;
+                targetReachCount = 0;
+                buttonDisbled = false;
+            }
+
+            if (buttonDisbled)
+            {
+                Debug.Log("Removed block");
+                rightButton.interactable = false;
+                leftButton.interactable = false;
+            }
+
+            if (screenCount == 0)
+            {
+                leftButton.interactable = false;
+            }
+
         }
-        
+
 
         if (rightMoveFlag)
         {
             for (int i = 0; i < levelSelectPanels.Length; i++)
             {
                 if (levelSelectPanels[i].transform.localPosition.x > targetPositions[i].x)
-                 {
-                     levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.1f );
-                     Vector3 direction = targetPositions[i] - levelSelectPanels[i].transform.localPosition;
-                     Debug.Log(direction.x);
-                     Debug.Log(targetPositions[i]);
-                     if (levelSelectPanels[i].transform.localPosition.x <= targetPositions[i].x)
-                     {
-                         levelSelectPanels[i].transform.localPosition = targetPositions[i];
-                         targetReachCount++;
-                     }
-                 }
-                 else
-                 {
-                     continue;
-                 }
+                {
+                    levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.5f);
+                    Vector3 direction = targetPositions[i] - levelSelectPanels[i].transform.localPosition;
+                    //  Debug.Log(direction.x);
+                    //  Debug.Log(targetPositions[i]);
+
+                    Debug.Log("Right move" + targetReachCount);
+
+                    if (Vector3.Distance(levelSelectPanels[i].transform.localPosition, targetPositions[i]) < 0.5f)
+                    {
+                        levelSelectPanels[i].transform.localPosition = targetPositions[i];
+                        targetReachCount++;
+                        Debug.Log("Right move" + targetReachCount);
+                    }
+                }
+                else
+                {
+                    continue;
+                }
             }
 
-          if(targetReachCount == levelSelectPanels.Length-1)
-          {
-              rightMoveFlag = false;
-              targetReachCount = 0;
-          }
+            if (targetReachCount >= levelSelectPanels.Length)
+            {
+                Debug.Log("Removed block");
+                rightMoveFlag = false;
+                targetReachCount = 0;
+                buttonDisbled = false;
+
+            }
         }
     }
-
+    bool buttonDisbled;
     public void MoveRight()
     {
-        rightMoveFlag = true;
-
-        for (int i = 0; i < levelSelectPanels.Length; i++)
+        if (!buttonDisbled && screenCount < levelSelectPanels.Length - 1)
         {
-            targetPositions[i] = levelSelectPanels[i].transform.localPosition;
-            targetPositions[i].x = levelSelectPanels[i].transform.localPosition.x - offset;
+
+            buttonDisbled = true;
+            rightMoveFlag = true;
+
+            for (int i = 0; i < levelSelectPanels.Length; i++)
+            {
+                targetPositions[i] = levelSelectPanels[i].transform.localPosition;
+                targetPositions[i].x = levelSelectPanels[i].transform.localPosition.x - offset;
+            }
+            screenCount++;
+
         }
 
     }
-    
-   public void MoveLeft()
+
+    public void MoveLeft()
     {
-        leftMoveFlag = true;
-
-        for (int i = 0; i < levelSelectPanels.Length; i++)
+        if (!buttonDisbled && screenCount > 0)
         {
-            targetPositions[i] = levelSelectPanels[i].transform.localPosition;
-            targetPositions[i].x = levelSelectPanels[i].transform.localPosition.x + offset;
+            buttonDisbled = true;
+
+
+
+            leftMoveFlag = true;
+
+            for (int i = 0; i < levelSelectPanels.Length; i++)
+            {
+                targetPositions[i] = levelSelectPanels[i].transform.localPosition;
+                targetPositions[i].x = levelSelectPanels[i].transform.localPosition.x + offset;
+            }
+            screenCount--;
+
+
         }
+
+
     }
 
 
-    
 }
