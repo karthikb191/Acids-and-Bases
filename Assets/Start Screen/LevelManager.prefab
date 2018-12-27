@@ -92,6 +92,12 @@ MonoBehaviour:
     type: 2}
   offset: 1430
   initialPosition: {x: 7, y: 2, z: 0}
+  rightButton: {fileID: 0}
+  leftButton: {fileID: 0}
+  bestTime: {fileID: 0}
+  targetSalts: {fileID: 0}
+  saltsCollected: {fileID: 0}
+  levelInfoDisplay: {fileID: 0}
 --- !u!114 &114241710711241536
 MonoBehaviour:
   m_ObjectHideFlags: 1

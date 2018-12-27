@@ -6,6 +6,9 @@ using System.Text;
 /// This class consists of a collection of all the reaction agents and their reaction information
 /// 
 /// </summary>
+/// 
+
+
 public enum Salt
 {
     Null,
