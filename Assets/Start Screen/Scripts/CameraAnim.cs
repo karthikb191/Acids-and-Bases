@@ -15,4 +15,14 @@ public class CameraAnim : MonoBehaviour {
     public void GoUp() {
         cameraAnimator.SetBool("GoDown", false);
     }
+
+    public void GoLeft()
+    {
+        cameraAnimator.SetBool("GoLeft", true);
+    }
+
+    public void GoRight()
+    {
+        cameraAnimator.SetBool("GoLeft", false);
+    }
 }

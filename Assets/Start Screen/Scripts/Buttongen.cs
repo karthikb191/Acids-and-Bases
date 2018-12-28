@@ -44,7 +44,14 @@ public class Buttongen : MonoBehaviour
     public Text bestTime;
     public Text targetSalts;
     public Text saltsCollected;
+
+    int starCount;
+
     public GameObject levelInfoDisplay;
+
+    CameraAnim cameraScript;
+
+    public Image[] starImages;
 
     public void StartGame()
     {
@@ -53,13 +60,67 @@ public class Buttongen : MonoBehaviour
 
     public void CloseDisplay()
     {
-        levelInfoDisplay.SetActive(false);
+     //   levelInfoDisplay.SetActive(false);
     }
 
-    public void DisplayInfo()
+    public void DisplayInfo(int levelNumber)
     {
-        levelInfoDisplay.SetActive(true);
+       levelInfoDisplay.SetActive(true);
+
+        //Get level data 
+
+        if(levelSelected > levelNumber)
+        {
+
+        }
+      //  Level levelData = GameManager.Instance.GetLevelData(levelSelected - 1);
+
+   //     Debug.Log(levelData.targetSalts);
+        //   bestTime.text = "" + levelData.bestTime;
+
+        //     starCount = levelData.starsCollected;
+
+        starCount = 5;
+
+        for(int i = 0;i<starCount;i++)
+        {
+            starImages[i].GetComponent<Animator>().SetBool("StarAnimate", true);
+            Color tempColor = starImages[i].color;
+            tempColor.a = 1f;
+            starImages[i].color = tempColor;
+
+        }
+        for (int i = starCount; i < starImages.Length; i++)
+        {
+           
+            Color tempColor = starImages[i].color;
+            tempColor.a = 0.3f;
+            starImages[i].color = tempColor;
+            starImages[i].GetComponent<Animator>().SetBool("StarAnimate", false);
+
+        }
+
+
     }
+    [SerializeField]
+    GameObject starPrefab;
+    [SerializeField]
+    Transform starParent;
+    [SerializeField]
+    int maxStarCount = 20;
+
+    public void CreateStars()
+    {
+        for (int i = 0; i < maxStarCount; i++)
+        {
+            GameObject temp = Instantiate(starPrefab) as GameObject;
+            starImages[i] = temp.GetComponent<Image>();
+            starImages[i].transform.SetParent(starParent);
+            starImages[i].transform.localScale = Vector3.one;
+        }
+    }
+
+
 
 
  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,6 +140,8 @@ public class Buttongen : MonoBehaviour
 
         levelSelectPanels = new RectTransform[numOfPanels];
         targetPositions = new Vector3[numOfPanels];
+
+        starImages = new Image[maxStarCount];
 
         //If the player prefs has no key that is called LevelCounter, create it
         if (!PlayerPrefs.HasKey("LevelCounter"))
@@ -100,9 +163,10 @@ public class Buttongen : MonoBehaviour
 
 
         }
-
+        cameraScript = FindObjectOfType<CameraAnim>();
         LevelPanelCreate();
         CreatingButtons();
+        CreateStars();
 
     }
 
@@ -145,7 +209,11 @@ public class Buttongen : MonoBehaviour
                     tempButton.interactable = true;
 
                     int n = buttonsCreated + 1;
-                    goButton.GetComponent<Button>().onClick.AddListener(() => { ButtonClicked(n); });
+                    goButton.GetComponent<Button>().onClick.AddListener(() => { ButtonClicked(n);
+                            cameraScript.GoLeft();
+
+
+                    });
                     tempButton.transform.GetChild(0).GetComponent<Text>().text = n.ToString();
                     buttonsCreated++;
                 }
@@ -172,7 +240,7 @@ public class Buttongen : MonoBehaviour
         //  StartCoroutine(GameManager.Instance.GoToLevelWithFade(index));
 
         levelSelected = index;
-        DisplayInfo();
+        DisplayInfo(index);
     }
 
     void LevelPanelCreate()
@@ -240,7 +308,6 @@ public class Buttongen : MonoBehaviour
             }
 
         }
-
 
         if (rightMoveFlag)
         {

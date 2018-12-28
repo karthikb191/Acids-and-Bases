@@ -7,7 +7,8 @@ public class Level{
     public float bestTime = Mathf.Infinity;
     public List<Salt> targetSalts;
     public List<Salt> saltsAchieved = new List<Salt>();
-    public int stars = 20;   //Max: stars
+    public int stars = 10;   //Max: stars
+    public int starsCollected = 0;
 }
 
 

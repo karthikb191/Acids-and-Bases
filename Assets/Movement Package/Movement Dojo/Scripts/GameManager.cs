@@ -164,6 +164,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 
+    public Level GetLevelData(int LevelNumber)
+    {
+        return levelsCleared[LevelNumber];
+    }
+
+
 
     void OnSceneLoad(Scene scene, LoadSceneMode scenMode)
     {
