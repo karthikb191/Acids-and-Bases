@@ -31,8 +31,8 @@ public abstract class Character : MonoBehaviour, ICharacter
     public Vector3 velocity = Vector3.zero;
 
     //blocks to inputs
-    public bool horizontalInputBlock { get; set; }
-    public bool verticalInputBlock { get; set; }
+    public bool horizontalInputBlock;// { get; set; }
+    public bool verticalInputBlock;// { get; set; }
 
     public GameObject ceilingCheck;
     public GameObject groundCheck;
@@ -75,14 +75,20 @@ public abstract class Character : MonoBehaviour, ICharacter
     {
         //Debug.Log("meh");
         if(blockRoutine != null)
+        {
             StopCoroutine(blockRoutine);
+            blockRoutine = null;
+        }
         blockRoutine = StartCoroutine(CharacterUtility.BlockInputs(this, true, true, true, 0.3f));
     }
     public virtual void BlockInputs(float duration, bool horizontal, bool vertical)
     {
         //Debug.Log("meh");
         if (blockRoutine != null)
+        {
             StopCoroutine(blockRoutine);
+            blockRoutine = null;
+        }
         blockRoutine =  StartCoroutine(CharacterUtility.BlockInputs(this, horizontal, vertical, true, duration));
     }
 
@@ -123,7 +129,8 @@ public abstract class Character : MonoBehaviour, ICharacter
                                                 jumpDirection * (velocity.y - 0.001f) * externalVerticalMovementDamp +
                                                 externalSpeed;
 
-            gameObject.transform.up = playerUpOrientation;
+            if(!horizontalInputBlock && !verticalInputBlock)
+                gameObject.transform.up = playerUpOrientation;
 
             gameObject.transform.position += velocity;
 
@@ -235,6 +242,7 @@ public abstract class Character : MonoBehaviour, ICharacter
     #endregion
     
 }
+
 struct PlayerStatus
 {
     public PlayerStatus(Canvas statusCanvas)
@@ -253,9 +261,22 @@ struct PlayerStatus
         maxHealth = 100.0f;
 
         ratioBetweenMaxHealthAndImageHeight = heightOfHealthImage / maxHealth;
+
+        //pH meter variables
+        //TODO: change this to search by name
+        pHMeterImage = playerStatusCanvas.transform.Find("pHMeter").GetChild(0).GetComponent<RawImage>();
+        pHpointer = pHMeterImage.transform.GetChild(0).GetComponent<RawImage>();
+
+        Debug.Log("phpointer: " + pHpointer.name);
+
+        pHpointer.rectTransform.localPosition = Vector3.zero;
+
+        widthOfpHMeter = pHMeterImage.rectTransform.rect.width;
     }
 
     public Canvas playerStatusCanvas;
+
+    //Health variables
     public RawImage healthImage;
     public float heightOfHealthImage;
 
@@ -263,6 +284,12 @@ struct PlayerStatus
     public float currentHealth;
     float ratioBetweenMaxHealthAndImageHeight;
 
+    //Ph Value variables
+    public RawImage pHMeterImage;
+    public RawImage pHpointer;
+    public float widthOfpHMeter;
+
+    
     public void Heal(float healAmount)
     {
         currentHealth += healAmount;
@@ -276,6 +303,16 @@ struct PlayerStatus
     {
         float result = amount * ratioBetweenMaxHealthAndImageHeight;
         healthImage.rectTransform.sizeDelta = new Vector2(healthImage.rectTransform.rect.width, result);
+    }
+
+    public void SetpHGraphic(float value)
+    {
+        float block = widthOfpHMeter / 14;
+
+        float xPos = -(widthOfpHMeter * 0.5f) + (value * block) + (block * 0.5f);
+
+        pHpointer.rectTransform.localPosition = new Vector3(xPos, 0, 0);
+        Debug.Log("pH pointer is set at: " + xPos);
     }
 
 }
@@ -336,13 +373,14 @@ public class Player : Character
         
     }
 
+    
     private void LateUpdate()
     {
         UpdatePositionInWorld();
         
+        ResetInputs();
         //SetGridIndex();
         //Reading inputs is left to unity's input functions. So, reset functions work here
-        ResetInputs();
     }
 
     protected override void GetInput()
@@ -382,10 +420,6 @@ public class Player : Character
         if (Input.GetKeyDown(KeyCode.V))
         {
             userInputs.absorbPressed = true;
-        }
-        else
-        {
-            userInputs.absorbPressed = false;
         }
 
         //open door input
@@ -485,7 +519,7 @@ public class Player : Character
         while(Mathf.Abs(th - ch) > 1.0f)
         {
             float diff = ((th - ch) / th) * speed;
-            Debug.Log("diff is: " + diff);
+            //Debug.Log("diff is: " + diff);
             ch += diff;
             playerStatus.SetHealthBar(ch);
             yield return new WaitForFixedUpdate();
@@ -496,6 +530,11 @@ public class Player : Character
 
     #endregion
 
+
+    public void SetpHCanvasGraphic(float value)
+    {
+        playerStatus.SetpHGraphic(value);
+    }
 
     void ItemButtonLogic(Collider2D info)
     {
@@ -528,10 +567,11 @@ public class Player : Character
         }
     }
 
-    void ResetInputs()
+    public void ResetInputs()
     {
         userInputs.climbPressed = false;
         userInputs.doorOpenPressed = false;
+        userInputs.absorbPressed = false;
     }
 
 }

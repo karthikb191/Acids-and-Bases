@@ -865,6 +865,11 @@ public class AI : MonoBehaviour {
     {
         haltMovement = true;
         horizontalMovement = 0; // Reset the movement value to 0
+        if(pauseRoutine != null)
+        {
+            StopCoroutine(pauseRoutine);
+            pauseRoutine = null;
+        }
         StartCoroutine(PauseMovement(duration));    //Initiate waiting for certain duration 
         enemy.BlockInputs(duration, horizontal, vertical);  //Finally, block the inputs on the base character class
     }
@@ -872,13 +877,14 @@ public class AI : MonoBehaviour {
     {
         haltMovement = false;
     }
-
+    Coroutine pauseRoutine;
     IEnumerator PauseMovement(float duration = 0.5f)
     {
         waiting = true;
         //Debug.Log("Movement paused");
         yield return new WaitForSeconds(duration);
         waiting = false;
+        pauseRoutine = null;
     }
 
     Coroutine jumpRoutine;
@@ -1185,6 +1191,22 @@ public class AI : MonoBehaviour {
         
     }
 
+    public void ResetChaseAndRunAway()
+    {
+        bool resetFinished = false;
+        if (runaway)
+        {
+            RunAwayReset();
+            resetFinished = true;
+        }
+        if (chaseStarted)
+        {
+            ChaseReset();
+            resetFinished = true;
+        }
+        if (!resetFinished)
+            RaycastAndFindFloor(false);
+    }
 
     private void OnDrawGizmos()
     {

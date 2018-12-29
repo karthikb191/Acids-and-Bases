@@ -1,0 +1,647 @@
+fileFormatVersion: 2
+guid: 2725125c9d7a6e843bfa6c7a95f872f7
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Acid-bases-grab_0
+    21300002: Acid-bases-grab_1
+    21300004: Acid-bases-grab_2
+    21300006: Acid-bases-grab_3
+    21300008: Acid-bases-grab_4
+    21300010: Acid-bases-grab_5
+    21300012: Acid-bases-grab_6
+    21300014: Acid-bases-grab_7
+    21300016: Acid-bases-grab_8
+    21300018: Acid-bases-grab_9
+    21300020: Acid-bases-grab_10
+    21300022: Acid-bases-grab_11
+    21300024: Acid-bases-grab_12
+    21300026: Acid-bases-grab_13
+    21300028: Acid-bases-grab_14
+    21300030: Acid-bases-grab_15
+    21300032: Acid-bases-grab_16
+    21300034: Acid-bases-grab_17
+    21300036: Acid-bases-grab_18
+    21300038: Acid-bases-grab_19
+    21300040: Acid-bases-grab_20
+    21300042: Acid-bases-grab_21
+    21300044: Acid-bases-grab_22
+    21300046: Acid-bases-grab_23
+  externalObjects: {}
+  serializedVersion: 7
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 240
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Acid-bases-grab_0
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 3580
+        width: 273
+        height: 491
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9793d78222aad0489aff99a467324e7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_1
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 3581
+        width: 273
+        height: 491
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6642f3e7857fbc64e98da645e76cec5f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_2
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 3581
+        width: 273
+        height: 491
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4a58a2896b81cb45b863ee2de6549e4
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_3
+      rect:
+        serializedVersion: 2
+        x: 1187
+        y: 3600
+        width: 306
+        height: 478
+      alignment: 9
+      pivot: {x: 0.44607842, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a477ba22ab81a634ba0d84d2c1ccb7ea
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_4
+      rect:
+        serializedVersion: 2
+        x: 1502
+        y: 3603
+        width: 291
+        height: 474
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd27cb2969d1ab9408bb30c886c92b6b
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_5
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 3098
+        width: 307
+        height: 464
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2aecb46832cecfd4ebc3190b05990aa6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_6
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 3098
+        width: 307
+        height: 469
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fb2cef32ad685d4e901db5f1aa7efeb
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_7
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 3099
+        width: 307
+        height: 469
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a97dc1cce8d2b845a6403c71f316902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_8
+      rect:
+        serializedVersion: 2
+        x: 985
+        y: 3104
+        width: 310
+        height: 469
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94803ddd30d899640b6e1897b429ded7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_9
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 3102
+        width: 344
+        height: 469
+      alignment: 9
+      pivot: {x: 0.39680234, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a5fe1efc4dbe5f4ca867bef7b16b2ca
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_10
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 2615
+        width: 317
+        height: 471
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 007258f0a4ca0834dae1e1bd9b00e64e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_11
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 2613
+        width: 353
+        height: 471
+      alignment: 9
+      pivot: {x: 0.39660057, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a74aef40ee251e0499a37b9170270df3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_12
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 2608
+        width: 462
+        height: 471
+      alignment: 9
+      pivot: {x: 0.3030303, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10b84d07a2747f747ab33d61ebadde19
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_13
+      rect:
+        serializedVersion: 2
+        x: 1172
+        y: 2603
+        width: 602
+        height: 480
+      alignment: 9
+      pivot: {x: 0.23255815, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b69075999371664388aad8665fea61f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_14
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 2123
+        width: 602
+        height: 474
+      alignment: 9
+      pivot: {x: 0.23255815, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6701d4f6c49d2284fbacfbc2d5817e7f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_15
+      rect:
+        serializedVersion: 2
+        x: 631
+        y: 2139
+        width: 628
+        height: 461
+      alignment: 9
+      pivot: {x: 0.22292994, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85bf53a693cf3e94d8baa5802f46fea3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_16
+      rect:
+        serializedVersion: 2
+        x: 1271
+        y: 2136
+        width: 680
+        height: 461
+      alignment: 9
+      pivot: {x: 0.20588236, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 326c830260404824ba9fa92fc2fd25d5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_17
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 1654
+        width: 667
+        height: 468
+      alignment: 9
+      pivot: {x: 0.20989506, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b7457a6cbc7b814db3f91bdaf0a5c3a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_18
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 1653
+        width: 645
+        height: 464
+      alignment: 9
+      pivot: {x: 0.21705426, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4ac9bdff68e8294d94824bb99720fe2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_19
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 1615
+        width: 632
+        height: 500
+      alignment: 9
+      pivot: {x: 0.221519, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b9897b8e10caa349ae4d51a165458a3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_20
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 1058
+        width: 614
+        height: 541
+      alignment: 9
+      pivot: {x: 0.22801302, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51eeab2324f846c47b924b982dc948a1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_21
+      rect:
+        serializedVersion: 2
+        x: 638
+        y: 1017
+        width: 555
+        height: 584
+      alignment: 9
+      pivot: {x: 0.25225225, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61651476a1ba4834b873bfda26ae6668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_22
+      rect:
+        serializedVersion: 2
+        x: 1199
+        y: 953
+        width: 515
+        height: 645
+      alignment: 9
+      pivot: {x: 0.27184466, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69ee33893c5c82f40b24a7742059e9f2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Acid-bases-grab_23
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 269
+        width: 496
+        height: 672
+      alignment: 9
+      pivot: {x: 0.28225806, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e583335172d6f04d8bb39640f4b65b0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 30840a72f958e91468abb469d615ed8f
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

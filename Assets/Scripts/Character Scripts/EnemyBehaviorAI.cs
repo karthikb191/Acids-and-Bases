@@ -304,7 +304,7 @@ class StunnedBehavior : EnemyBehaviorAI
 
     public override void BehaviorUpdate()
     {
-        Debug.Log("Stunned");
+        //Debug.Log("Stunned");
         if(timeElapsed < duration)
         {
             timeElapsed += Time.deltaTime;

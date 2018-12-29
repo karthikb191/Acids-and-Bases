@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterMechanics : MonoBehaviour {
 
-    protected SpriteRenderer characterSprite;
+    protected SpriteRenderer liquidSprite;
     public bool PhTransitionMechanic = true;
 
     [SerializeField]
@@ -29,16 +29,17 @@ public class CharacterMechanics : MonoBehaviour {
         {12, new Color(0.3882f, 0.2705f, 0.6156f)}, {13, new Color(0.4235f, 0.1294f, 0.5019f)},
 
         { 14, new Color(0.2862f, 0.0901f, 0.4313f)}
+
     };
 
     protected void Start()
     {
         if (transform.Find("Sprite") != null)
         {
-            characterSprite = transform.Find("Sprite").GetComponent<SpriteRenderer>();
+            liquidSprite = transform.Find("Sprite").transform.Find("Liquid").GetComponent<SpriteRenderer>();
         }
-        if (characterSprite != null)
-            characterSprite.color = phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)];
+        if (liquidSprite != null)
+            liquidSprite.color = phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)];
         else
             PhTransitionMechanic = false;
     }
@@ -51,7 +52,7 @@ public class CharacterMechanics : MonoBehaviour {
 
     #region pH Functions
 
-    void CheckForPhChange()
+    protected virtual void CheckForPhChange()
     {
         float stepSize = 0.1f;
         if(currentColor != phColorDictionary[Mathf.FloorToInt(phValue)])
@@ -70,13 +71,21 @@ public class CharacterMechanics : MonoBehaviour {
             {
                 currentColor = targetColor;
             }
+            if (liquidSprite != null)
+                liquidSprite.color = currentColor;
+            else
+                Debug.Log("Add a liquid sprite and then try changing the color");
 
-            characterSprite.color = currentColor;
+            //TODO: Remove this logic from here and find another place for it
+            if (GetComponent<PlayerMechanics>())
+            {
+                GetComponent<PlayerMechanics>().player.SetpHCanvasGraphic(phValue);
+            }
         }
         //This function later changes the pH meter also
     }
 
-    public void SetpH(float value)
+    public virtual void SetpH(float value)
     {
         phValue = value;
     }
@@ -85,6 +94,8 @@ public class CharacterMechanics : MonoBehaviour {
     {
         return phValue;
     }
+
+
 
     #endregion
 }

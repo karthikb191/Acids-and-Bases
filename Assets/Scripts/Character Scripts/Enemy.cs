@@ -81,6 +81,7 @@ class Enemy : EnemyBase
 
         State = StateList[StateList.Count - 1];
 
+        //Debug.Log("Stunned: " + IsStunned());
     }
 
     private void LateUpdate()
@@ -132,7 +133,7 @@ class Enemy : EnemyBase
     public override void UseItem()
     {
         //TODO: add the condition that checks if item has a stun variable
-        Stun(1.5f);
+        Stun(5.0f);
     }
 
     #region Stun Scripts
@@ -236,10 +237,7 @@ class Enemy : EnemyBase
     
     public void ResetAI()
     {
-        aiComponent.ChaseReset();
-        aiComponent.RunAwayReset();
+        aiComponent.ResetChaseAndRunAway();
     }
-
-
-
+    
 }

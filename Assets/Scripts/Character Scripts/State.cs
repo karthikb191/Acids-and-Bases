@@ -164,17 +164,15 @@ public class RunningState : States
             }
             
         }
-
         
-
-        //}
-
     }
 
     public void AnimateState(Character c)
     {
         c.playerSprite.GetComponent<Animator>().SetBool("Walk", true);
+        
         c.playerSprite.GetComponent<Animator>().SetBool("BottomContact", true);
+        
     }
 }
 
@@ -251,6 +249,7 @@ public class JumpingState : States
     }
     public void AnimateState(Character c)
     {
+        c.playerSprite.GetComponent<Animator>().SetBool("BottomContact", false);
         c.playerSprite.GetComponent<Animator>().SetFloat("JumpSpeed", c.currentJumpSpeed);
     }
 

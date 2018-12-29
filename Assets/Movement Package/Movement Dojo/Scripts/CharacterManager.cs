@@ -56,44 +56,7 @@ public class CharacterManager : MonoBehaviour {
                 hit.collider.GetComponent<Character>().UseItem();
             }
         }
-            /*MovementScript2D ms = null;
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
-            //TODO: Add a layer mask that filters out the character colliders
-            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector3.forward, 15);
-            if(hit.collider != null)
-            {
-                if (hit.collider.GetComponent<MovementScript2D>())
-                {
-                    ms = hit.collider.GetComponent<MovementScript2D>();
-                    if (ms != ControlledCharacter && (ms.IsAI || ms == Player))
-                    {
-                        //If the previous controlled character is not out main charcater,
-                        //Make it work under AI
-                        if (ControlledCharacter != Player)
-                            ControlledCharacter.IsAI = true;
-                        else
-                        {
-                            ControlledCharacter.playerState = PlayerStates.stun;
-                        }
-
-                        //Controlled character is changed to the character that's clicked
-                        ControlledCharacter = hit.collider.GetComponent<MovementScript2D>();
-
-                        if(ControlledCharacter == Player)
-                        {
-                            ControlledCharacter.playerState = PlayerStates.idle;
-                        }
-                        else
-                        {
-                            //AI of the character that we take control right now is disabled for us to manipulate it
-                            ControlledCharacter.IsAI = false;
-                            characterClicked = true;
-                        }
-                    }
-                }
-            }
-            return ms;*/
-        }
+    }
 
     private void LateUpdate()
     {
