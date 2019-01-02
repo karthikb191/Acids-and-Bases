@@ -22,13 +22,14 @@ public class ItemBase : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha0) && setFocus)
         {
 
-            Debug.Log(playerObject.gameObject.name + itemProperties.name);
+           // Debug.Log(playerObject.gameObject.name + itemProperties.name);
+          //  Debug.Log(playerObject.GetComponentInChildren<PlayerInventory>());
 
-            if (playerObject.GetComponentInChildren<Inventory>().activeItem == null)
+           if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
             {
-                playerObject.GetComponentInChildren<Inventory>().activeItem = this;
+                playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
 
-                playerObject.GetComponentInChildren<Inventory>().AddItem(this);
+                playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);
 
                 targetScale = transform.localScale/5;
 
@@ -38,7 +39,7 @@ public class ItemBase : MonoBehaviour {
                 transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
 
             }
-            else
+           else
             {
                 playerObject.GetComponentInChildren<Inventory>().AddItem(this);
 

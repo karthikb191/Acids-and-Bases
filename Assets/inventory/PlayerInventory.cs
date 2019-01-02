@@ -85,13 +85,13 @@ public class PlayerInventory : Inventory {
             DropItem();
             activeItem = null;
         }
-        //if (activeItem != null && Input.GetKeyDown(KeyCode.T))
-        //{
-        //    if (activeItem.itemProperties.isThrowable)
-        //    {
-        //        ThrowItem(targerSetTest, 200f);
-        //    }
-        //}
+       if (activeItem != null && Input.GetKeyDown(KeyCode.T))
+        {
+           if (activeItem.itemProperties.isThrowable)
+          {
+                ThrowItem(targerSetTest,this.gameObject.GetComponent<Character>());
+          }
+        }
         if (activeItem != null && Input.GetKeyDown(KeyCode.U))
         {
             UseItem();

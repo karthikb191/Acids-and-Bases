@@ -292,7 +292,10 @@ struct PlayerStatus
     
     public void Heal(float healAmount)
     {
+        Debug.Log("Healer used");
         currentHealth += healAmount;
+
+        
     }
     public void TakeDamage(float DamageAmount)
     {

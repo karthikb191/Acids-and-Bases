@@ -9,9 +9,10 @@ public class Healer : ItemBase {
     {
 
 
-        Debug.Log("Healer used");
+      
         if(this.itemProperties.isConsumable)
         {
+            Debug.Log("Healer called");
             c.Heal(itemProperties.HealthRestore);
             gameObject.SetActive(false);
         }

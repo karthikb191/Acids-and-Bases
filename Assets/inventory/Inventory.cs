@@ -33,7 +33,7 @@ public class Slot
                 itemCount++;
                 itemlist.Add(l_itemBase);
                 
-                //Debug.Log(this.itemCount + "___" + itemStored.name);
+               // Debug.Log(this.itemCount + "___" + itemStored.name);
 
             }
         }
@@ -78,7 +78,7 @@ public class Slot
         
        // countText.text = "" + itemCount;
         countText.text = "" + itemlist.Count;
-       // Debug.Log("UI Text" + itemlist.Count);
+      // Debug.Log("UI Text" + itemlist.Count);
     }
 
     public void FlushOut()
@@ -146,7 +146,7 @@ public class Inventory : MonoBehaviour {
         {
             activeItem.gameObject.transform.parent = null;
 
-            Debug.Log(gameObject.transform.GetComponentInParent<Character>());
+           // Debug.Log(gameObject.transform.GetComponentInParent<Character>());
            activeItem.Use(gameObject.transform.GetComponentInParent<Character>());
         }
         UpdateSlotData(activeItem);
@@ -286,17 +286,18 @@ public class Inventory : MonoBehaviour {
 
         if (slots.Count == 0)
         {
+            Debug.Log("MAx slot count"+maxSlotCount);
             for (int i = 0; i < maxSlotCount; i++)
             {
                 Slot tempSlot = new Slot();
               //  Debug.Log(tempSlot);
                 slots.Add(tempSlot);
-               // Debug.Log(slots.Count);
+              Debug.Log(slots.Count);
             }
 
             for (int i = 0; i < slots.Count; i++)
             {
-
+                
                 slots[i].imageSlotPrefab = Instantiate(imageSlotPrefab);
 
 
@@ -313,7 +314,7 @@ public class Inventory : MonoBehaviour {
 
                 slots[i].countText = slots[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
 
-                //  Debug.Log(slots[i].countText.text + "_____" + i);
+                  Debug.Log(slots[i].countText.text + "_____" + i);
 
                
 
@@ -363,7 +364,7 @@ public class Inventory : MonoBehaviour {
 
             else
             {
-                Debug.Log("Max Slots reached");
+               // Debug.Log("Max Slots reached");
             }
 
 
