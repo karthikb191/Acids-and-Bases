@@ -2088,7 +2088,7 @@ MonoBehaviour:
   camHalfHeight: 0
   camHalfWidth: 0
   currentZValue: 0
-  keyboardControls: 1
+  keyboardControls: 0
   paused: 0
   fadeCanvasPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
     type: 2}

@@ -65,7 +65,9 @@ public abstract class Character : MonoBehaviour, ICharacter
     //Inventory variables
     protected Inventory inventory;
 
-    
+
+    // pH button show/hide
+    public Button phMeterShow;
 
     //Chemical the character carrying
     public Chemical chemical;
@@ -272,6 +274,8 @@ struct PlayerStatus
         pHpointer.rectTransform.localPosition = Vector3.zero;
 
         widthOfpHMeter = pHMeterImage.rectTransform.rect.width;
+
+        phShowButton = playerStatusCanvas.transform.Find("pHMeterButton").GetComponent<Button>();
     }
 
     public Canvas playerStatusCanvas;
@@ -289,7 +293,10 @@ struct PlayerStatus
     public RawImage pHpointer;
     public float widthOfpHMeter;
 
-    
+    //ph button Show/Hide
+    public Button phShowButton;
+
+
     public void Heal(float healAmount)
     {
         Debug.Log("Healer used");
@@ -308,7 +315,7 @@ struct PlayerStatus
         healthImage.rectTransform.sizeDelta = new Vector2(healthImage.rectTransform.rect.width, result);
     }
 
-    public void SetpHGraphic(float value)
+    public void SetpHGraphic(float value , Color phColor)
     {
         float block = widthOfpHMeter / 14;
 
@@ -316,6 +323,9 @@ struct PlayerStatus
 
         pHpointer.rectTransform.localPosition = new Vector3(xPos, 0, 0);
         Debug.Log("pH pointer is set at: " + xPos);
+
+        phShowButton.GetComponent<Image>().color = phColor;
+        phShowButton.GetComponentInChildren<Text>().text = "PhMeter" + value;
     }
 
 }
@@ -327,6 +337,56 @@ public class Player : Character
 
     //Player Status Canvas
     PlayerStatus playerStatus;
+
+    public Animator phMeterAnimator;
+    
+    public Animator InventoryAnimator;
+
+    public Animator InventoryButtonAnimator;
+
+   public void ShowPhMeter()
+    {
+        Debug.Log( "Animebool" + phMeterAnimator.GetBool("ShowPhMeter"));
+        
+       if(phMeterAnimator.GetBool("ShowPhMeter"))
+        {
+            phMeterAnimator.SetBool("ShowPhMeter", false);
+        }
+       else
+        {
+            phMeterAnimator.SetBool("ShowPhMeter", true);
+            Invoke("ShowPhMeter", 15f);
+
+        }
+
+    }
+
+    public void ShowInventory()
+    {
+        if (InventoryButtonAnimator.GetBool("SlideLeft"))
+        {
+            InventoryButtonAnimator.SetBool("SlideLeft", false);
+            ShowInventoryPanel();
+        }
+        else
+        {
+            InventoryButtonAnimator.SetBool("SlideLeft", true);
+            Invoke("ShowInventoryPanel", 0.5f);
+        }
+    }
+
+    private void ShowInventoryPanel()
+    {
+        if (InventoryAnimator.GetBool("ShowInventory"))
+        {
+            InventoryAnimator.SetBool("ShowInventory", false);
+        }
+        else
+        {
+            InventoryAnimator.SetBool("ShowInventory", true);
+            Invoke("ShowInventory",15f);
+        }
+    }
 
     private void Start()
     {
@@ -534,9 +594,9 @@ public class Player : Character
     #endregion
 
 
-    public void SetpHCanvasGraphic(float value)
+    public void SetpHCanvasGraphic(float value,Color phColor)
     {
-        playerStatus.SetpHGraphic(value);
+        playerStatus.SetpHGraphic(value,phColor);
     }
 
     void ItemButtonLogic(Collider2D info)

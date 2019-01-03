@@ -9,6 +9,7 @@ TagManager:
   - tag_enemy
   - tag_door
   - tag_item
+  - tag_PhMeterButton
   layers:
   - Default
   - TransparentFX

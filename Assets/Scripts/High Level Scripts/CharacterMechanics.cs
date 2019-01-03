@@ -79,7 +79,8 @@ public class CharacterMechanics : MonoBehaviour {
             //TODO: Remove this logic from here and find another place for it
             if (GetComponent<PlayerMechanics>())
             {
-                GetComponent<PlayerMechanics>().player.SetpHCanvasGraphic(phValue);
+                GetComponent<PlayerMechanics>().player.SetpHCanvasGraphic(phValue,currentColor);
+
             }
         }
         //This function later changes the pH meter also

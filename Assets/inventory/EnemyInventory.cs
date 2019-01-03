@@ -35,6 +35,7 @@ public class EnemyInventory : Inventory {
             temp.transform.parent = GetComponentInParent<Character>().Hand.transform;
             temp.transform.localScale = tempLocalScale;
             temp.gameObject.SetActive(false);
+            ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
             AddItem(ItemStored);
         }
         SetActiveItem();   
@@ -64,6 +65,7 @@ public class EnemyInventory : Inventory {
                
                 slots[i].itemlist[slots[i].itemlist.Count - 1].gameObject.SetActive(true);
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                activeItem.isFromEnemy = true;
                 activeItem.gameObject.SetActive(true);
 
             }

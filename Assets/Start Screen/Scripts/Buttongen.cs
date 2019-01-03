@@ -73,6 +73,9 @@ public class Buttongen : MonoBehaviour
         {
 
         }
+
+
+
       //  Level levelData = GameManager.Instance.GetLevelData(levelSelected - 1);
 
    //     Debug.Log(levelData.targetSalts);
@@ -270,10 +273,10 @@ public class Buttongen : MonoBehaviour
 
                 if (levelSelectPanels[i].transform.localPosition.x < targetPositions[i].x)
                 {
-                    levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.1f);
+                    levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.8f);
                     Vector3 direction = targetPositions[i] - levelSelectPanels[i].transform.localPosition;
 
-                    if (Vector3.Distance(levelSelectPanels[i].transform.localPosition, targetPositions[i]) < 0.5f)
+                    if (Vector3.Distance(levelSelectPanels[i].transform.localPosition, targetPositions[i]) < 0.8f)
                     {
                         levelSelectPanels[i].transform.localPosition = targetPositions[i];
                         targetReachCount++;
@@ -315,14 +318,14 @@ public class Buttongen : MonoBehaviour
             {
                 if (levelSelectPanels[i].transform.localPosition.x > targetPositions[i].x)
                 {
-                    levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.1f);
+                    levelSelectPanels[i].transform.localPosition = Vector3.Lerp(levelSelectPanels[i].transform.localPosition, targetPositions[i], 0.5f);
                     Vector3 direction = targetPositions[i] - levelSelectPanels[i].transform.localPosition;
                     //  Debug.Log(direction.x);
                     //  Debug.Log(targetPositions[i]);
 
                     Debug.Log("Right move" + targetReachCount);
 
-                    if (Vector3.Distance(levelSelectPanels[i].transform.localPosition, targetPositions[i]) < 0.5f)
+                    if (Vector3.Distance(levelSelectPanels[i].transform.localPosition, targetPositions[i]) < 0.8f)
                     {
                         levelSelectPanels[i].transform.localPosition = targetPositions[i];
                         targetReachCount++;

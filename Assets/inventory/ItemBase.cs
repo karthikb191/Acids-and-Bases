@@ -1,6 +1,7 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemBase : MonoBehaviour {
 
@@ -17,51 +18,15 @@ public class ItemBase : MonoBehaviour {
     Vector3 targetScale;
 
 
+   public bool isFromEnemy = false;
+ 
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0) && setFocus)
-        {
-
-           // Debug.Log(playerObject.gameObject.name + itemProperties.name);
-          //  Debug.Log(playerObject.GetComponentInChildren<PlayerInventory>());
-
-           if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
-            {
-                playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
-
-                playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);
-
-                targetScale = transform.localScale/5;
-
-             //   Debug.Log("Align with pos called" + "________Character player>>>" + playerObject.GetComponentInChildren<Character>());
-
-                StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-                transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-
-            }
-           else
-            {
-                playerObject.GetComponentInChildren<Inventory>().AddItem(this);
-
-                StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-
-
-                gameObject.SetActive(false);
-
-                transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-
-            }
-
-            setFocus = false;
-        }
-
-
         if (thrown)
         {
             //do something
-        }
-
-       
+        }       
     }
 
     public virtual void Use() {
@@ -80,31 +45,37 @@ public class ItemBase : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Character>())
+
+        Debug.Log("Trigger enter");
+        if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
             playerObject = collision.gameObject;
 
-            setFocus = true;
+           // Player p = collision.GetComponent<Player>();
+            if (collision.GetComponent<Player>() != null)
+            {
+                //Enable the button
+                DynamicButton d = VirtualJoystick.CreateButton("tag_Item");
+                if (!d.active)
+                {
+                    VirtualJoystick.EnableButton(d);
+                    d.button.onClick.AddListener(() =>
+                    {
+                        AddItem();
+                        VirtualJoystick.DisableButton(d);                          
+                    });
+                }
+            }
         }
-
-     //   Debug.Log(collision.gameObject.name + itemProperties.name);
-
-     //   Debug.Log(itemProperties.name + "___focus___"+ setFocus);
 
     }
 
-
-
-
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<Character>())
+        if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
-  
 
-            setFocus = false;
-            playerObject = null;
-            //Diable prompt message
+            VirtualJoystick.DisableButton("tag_Item");
         }
     }
 
@@ -198,48 +169,38 @@ public class ItemBase : MonoBehaviour {
     {
         //Animating the rotation
         float angle = Quaternion.Angle(gameObject.transform.rotation, targetRotation);
-       
-
-       if (angle > 0.05f)
+      
+        if (angle > 0.05f)
             gameObject.transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, targetRotation, 0.2f);
         else
             gameObject.transform.rotation = targetRotation;
 
         //Animating scale
         float scaleDiff = Vector3.Distance(gameObject.transform.localScale, targetScale);
+
         if (scaleDiff > 0.05f)
             gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, targetScale, 0.2f);
         else
             gameObject.transform.localScale = targetScale;
 
-
-
-
         if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
         {
             gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
-
         }
-
         else
         {
             gameObject.transform.position = targetPosition;
-
         }
-
     }
 
-
     IEnumerator ThrowProjectile(Vector3 Target, float firingAngle)
-    {
-        
+    {      
         Debug.Log("Target to reach"+Target);
         float target_Distance = Vector3.Distance(gameObject.transform.position, Target);
         Debug.Log("target_Distance" + target_Distance);
         float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / speed);
         float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
         float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
-
         float flightDuration = target_Distance / Vx;
 
         //Looking at the target
@@ -274,7 +235,6 @@ public class ItemBase : MonoBehaviour {
                     }
               }
             }
-
             //Depending on sign, the object goes right(1) or left(0)
             int directionOfTranslation = (int)Mathf.Sign(Target.x - gameObject.transform.position.x);
 
@@ -286,10 +246,8 @@ public class ItemBase : MonoBehaviour {
 
             yield return null;
         }
-
         if (elapse_time >= flightDuration)
         {
-
             transform.rotation = Quaternion.identity;
             elapse_time = 0;
             transform.parent = null;
@@ -297,17 +255,34 @@ public class ItemBase : MonoBehaviour {
            // Debug.Log("Flight over");
             yield break;
         }
-
     }
 
- 
+    private void AddItem()
+    {
+        if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
+        {
+            playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
 
-      
-            
+            playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);
 
-        
-    
+            targetScale = transform.localScale / 5;
 
+            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+
+            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+        }
+        else
+        {
+            playerObject.GetComponentInChildren<Inventory>().AddItem(this);
+
+            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+
+            gameObject.SetActive(false);
+
+            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+        }
+        setFocus = false;
+    }
 }
 
 

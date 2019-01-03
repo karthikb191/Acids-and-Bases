@@ -10,6 +10,7 @@ public class PlayerInventory : Inventory {
     RectTransform panel;    //Panel within which the slots are stored   
     Vector3 targerSetTest;
 
+
     void CreateSlots()
     {
         CreateSlot();
@@ -62,7 +63,7 @@ public class PlayerInventory : Inventory {
                         else if (activeItem.itemProperties != slots[i].itemStored.itemProperties)
                         {
                                 activeItem.gameObject.SetActive(false);
-                                ItemBase temp = activeItem;
+                               // ItemBase temp = activeItem;
                             if (slots[i].itemlist.Count > 0)
                             {
                                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
