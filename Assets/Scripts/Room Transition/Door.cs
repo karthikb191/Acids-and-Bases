@@ -17,12 +17,10 @@ public class Door : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        
         Player p = collider.GetComponent<Player>();
         if (p != null)
         {
             playerOnFocus = p;
-
             //Enable the button
             DynamicButton d = VirtualJoystick.CreateButton("tag_door");
             if (!d.active)
@@ -36,7 +34,6 @@ public class Door : MonoBehaviour {
                    VirtualJoystick.DisableButton(d);
                });
             }
-            
         }
     }
     private void OnTriggerExit2D(Collider2D collider)
