@@ -103,7 +103,7 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     RectTransform panel;   */ //Panel within which the slots are stored
 
-    public Character character;    //The character the inventory belongs to
+     Character character;    //The character the inventory belongs to
 
     public List<Slot> slots = new List<Slot>();
 
@@ -121,15 +121,11 @@ public class Inventory : MonoBehaviour {
 
     private void Start()
     {
-      //  CreateSlot();
+        //  CreateSlot();
 
-        
+        character = GetComponentInParent<Character>();
     }
-     
-    private void Update()
-    {
-       // SelectFromSlot();
-    }
+
 
     public virtual void SetActiveSlotCount()
     {

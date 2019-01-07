@@ -15,15 +15,10 @@ public class LevelHelpBase : MonoBehaviour {
     public Sprite hintTextBackGround;
 
     public List<HelpTrigger> helpTriggers = new List<HelpTrigger>();
-   
-
-
-
 
     private void Start()
     {
         helpSystem = GetComponentInParent<HelpSystem>();
-
      
         foreach(HelpTrigger helpTriggerObj in GetComponentsInChildren<HelpTrigger>())
         {

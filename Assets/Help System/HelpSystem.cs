@@ -27,7 +27,7 @@ public class HelpSystem : MonoBehaviour {
 
     private void Start()
     {
-        levelHelper = GetComponentInChildren<LevelHelpBase>();
+     //   levelHelper = GetComponentInChildren<LevelHelpBase>();
         //Try to find the helper for the scene when the scene is loaded
         SceneManager.sceneLoaded += OnSceneLoad;
 
@@ -36,21 +36,19 @@ public class HelpSystem : MonoBehaviour {
     
     public static void Help()
     {
-       // levelHelper.DisplayHelp();
+      //  levelHelper.DisplayHelp();
     }
     
     void OnSceneLoad(Scene s, LoadSceneMode mode)
     {
-     //   levelHelper = FindObjectOfType<LevelHelpBase>();
+        levelHelper = FindObjectOfType<LevelHelpBase>();
+        Debug.Log("found");
     }
 
     public void HelpDisplay(string helpMessage, Sprite bgSprite)
     {
         textToDisplay.text = helpMessage;
-        backgroundSprite.sprite = bgSprite;
-
-       
-        
+        backgroundSprite.sprite = bgSprite;       
         Debug.Log("Triggered hint activated>>>>><<<><><><><>");
         hintTriggered.enabled = true;
         hintTriggered.sprite = hintTriggerSprite;

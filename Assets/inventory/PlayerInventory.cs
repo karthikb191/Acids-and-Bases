@@ -19,7 +19,6 @@ public class PlayerInventory : Inventory
         for (int i = 0; i < slots.Count; i++)
         {
             slots[i].imageSlotPrefab.transform.SetParent(panel.transform);
-
         }
 
     }
