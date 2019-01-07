@@ -475,12 +475,12 @@ TextureImporter:
       name: Acid-bases-grab_16
       rect:
         serializedVersion: 2
-        x: 1271
-        y: 2136
-        width: 680
-        height: 461
+        x: 1269.1306
+        y: 2135.2563
+        width: 690
+        height: 470
       alignment: 9
-      pivot: {x: 0.20588236, y: 0}
+      pivot: {x: 0.20560782, y: 0.0015822389}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -642,6 +642,6 @@ TextureImporter:
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
-  userData: 
+  userData: 636820945057070079
   assetBundleName: 
   assetBundleVariant: 

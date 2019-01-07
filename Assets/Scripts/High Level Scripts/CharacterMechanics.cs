@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterMechanics : MonoBehaviour {
 
     protected SpriteRenderer liquidSprite;
+    protected SkinnedMeshRenderer skinnedMeshRenderer;
     public bool PhTransitionMechanic = true;
 
     [SerializeField]
@@ -12,6 +13,8 @@ public class CharacterMechanics : MonoBehaviour {
     protected float phValue = 7;
     
     Color currentColor = Color.white;
+    
+
     Dictionary<float, Color> phColorDictionary = new Dictionary<float, Color>()
     {
         {0, new Color(1, 0 , 0)}, {1, new Color(0.9568f, 0.3921f, 0.1960f)},
@@ -34,14 +37,29 @@ public class CharacterMechanics : MonoBehaviour {
 
     protected void Start()
     {
+
         if (transform.Find("Sprite") != null)
         {
+            if(transform.Find("Sprite").transform.Find("Body") != null)
+            {
+                skinnedMeshRenderer = transform.Find("Sprite").transform.Find("Body").GetComponent<SkinnedMeshRenderer>();
+                Material mat = Instantiate(skinnedMeshRenderer.GetComponent<Anima2D.SpriteMeshInstance>().sharedMaterial);
+                //skinnedMeshRenderer.material = mat;
+                skinnedMeshRenderer.GetComponent<Anima2D.SpriteMeshInstance>().sharedMaterial = mat; 
+            }
             liquidSprite = transform.Find("Sprite").transform.Find("Liquid").GetComponent<SpriteRenderer>();
         }
         if (liquidSprite != null)
             liquidSprite.color = phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)];
         else
             PhTransitionMechanic = false;
+        
+        //Checking for the sprite mesh renderer
+        if(skinnedMeshRenderer != null)
+        {
+            skinnedMeshRenderer.sharedMaterial.SetColor("_LiquidColor", phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)]);
+        }
+
     }
 
     // Update is called once per frame
@@ -75,6 +93,12 @@ public class CharacterMechanics : MonoBehaviour {
                 liquidSprite.color = currentColor;
             else
                 Debug.Log("Add a liquid sprite and then try changing the color");
+
+            //Changing the color of the liquid in the material of the skinned mesh renderer
+            if (skinnedMeshRenderer != null)
+            {
+                skinnedMeshRenderer.sharedMaterial.SetColor("_LiquidColor", phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)]);
+            }
 
             //TODO: Remove this logic from here and find another place for it
             if (GetComponent<PlayerMechanics>())

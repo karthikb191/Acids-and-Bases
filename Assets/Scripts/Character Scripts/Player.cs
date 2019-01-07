@@ -42,6 +42,8 @@ public abstract class Character : MonoBehaviour, ICharacter
     public float ceilingCheckCircleRadius = 0.2f;
     
     public GameObject Hand { get; set; }
+    public GameObject Liquid { get; set; }
+    public GameObject Body { get; set; }
 
     public Vector3 playerUpOrientation = Vector3.up;
     public GameObject playerSprite;
@@ -312,7 +314,7 @@ struct PlayerStatus
         float xPos = -(widthOfpHMeter * 0.5f) + (value * block) + (block * 0.5f);
 
         pHpointer.rectTransform.localPosition = new Vector3(xPos, 0, 0);
-        Debug.Log("pH pointer is set at: " + xPos);
+        //Debug.Log("pH pointer is set at: " + xPos);
     }
 
 }
@@ -335,6 +337,8 @@ public class Player : Character
 
         playerSprite = transform.Find("Sprite").gameObject;
         Hand = playerSprite.transform.Find("Hand").gameObject;
+        Liquid = playerSprite.transform.Find("Liquid").gameObject;
+        Body = playerSprite.transform.Find("Body").gameObject;
 
         //Initializing the player status variables
         playerStatus = new PlayerStatus(transform.GetComponentInChildren<Canvas>());
@@ -348,7 +352,6 @@ public class Player : Character
 
         //Add health to player initially
         Heal(100);
-        
     }
     
     private void Update()
@@ -370,9 +373,8 @@ public class Player : Character
         MoveCharacter();
 
         State = StateList[StateList.Count - 1];
-        
     }
-
+    
     
     private void LateUpdate()
     {
