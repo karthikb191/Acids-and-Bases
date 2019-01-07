@@ -23,7 +23,7 @@ public class Rock : ItemBase {
     public override void Use(Character c)
     {
         base.Use(c);
-        c.Heal(itemProperties.HealthRestore);
+      //  c.Heal(itemProperties.HealthRestore);
         c.TakeDamage(itemProperties.damageDealt);
     }
 }

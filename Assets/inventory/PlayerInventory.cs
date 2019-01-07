@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInventory : Inventory {
+public class PlayerInventory : Inventory
+{
 
     [SerializeField]
     Canvas inventoryUI;
@@ -20,7 +21,7 @@ public class PlayerInventory : Inventory {
             slots[i].imageSlotPrefab.transform.SetParent(panel.transform);
 
         }
-        
+
     }
 
     void AddItems(ItemBase l_ItemBase)
@@ -30,14 +31,16 @@ public class PlayerInventory : Inventory {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         CreateSlots();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         SelectFromSlots();
-	}
+    }
 
     void SelectFromSlots()
     {
@@ -62,18 +65,18 @@ public class PlayerInventory : Inventory {
                         }
                         else if (activeItem.itemProperties != slots[i].itemStored.itemProperties)
                         {
-                                activeItem.gameObject.SetActive(false);
-                               // ItemBase temp = activeItem;
+                            activeItem.gameObject.SetActive(false);
+                            // ItemBase temp = activeItem;
                             if (slots[i].itemlist.Count > 0)
                             {
                                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
-                            }                            
-                                activeItem.gameObject.SetActive(true);
+                            }
+                            activeItem.gameObject.SetActive(true);
                         }
                     }
                 }
             }
-///////////////////////////////////////////////////////////////////Target Setting testing//////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////Target Setting testing//////////////////////////////////////////////////
             else
             {
                 targerSetTest = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -86,18 +89,19 @@ public class PlayerInventory : Inventory {
             DropItem();
             activeItem = null;
         }
-       if (activeItem != null && Input.GetKeyDown(KeyCode.T))
-        {
-           if (activeItem.itemProperties.isThrowable)
-          {
-                ThrowItem(targerSetTest,this.gameObject.GetComponent<Character>());
-          }
-        }
+
         if (activeItem != null && Input.GetKeyDown(KeyCode.U))
         {
             UseItem();
         }
     }
 
+    public void ThrowItem(Vector3 target)
+    {
+        if (activeItem.itemProperties.isThrowable)
+        {
+            ThrowItem(target, this.gameObject.GetComponent<Character>());
+        }
+    }
 }
 

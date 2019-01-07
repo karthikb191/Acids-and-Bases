@@ -9,7 +9,7 @@ public class ItemBase : MonoBehaviour {
     bool used = false;
     
     bool setFocus;
-    GameObject playerObject;
+   public GameObject playerObject;
 
     public ItemProperties itemProperties;
 
@@ -38,7 +38,20 @@ public class ItemBase : MonoBehaviour {
     public virtual void Throw(Vector3 target)
     {
         float angle = 45;
-        
+
+        if((target.x - transform.position.x) < (target.y - transform.position.y))
+        {
+            angle = 60;
+        }
+        if(isFromEnemy)
+      //  Debug.Log("From enemy" + gameObject.GetComponentInParent<Character>().name);
+
+        if (isFromEnemy && GetComponentInParent<Enemy>())
+        {
+         //   playerObject = GetComponentInParent<Enemy>().gameObject;
+            Debug.Log( "From enemy" + playerObject.name);
+        }
+
         StartCoroutine(ThrowProjectile(target, angle));
     }
 
@@ -250,8 +263,22 @@ public class ItemBase : MonoBehaviour {
         {
             transform.rotation = Quaternion.identity;
             elapse_time = 0;
-            transform.parent = null;
-            gameObject.SetActive(false);
+           // 
+            
+
+           if(isFromEnemy)
+            {
+                //   transform.position = playerObject.GetComponentInChildren<Character>().Hand.transform.position;
+                //   transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+                gameObject.SetActive(false);
+                Destroy(gameObject);
+             //   GetComponentInParent<Inventory>().AddItem(this);
+            }
+           else
+            {
+                gameObject.SetActive(false);
+                transform.parent = null;
+            }
            // Debug.Log("Flight over");
             yield break;
         }

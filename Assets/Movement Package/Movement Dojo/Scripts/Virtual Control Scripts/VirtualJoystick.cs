@@ -30,7 +30,12 @@ public class VirtualJoystick : MonoBehaviour {
     public static GameObject itemSpecialActionButton;
     public static bool itemSpecialActionButtonDown;
     public static bool itemSpecialActionButtonUp;
-    
+
+    //Item special Action Button
+    public static GameObject throwButton;
+    public static bool throwButtonButtonDown;
+    public static bool throwButtonButtonUp;
+
     public static float horizontalValue;
     public static float verticalValue;
 
@@ -75,6 +80,7 @@ public class VirtualJoystick : MonoBehaviour {
         controlCanvas = transform.GetChild(0);
         pickUpButton = transform.GetChild(0).Find("PickUp").gameObject;
         itemSpecialActionButton = transform.GetChild(0).Find("ItemSpecialAction").gameObject;
+        throwButton = transform.GetChild(0).Find("ThrowItem").gameObject;
 
         pickUpButton.SetActive(false);
         itemSpecialActionButton.SetActive(false);

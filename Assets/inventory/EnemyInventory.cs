@@ -36,6 +36,7 @@ public class EnemyInventory : Inventory {
             temp.transform.localScale = tempLocalScale;
             temp.gameObject.SetActive(false);
             ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
+           // ItemStored.GetComponent<ItemBase>().playerObject = GetComponentInParent<GameObject>();
             AddItem(ItemStored);
         }
         SetActiveItem();   
@@ -46,7 +47,9 @@ public class EnemyInventory : Inventory {
     {
 
         base.ThrowItem(target, c);
+        
         activeItem = null;
+
         Invoke("Reload",reloadTime);
 
     }
@@ -60,6 +63,18 @@ public class EnemyInventory : Inventory {
     {
         for (int i = 0; i<slots.Count; i++)
         {
+           /* for (int j = 0; j < slots[i].itemlist.Count; j++)
+            {
+                if (slots[i].itemlist[j].gameObject !=null && !slots[i].itemlist[j].gameObject.activeSelf)
+                {
+                    activeItem = slots[i].itemlist[j];
+                    activeItem.isFromEnemy = true;
+                    activeItem.AlignPos(this.transform.position, GetComponentInParent<Enemy>());
+                    activeItem.gameObject.SetActive(true);
+                    break;
+
+                }
+            }*/
             if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == ItemStored.itemProperties)
             {
                
@@ -67,7 +82,7 @@ public class EnemyInventory : Inventory {
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
                 activeItem.isFromEnemy = true;
                 activeItem.gameObject.SetActive(true);
-
+                break;
             }
         }
 
@@ -76,5 +91,6 @@ public class EnemyInventory : Inventory {
         temp.transform.parent = GetComponentInParent<Character>().Hand.transform;
         temp.transform.localScale = tempLocalScale;
         AddItem(ItemStored);
+       
     }
 }
