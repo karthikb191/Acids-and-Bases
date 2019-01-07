@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [SerializeField]
     Player player;
 
     Vector3 initialPosition;
@@ -18,6 +17,10 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Awake()
     {
         initialPosition = transform.position;
+    }
+    private void Start()
+    {
+        player = FindObjectOfType<Player>();
     }
     private void Update()
     {
@@ -34,12 +37,10 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
 
         }
-
-
-       
+        
         if (player.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
-          
+            
             this.gameObject.SetActive(false);
         }
         else

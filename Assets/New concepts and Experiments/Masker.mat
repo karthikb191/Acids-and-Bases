@@ -77,10 +77,10 @@ Material:
     - _UVSec: 0
     - _XOffset: -0.22
     - _XSize: 2
-    - _YOffset: 0.31287026
+    - _YOffset: 0.476745
     - _YSize: 1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LiquidColor: {r: 0.2862, g: 0.0901, b: 0.4313, a: 1}
+    - _LiquidColor: {r: 1, g: 0, b: 0, a: 1}

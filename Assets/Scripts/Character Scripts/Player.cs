@@ -324,14 +324,11 @@ struct PlayerStatus
         float xPos = -(widthOfpHMeter * 0.5f) + (value * block) + (block * 0.5f);
 
         pHpointer.rectTransform.localPosition = new Vector3(xPos, 0, 0);
-<<<<<<< HEAD
-        //Debug.Log("pH pointer is set at: " + xPos);
-=======
+
         Debug.Log("pH pointer is set at: " + xPos);
 
         phShowButton.GetComponent<Image>().color = phColor;
         phShowButton.GetComponentInChildren<Text>().text = "PhMeter" + value;
->>>>>>> df8913b80013a22f35e2765299dcfa2b0208e49e
     }
 
 }
@@ -364,7 +361,6 @@ public class Player : Character
             Invoke("ShowPhMeter", 15f);
 
         }
-
     }
 
     public void ShowInventory()
