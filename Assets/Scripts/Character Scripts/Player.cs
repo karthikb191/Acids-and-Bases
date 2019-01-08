@@ -268,7 +268,10 @@ struct PlayerStatus
 
         //pH meter variables
         //TODO: change this to search by name
-        pHMeterImage = playerStatusCanvas.transform.Find("pHMeter").GetChild(0).GetComponent<RawImage>();
+     
+        pHMeterImage = playerStatusCanvas.transform.Find("PhMeterIndicator").GetChild(0).GetChild(0).GetComponent<RawImage>();
+
+        Debug.Log(pHMeterImage + "PH meter image");
         pHpointer = pHMeterImage.transform.GetChild(0).GetComponent<RawImage>();
 
         Debug.Log("phpointer: " + pHpointer.name);
@@ -277,7 +280,7 @@ struct PlayerStatus
 
         widthOfpHMeter = pHMeterImage.rectTransform.rect.width;
 
-        phShowButton = playerStatusCanvas.transform.Find("pHMeterButton").GetComponent<Button>();
+        phShowButton = playerStatusCanvas.transform.Find("PhMeterIndicator").GetChild(1).GetComponent<Button>();
     }
 
     public Canvas playerStatusCanvas;
@@ -341,11 +344,7 @@ public class Player : Character
     //Player Status Canvas
     PlayerStatus playerStatus;
 
-    public Animator phMeterAnimator;
-    
-    public Animator InventoryAnimator;
-
-    public Animator InventoryButtonAnimator;
+    Animator phMeterAnimator;
 
    public void ShowPhMeter()
     {
@@ -363,33 +362,7 @@ public class Player : Character
         }
     }
 
-    public void ShowInventory()
-    {
-        if (InventoryButtonAnimator.GetBool("SlideLeft"))
-        {
-            InventoryButtonAnimator.SetBool("SlideLeft", false);
-            ShowInventoryPanel();
-        }
-        else
-        {
-            InventoryButtonAnimator.SetBool("SlideLeft", true);
-            Invoke("ShowInventoryPanel", 0.5f);
-        }
-    }
-
-    private void ShowInventoryPanel()
-    {
-        if (InventoryAnimator.GetBool("ShowInventory"))
-        {
-            InventoryAnimator.SetBool("ShowInventory", false);
-        }
-        else
-        {
-            InventoryAnimator.SetBool("ShowInventory", true);
-            Invoke("ShowInventory",15f);
-        }
-    }
-
+ 
     private void Start()
     {
         Debug.Log("script is working");
@@ -405,8 +378,8 @@ public class Player : Character
 
         //Initializing the player status variables
         playerStatus = new PlayerStatus(transform.GetComponentInChildren<Canvas>());
-        
 
+        phMeterAnimator = transform.GetComponentInChildren<Canvas>().transform.Find("PhMeterIndicator").GetChild(0).GetComponent<Animator>();
         playerAudio = GetComponent<PlayerAudio>();
         audioSource = GetComponent<AudioSource>();
 

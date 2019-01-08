@@ -208,6 +208,7 @@ public class VirtualJoystick : MonoBehaviour {
             {
                 if(activeDynamicButtons[i].tag == tag)
                 {
+                    activeDynamicButtons[i].button.onClick.RemoveAllListeners();
                     activeDynamicButtons[i].active = false;
                     activeDynamicButtons[i].button.gameObject.SetActive(false);
                     activeDynamicButtons.RemoveAt(i);

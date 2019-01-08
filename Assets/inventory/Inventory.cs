@@ -43,7 +43,7 @@ public class Slot
             itemStored = l_itemBase;
             itemlist.Add(l_itemBase);
          
-            imageSlotPrefab.SetActive(true);
+           // imageSlotPrefab.SetActive(true);
 
             displaySprite.enabled = true;
            displaySprite.sprite = itemStored.itemProperties.imageSprite;
@@ -103,7 +103,7 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     RectTransform panel;   */ //Panel within which the slots are stored
 
-    public Character character;    //The character the inventory belongs to
+     Character character;    //The character the inventory belongs to
 
     public List<Slot> slots = new List<Slot>();
 
@@ -121,15 +121,12 @@ public class Inventory : MonoBehaviour {
 
     private void Start()
     {
-      //  CreateSlot();
+        //  CreateSlot();
 
-        
+        character = GetComponentInParent<Character>();
+        slots = new List<Slot>(maxSlotCount);
     }
-     
-    private void Update()
-    {
-       // SelectFromSlot();
-    }
+
 
     public virtual void SetActiveSlotCount()
     {
@@ -289,15 +286,18 @@ public class Inventory : MonoBehaviour {
             Debug.Log("MAx slot count"+maxSlotCount);
             for (int i = 0; i < maxSlotCount; i++)
             {
-                Slot tempSlot = new Slot();
+               // Slot tempSlot = new Slot();
               //  Debug.Log(tempSlot);
-                slots.Add(tempSlot);
+              //  slots.Add(tempSlot);
               Debug.Log(slots.Count);
             }
 
-            for (int i = 0; i < slots.Count; i++)
+            for (int i = 0; i < maxSlotCount; i++)
             {
-                
+                Slot tempSlot = new Slot();
+               
+                 slots.Add(tempSlot);
+
                 slots[i].imageSlotPrefab = Instantiate(imageSlotPrefab);
 
 
@@ -351,7 +351,7 @@ public class Inventory : MonoBehaviour {
                     if (!slots[i].imageSlotPrefab.activeSelf && slots[i].itemStored == null)
                     {
                         slots[i].AddItem(l_ItemBase);
-                       slots[i].imageSlotPrefab.SetActive(true);
+                      // slots[i].imageSlotPrefab.SetActive(true);
                         slots[i].displaySprite.sprite = l_ItemBase.itemProperties.imageSprite;
                         slots[i].itemStored = l_ItemBase;
                         activeSlotCount = ActiveSlotCount();
@@ -395,7 +395,25 @@ public class Inventory : MonoBehaviour {
         
     }
 
+    public void DisplaySlots()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if(slots[i].itemStored!= null)
+            {
+                slots[i].imageSlotPrefab.SetActive(true);
+            }
+        }
+    }
 
-
+    public void HideSlots()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            
+                slots[i].imageSlotPrefab.SetActive(false);
+            
+        }
+    }
 
 }
