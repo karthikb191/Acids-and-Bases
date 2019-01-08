@@ -25,8 +25,9 @@ public class EnemyInventory : Inventory {
         for(int i = 0; i<slots.Count;i++)
         {
             slots[i].maxStorage = 10;
+            slots[i].imageSlotPrefab.transform.SetParent(transform);
         }
-
+        
         //Instantiating items
         for(int i = 0;i<maxItem;i++)
         {
@@ -38,6 +39,7 @@ public class EnemyInventory : Inventory {
             ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
            // ItemStored.GetComponent<ItemBase>().playerObject = GetComponentInParent<GameObject>();
             AddItem(ItemStored);
+
         }
         SetActiveItem();   
     }
@@ -63,18 +65,7 @@ public class EnemyInventory : Inventory {
     {
         for (int i = 0; i<slots.Count; i++)
         {
-           /* for (int j = 0; j < slots[i].itemlist.Count; j++)
-            {
-                if (slots[i].itemlist[j].gameObject !=null && !slots[i].itemlist[j].gameObject.activeSelf)
-                {
-                    activeItem = slots[i].itemlist[j];
-                    activeItem.isFromEnemy = true;
-                    activeItem.AlignPos(this.transform.position, GetComponentInParent<Enemy>());
-                    activeItem.gameObject.SetActive(true);
-                    break;
-
-                }
-            }*/
+          
             if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == ItemStored.itemProperties)
             {
                

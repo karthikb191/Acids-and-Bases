@@ -284,13 +284,7 @@ public class Inventory : MonoBehaviour {
         if (slots.Count == 0)
         {
             Debug.Log("MAx slot count"+maxSlotCount);
-            for (int i = 0; i < maxSlotCount; i++)
-            {
-               // Slot tempSlot = new Slot();
-              //  Debug.Log(tempSlot);
-              //  slots.Add(tempSlot);
-              Debug.Log(slots.Count);
-            }
+          
 
             for (int i = 0; i < maxSlotCount; i++)
             {
@@ -342,7 +336,7 @@ public class Inventory : MonoBehaviour {
 
                     
                 }
-            Debug.Log("Active Slot Count :  " + activeSlotCount);
+           // Debug.Log("Active Slot Count :  " + activeSlotCount);
 
            if( activeSlotCount < maxSlotCount && !assigned)
             {
@@ -384,7 +378,7 @@ public class Inventory : MonoBehaviour {
         int c = 0;
         for (int i = 0; i < slots.Count; i++)
         {
-            if(slots[i].imageSlotPrefab.activeSelf)
+            if (slots[i].itemStored != null)
             {
                 c++;
                 continue;
