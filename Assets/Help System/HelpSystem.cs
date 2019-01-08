@@ -14,7 +14,7 @@ public class HelpSystem : MonoBehaviour {
 
     bool startTimer;
 
-   public Image hintTriggered;
+    public Image hintTriggered;
 
     public float displayTime;
 
@@ -31,19 +31,20 @@ public class HelpSystem : MonoBehaviour {
         //Try to find the helper for the scene when the scene is loaded
         SceneManager.sceneLoaded += OnSceneLoad;
 
+
       
     }
-    
-    public static void Help()
-    {
-      //  levelHelper.DisplayHelp();
-    }
-    
+
+
+
     void OnSceneLoad(Scene s, LoadSceneMode mode)
     {
         levelHelper = FindObjectOfType<LevelHelpBase>();
+
         Debug.Log("found");
+
     }
+    
 
     public void HelpDisplay(string helpMessage, Sprite bgSprite)
     {
@@ -77,8 +78,7 @@ public class HelpSystem : MonoBehaviour {
             CloseHint();
 
     }
-
-
+    
     public void CloseHint()
     {
         displayHelp.SetActive(false);

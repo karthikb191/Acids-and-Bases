@@ -5,6 +5,45 @@ using UnityEngine;
 public class PlayerInventory : Inventory
 {
 
+////////////////////////////////////////Inventory animation//////////////////////////////////////////
+     Animator InventoryAnimator;
+
+     Animator InventoryButtonAnimator;
+
+    public void ShowInventory()
+    {
+        if (InventoryButtonAnimator.GetBool("SlideLeft"))
+        {
+            InventoryButtonAnimator.SetBool("SlideLeft", false);
+
+            ShowInventoryPanel();
+        }
+        else
+        {
+            InventoryButtonAnimator.SetBool("SlideLeft", true);
+            Invoke("ShowInventoryPanel", 0.5f);
+            
+        }
+    }
+
+    private void ShowInventoryPanel()
+    {
+        if (InventoryAnimator.GetBool("ShowInventory"))
+        {
+            InventoryAnimator.SetBool("ShowInventory", false);
+          
+        }
+        else
+        {
+            InventoryAnimator.SetBool("ShowInventory", true);
+            
+        }
+    }
+
+
+////////////////////////////////////////Inventory animation//////////////////////////////////////////
+
+
     [SerializeField]
     Canvas inventoryUI;
     [SerializeField]
@@ -18,7 +57,11 @@ public class PlayerInventory : Inventory
 
         for (int i = 0; i < slots.Count; i++)
         {
+         Debug.Log(slots[i].imageSlotPrefab.transform.name);
+           // slots[i].imageSlotPrefab.transform.parent = panel.transform;
+
             slots[i].imageSlotPrefab.transform.SetParent(panel.transform);
+
         }
 
     }
@@ -26,12 +69,16 @@ public class PlayerInventory : Inventory
     void AddItems(ItemBase l_ItemBase)
     {
         AddItem(l_ItemBase);
-
+        
     }
 
     // Use this for initialization
     void Start()
     {
+        inventoryUI = transform.GetChild(0).GetComponent<Canvas>();
+        panel = transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
+        InventoryAnimator = transform.GetChild(0).GetChild(0).GetComponent<Animator>();
+        InventoryButtonAnimator = transform.GetChild(0).GetChild(1).GetComponent<Animator>();
         CreateSlots();
     }
 
@@ -39,6 +86,12 @@ public class PlayerInventory : Inventory
     void Update()
     {
         SelectFromSlots();
+        if (InventoryAnimator.GetBool("ShowInventory"))
+        {
+            Invoke("DisplaySlots",0.5f);
+        }
+        else
+        { HideSlots(); }
     }
 
     void SelectFromSlots()

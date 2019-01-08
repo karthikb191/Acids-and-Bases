@@ -6,9 +6,15 @@ using UnityEngine;
 [System.Serializable]
 public struct GrabAnimationInfo
 {
-    public AnimationClip grabStartAnimationClip;
+    public AnimationClip grabStartAnimationClip;    //Must be set in the inspector
 }
-
+[System.Serializable]
+public struct LiquidInformation
+{
+    //All these values must be set inside the inspector
+    public float minimumPosition;
+    public float maximumPosition;
+}
 
 //Try making this script independent of monoBehavior
 public class PlayerMechanics : CharacterMechanics
@@ -17,12 +23,7 @@ public class PlayerMechanics : CharacterMechanics
     //Item variables
     public bool itemPickUpEnabled = true;
     public GameObject itemPickedUp;
-
-    //Transformation variables
-    public string whatAmI = "Haldi";
-    public Color haldiColor;
-    public Color kumkumColor;
-
+    
     //Enemy Absorb variables
     public bool canAbsorbEnemy = true;
     public float absorbDistance = 1.0f;
@@ -32,9 +33,22 @@ public class PlayerMechanics : CharacterMechanics
     public bool isInContactwithField;
 
     private AudioSource playerAudioSource;
+    [HideInInspector]
     public Player player;
+    SpriteRenderer bodySkinnedMeshRenderer;
 
     float fallShoutCounter;
+
+    float maxVolume = 2000;
+    [Range(0, 2000)]
+    public float volume = 1000;
+    float currentlyVisibleVolume = 0.0f;
+
+    //Information for specific mechanics
+    [SerializeField]
+    public GrabAnimationInfo grabAnimationInfo;
+    [SerializeField]
+    public LiquidInformation liquidInformation;
 
     private void Start()
     {
@@ -46,8 +60,12 @@ public class PlayerMechanics : CharacterMechanics
 
         //TODO: Change this to a more automated form
         SetpH(phValue);
-        //StartCoroutine(Transformation());
+
+        bodySkinnedMeshRenderer = player.playerSprite.GetComponent<SpriteRenderer>();
+
+        //liquidBounds = player.Liquid.GetComponent<SpriteRenderer>().bounds;
     }
+
     private new void Update()
     {
         base.Update();
@@ -59,59 +77,44 @@ public class PlayerMechanics : CharacterMechanics
             else
             {
                 absMec.StunUpdate(ref absMec);
-                //Debug.Log("Not null......" + absMec.ToString());
-            }
+            }   
+        }
+        SetVolume();
+    }
+
+    void SetVolume()
+    {
+        float speed = 0.1f;
+        if (Mathf.Abs(currentlyVisibleVolume - volume) > 1.0f)
+        {
+            Debug.Log("Changing volume");
+            //Simple lerp for animating visibility
+            currentlyVisibleVolume = speed * currentlyVisibleVolume + (1 - speed) * volume;
+
+            //Get x offset value of the shader here
+            //float xOffset = player.Body.GetComponent<SkinnedMeshRenderer>().material.GetTextureOffset("_BodyTex").x;
+
+            //Calculating the offset which must be applied to the material
+            float volumeRatio = currentlyVisibleVolume / maxVolume;
+            float yOffset = (liquidInformation.minimumPosition + liquidInformation.maximumPosition) * volumeRatio;
+            yOffset = (liquidInformation.maximumPosition - liquidInformation.minimumPosition) - yOffset;
+            Debug.Log("y offset: " + yOffset);
+            //Set the offset property of the body texture 
+            player.Body.GetComponent<SkinnedMeshRenderer>().sharedMaterial.SetFloat("_YOffset", yOffset);
             
         }
+        else if (currentlyVisibleVolume != volume)
+            currentlyVisibleVolume = volume;
     }
-    [SerializeField]
-    public GrabAnimationInfo grabAnimationInfo;
-    AbsorbMechanic absMec = null;
 
+
+    AbsorbMechanic absMec = null;
+    
     private void LateUpdate()
     {
         isInContactwithField = false;
     }
     
-    //Will be called by Liquid
-    public IEnumerator Transformation()
-    {
-        yield return new WaitForSeconds(1);
-        Debug.Log("transforming the player");
-        if (whatAmI == "Haldi")
-        {
-            whatAmI = "Kumkum";
-            Vector4 presentColor = transform.GetChild(0).GetComponent<SpriteRenderer>().color;
-            Vector4 targetColor = kumkumColor;
-            while ( (presentColor - targetColor).sqrMagnitude > 0.1f ){
-                presentColor = Vector4.Lerp(presentColor, targetColor, 2 * Time.deltaTime);
-                //Change the sprite color now
-                transform.GetChild(0).GetComponent<SpriteRenderer>().color = presentColor;
-                yield return new WaitForFixedUpdate();
-            }
-            transform.GetChild(0).GetComponent<SpriteRenderer>().color = kumkumColor;
-            
-        }
-        else if(whatAmI == "Kumkum")
-        {
-            whatAmI = "Haldi";
-            Debug.Log("transforming to kumkum");
-            Vector4 presentColor = transform.GetChild(0).GetComponent<SpriteRenderer>().color;
-            Vector4 targetColor = haldiColor;
-            while ((presentColor - targetColor).sqrMagnitude > 0.1f)
-            {
-                presentColor = Vector4.Lerp(presentColor, targetColor, 2 * Time.deltaTime);
-                //Change the sprite color now
-                transform.GetChild(0).GetComponent<SpriteRenderer>().color = presentColor;
-                yield return new WaitForFixedUpdate();
-            }
-            transform.GetChild(0).GetComponent<SpriteRenderer>().color = haldiColor;
-            
-        }
-      //  Liquid.TransformationCoroutine = null;
-        yield return null;
-
-    }
     
     void FallSoundCondition()
     {
@@ -145,14 +148,10 @@ public class PlayerMechanics : CharacterMechanics
         //}
     }
     
-
-
     #region Absorb Functions
-    Character absorbingCharacter = null;
     
     void AbsorbCharacter()
     {
-
         //Enable the virtual joystick button by checking the target's status
         Enemy e = DetectCharacter();
         if(e != null)
@@ -165,7 +164,7 @@ public class PlayerMechanics : CharacterMechanics
 
                 if (player.userInputs.absorbPressed)
                 {
-                    StartCoroutine(AbsorbReset(e, 3.0f));
+                    InitiateAbsorb(e, 3.0f);
                 }
             }
             else if(absorbButton!=null && !absorbing)
@@ -183,19 +182,19 @@ public class PlayerMechanics : CharacterMechanics
         }
     }
     
-
     Enemy DetectCharacter()
     {
         Enemy e = null;
-        Debug.DrawRay(new Vector3(player.transform.position.x +(player.playerSprite.GetComponent<SpriteRenderer>().bounds.extents.x + 0.1f) * Mathf.Sign(player.playerSprite.transform.localScale.x),
-                            player.transform.position.y + player.playerSprite.GetComponent<SpriteRenderer>().bounds.extents.y,
-                            player.transform.position.z), Vector3.right*100, Color.green);
+        //Debug.DrawRay(new Vector3(player.transform.position.x +(player.Body.GetComponent<SkinnedMeshRenderer>().bounds.extents.x + 0.1f) * Mathf.Sign(player.playerSprite.transform.localScale.x),
+        //                    player.transform.position.y + player.Body.GetComponent<SkinnedMeshRenderer>().bounds.extents.y,
+        //                    player.transform.position.z), Vector3.right*100, Color.green);
+
         if (player.State.Equals(typeof(IdleState)))
         {
             //Debug.Log("Casting ray to find the enemy");
             //If player is idle, Cast ray directly to the player's right to detect a hit
-            Vector3 pointOfCast = new Vector3(player.transform.position.x + (player.playerSprite.GetComponent<SpriteRenderer>().bounds.extents.x + 0.1f) * Mathf.Sign(player.playerSprite.transform.localScale.x),
-                            player.transform.position.y + player.playerSprite.GetComponent<SpriteRenderer>().bounds.extents.y,
+            Vector3 pointOfCast = new Vector3(player.transform.position.x + (player.Body.GetComponent<SkinnedMeshRenderer>().bounds.extents.x + 0.1f) * Mathf.Sign(player.playerSprite.transform.localScale.x),
+                            player.transform.position.y + player.Body.GetComponent<SkinnedMeshRenderer>().bounds.extents.y,
                             player.transform.position.z);
             RaycastHit2D hit = Physics2D.Raycast(pointOfCast, player.transform.right * Mathf.Sign(player.playerSprite.transform.localScale.x),
                                 absorbDistance, LayerMask.GetMask("Character"));
@@ -229,12 +228,11 @@ public class PlayerMechanics : CharacterMechanics
         }
     }
 
-    IEnumerator AbsorbReset(Character c, float duration)
+    void InitiateAbsorb(Character c, float duration)
     {
         Debug.Log("initiated the absorb mechanic");
         absMec = new AbsorbMechanic();
         absMec.Setup(this, c, grabAnimationInfo);
-        yield return null;
     }
     
     #endregion
@@ -278,15 +276,15 @@ public class PlayerMechanics : CharacterMechanics
 
             //Once the conditions are met, this block is executed only once. So, the absorb has to be set here
             animator.SetBool("Absorb", true);
-            
         }
+
         AnimatorStateInfo stateInfo;
         public void StunUpdate(ref AbsorbMechanic absMec)
         {
             //Debug.Log("updating stun");
             stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-            Debug.Log("Normalized state time: " + stateInfo.normalizedTime);
+            //Debug.Log("Normalized state time: " + stateInfo.normalizedTime);
             if (stageOneEntered)
             {
                 if (!clipSet)
@@ -314,6 +312,7 @@ public class PlayerMechanics : CharacterMechanics
                 //Set the target character's parent as the current character's hand
                 if (!parentSet)
                 {
+                    //After ta certain amount of time, set the enemy as child to the player's hand
                     if (elapsedTime > time * 0.4f)
                     {
                         //Halt character movement of both the player and the enemy
@@ -324,7 +323,7 @@ public class PlayerMechanics : CharacterMechanics
                         c.transform.parent = player.Hand.transform;
                         c.transform.localPosition = new Vector3(0, -1.0f, 0);
                         c.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                        c.playerSprite.GetComponent<SpriteRenderer>().sortingOrder = player.playerSprite.GetComponent<SpriteRenderer>().sortingOrder - 1;
+                        //c.playerSprite.GetComponent<SpriteRenderer>().sortingOrder = player.playerSprite.GetComponent<SpriteRenderer>().sortingOrder - 1;
 
                         parentSet = true;
                     }

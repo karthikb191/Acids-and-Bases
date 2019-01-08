@@ -42,6 +42,8 @@ public abstract class Character : MonoBehaviour, ICharacter
     public float ceilingCheckCircleRadius = 0.2f;
     
     public GameObject Hand { get; set; }
+    public GameObject Liquid { get; set; }
+    public GameObject Body { get; set; }
 
     public Vector3 playerUpOrientation = Vector3.up;
     public GameObject playerSprite;
@@ -266,7 +268,10 @@ struct PlayerStatus
 
         //pH meter variables
         //TODO: change this to search by name
-        pHMeterImage = playerStatusCanvas.transform.Find("pHMeter").GetChild(0).GetComponent<RawImage>();
+     
+        pHMeterImage = playerStatusCanvas.transform.Find("PhMeterIndicator").GetChild(0).GetChild(0).GetComponent<RawImage>();
+
+        Debug.Log(pHMeterImage + "PH meter image");
         pHpointer = pHMeterImage.transform.GetChild(0).GetComponent<RawImage>();
 
         Debug.Log("phpointer: " + pHpointer.name);
@@ -275,7 +280,7 @@ struct PlayerStatus
 
         widthOfpHMeter = pHMeterImage.rectTransform.rect.width;
 
-        phShowButton = playerStatusCanvas.transform.Find("pHMeterButton").GetComponent<Button>();
+        phShowButton = playerStatusCanvas.transform.Find("PhMeterIndicator").GetChild(1).GetComponent<Button>();
     }
 
     public Canvas playerStatusCanvas;
@@ -322,6 +327,7 @@ struct PlayerStatus
         float xPos = -(widthOfpHMeter * 0.5f) + (value * block) + (block * 0.5f);
 
         pHpointer.rectTransform.localPosition = new Vector3(xPos, 0, 0);
+
         Debug.Log("pH pointer is set at: " + xPos);
 
         phShowButton.GetComponent<Image>().color = phColor;
@@ -338,11 +344,7 @@ public class Player : Character
     //Player Status Canvas
     PlayerStatus playerStatus;
 
-    public Animator phMeterAnimator;
-    
-    public Animator InventoryAnimator;
-
-    public Animator InventoryButtonAnimator;
+    Animator phMeterAnimator;
 
    public void ShowPhMeter()
     {
@@ -358,36 +360,9 @@ public class Player : Character
             Invoke("ShowPhMeter", 15f);
 
         }
-
     }
 
-    public void ShowInventory()
-    {
-        if (InventoryButtonAnimator.GetBool("SlideLeft"))
-        {
-            InventoryButtonAnimator.SetBool("SlideLeft", false);
-            ShowInventoryPanel();
-        }
-        else
-        {
-            InventoryButtonAnimator.SetBool("SlideLeft", true);
-            Invoke("ShowInventoryPanel", 0.5f);
-        }
-    }
-
-    private void ShowInventoryPanel()
-    {
-        if (InventoryAnimator.GetBool("ShowInventory"))
-        {
-            InventoryAnimator.SetBool("ShowInventory", false);
-        }
-        else
-        {
-            InventoryAnimator.SetBool("ShowInventory", true);
-            Invoke("ShowInventory",15f);
-        }
-    }
-
+ 
     private void Start()
     {
         Debug.Log("script is working");
@@ -398,11 +373,13 @@ public class Player : Character
 
         playerSprite = transform.Find("Sprite").gameObject;
         Hand = playerSprite.transform.Find("Hand").gameObject;
+        Liquid = playerSprite.transform.Find("Liquid").gameObject;
+        Body = playerSprite.transform.Find("Body").gameObject;
 
         //Initializing the player status variables
         playerStatus = new PlayerStatus(transform.GetComponentInChildren<Canvas>());
-        
 
+        phMeterAnimator = transform.GetComponentInChildren<Canvas>().transform.Find("PhMeterIndicator").GetChild(0).GetComponent<Animator>();
         playerAudio = GetComponent<PlayerAudio>();
         audioSource = GetComponent<AudioSource>();
 
@@ -411,7 +388,6 @@ public class Player : Character
 
         //Add health to player initially
         Heal(100);
-        
     }
     
     private void Update()
@@ -433,9 +409,8 @@ public class Player : Character
         MoveCharacter();
 
         State = StateList[StateList.Count - 1];
-        
     }
-
+    
     
     private void LateUpdate()
     {

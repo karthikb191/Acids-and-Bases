@@ -23,10 +23,7 @@ public class ItemBase : MonoBehaviour {
 
     private void Update()
     {
-        if (thrown)
-        {
-            //do something
-        }       
+              
     }
 
     public virtual void Use() {
@@ -43,8 +40,7 @@ public class ItemBase : MonoBehaviour {
         {
             angle = 60;
         }
-        if(isFromEnemy)
-      //  Debug.Log("From enemy" + gameObject.GetComponentInParent<Character>().name);
+        
 
         if (isFromEnemy && GetComponentInParent<Enemy>())
         {

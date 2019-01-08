@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour {
     void Start () {
         virtualJoystick = FindObjectOfType<VirtualJoystick>();
 
-        //Limiting frame rate to 40 fps
+        //Limiting frame rate to <__> fps
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
 
@@ -159,8 +159,7 @@ public class GameManager : MonoBehaviour {
         //Debug.Log("Delta time is: " + deltaTime);
 
         SetCameraBounds();
-
-
+        
 	}
 
 

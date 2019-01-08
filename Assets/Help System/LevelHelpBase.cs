@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelHelpBase : MonoBehaviour {
+    
+    public virtual void DisplayHelp()
+    {
 
-   public HelpSystem helpSystem;
+    }
+    public HelpSystem helpSystem;
 
     public List<string> hintsForTheLevel = new List<string>();
 
@@ -55,5 +59,5 @@ public class LevelHelpBase : MonoBehaviour {
     {
         DisplayHelp(hintsForTheLevel[hintNumber], hintTextBackGround);
     }
-
+    
 }

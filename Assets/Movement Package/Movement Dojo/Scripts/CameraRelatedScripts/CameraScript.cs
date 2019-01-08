@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class CameraScript : MonoBehaviour {
     private GameObject player;
     private Player playerms;
@@ -29,13 +30,11 @@ public class CameraScript : MonoBehaviour {
     public GameObject boundariesContainer;
 
     //camera move properties
-    
+
     [Range(0, 1)]
     public float speed;
 
-
     //Movement Multipliers
-    
     [Range(-50, 50)]
     public float xPosMultiplier = 2;
     [Range(-50, 50)]
@@ -46,10 +45,25 @@ public class CameraScript : MonoBehaviour {
     private Vector3 oldPosition;
 
     private bool otherObjectCommandingCamera;
+
+    //Camera shake variables
+    public bool shakeEnabled = false;
+    CameraShake shakeObject;
+    public float shakeAmount = 0.2f;
+    public float shakeDamping = 0.5f;
+    public float shakeSmoothness = 0.5f;
+
+    //Camera Focus Variables
+    public bool focusEnabled = false;
+    CameraFocus focusObject;
+    public Vector3 focusPosition;
+    public float focusSpeed;
+    public float focusDuration;
+
     //public bool OtherObjectCommandingCamera {   get { return otherObjectCommandingCamera; }
     //                                            set { otherObjectCommandingCamera = value; } }
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start() {
         playerms = FindObjectOfType<Player>();
         mainCam = Camera.main;
 
@@ -57,19 +71,24 @@ public class CameraScript : MonoBehaviour {
         //playerms = CharacterManager.Instance.ThePlayer;
         player = playerms.gameObject;
         //speed = playerms.maxSpeed;
-        
+
 
         targetPosition = new Vector3(player.transform.position.x, player.transform.position.y, gameObject.transform.position.z);
         oldPosition = gameObject.transform.position;
     }
-    
-    
-    // Update is called once per frame
-    void Update () {
 
+
+    // Update is called once per frame
+    void Update() {
         if (player != null)
         {
-            
+            if (focusObject != null)
+            {
+                gameObject.transform.position = focusObject.FocusUpdate(gameObject.transform.position, ref focusObject);
+                return;
+            }
+
+
             distance = Vector3.Distance(player.transform.position, new Vector3(targetPosition.x, targetPosition.y, player.transform.position.z));
 
             //targetPosition = new Vector3(player.transform.position.x + playerms.CurrentLinearSpeed * 5 * xPosMultiplier,
@@ -90,10 +109,14 @@ public class CameraScript : MonoBehaviour {
                                                         gameObject.transform.position.y * (1 - yMultiplier) + targetPosition.y * (yMultiplier),
                                                         gameObject.transform.position.z);
 
-            gameObject.transform.position = Vector3.Lerp(oldPosition, position, speed);
-            //gameObject.transform.position = position;
+            Vector3 positionToReach = Vector3.Lerp(oldPosition, position, speed);
+
+            if (shakeObject != null)
+                positionToReach += shakeObject.ShakeUpdate(ref shakeObject);
+
+            gameObject.transform.position = positionToReach;
+
             oldPosition = gameObject.transform.position;
-            //oldPosition = mainCam.transform.position;
         }
     }
     Vector3 direction;
@@ -108,7 +131,7 @@ public class CameraScript : MonoBehaviour {
                                         playerms.transform.position.y + yPosMultiplier * playerms.velocity.y,
                                         gameObject.transform.position.z);
 
-        
+
         //targetPosition = new Vector3(player.transform.position.x + playerms.CurrentLinearSpeed * 5 * xPosMultiplier, 
         //                                player.transform.position.y + playerms.CurrentJumpSpeed * 5 * yPosMultiplier, 
         //                                gameObject.transform.position.z);
@@ -132,7 +155,7 @@ public class CameraScript : MonoBehaviour {
 
     }
     int yMultiplier = 0; int xMultiplier = 0;
-    
+
     //if the TARGET POSITION is within bounds, then move the camera
     void CameraIsWithinBounds(out int xMult, out int yMult)
     {
@@ -140,13 +163,8 @@ public class CameraScript : MonoBehaviour {
         xMult = 1; yMult = 1;
         if (boundariesContainer != null)
         {
-            if(boundariesContainer.transform.childCount == 2)
+            if (boundariesContainer.transform.childCount == 2)
             {
-
-                //if (targetPosition.x < boundariesContainer.transform.GetChild(0).transform.position.x + GameManager.Instance.camHalfWidth ||
-                //    targetPosition.x > boundariesContainer.transform.GetChild(1).transform.position.x - GameManager.Instance.camHalfWidth ||
-                //    targetPosition.y < boundariesContainer.transform.GetChild(0).transform.position.y + GameManager.Instance.camHalfHeight||
-                //    targetPosition.y > boundariesContainer.transform.GetChild(1).transform.position.y - GameManager.Instance.camHalfHeight)
                 if ((targetPosition.x - GameManager.Instance.camHalfWidth < boundariesContainer.transform.GetChild(0).transform.position.x &&
                     gameObject.transform.position.x - GameManager.Instance.camHalfWidth < boundariesContainer.transform.GetChild(0).transform.position.x) ||
                      (targetPosition.x + GameManager.Instance.camHalfWidth > boundariesContainer.transform.GetChild(1).transform.position.x &&
@@ -154,7 +172,7 @@ public class CameraScript : MonoBehaviour {
                 {
                     xMult = 0;
                 }
-                if((targetPosition.y - GameManager.Instance.camHalfHeight < boundariesContainer.transform.GetChild(0).transform.position.y &&
+                if ((targetPosition.y - GameManager.Instance.camHalfHeight < boundariesContainer.transform.GetChild(0).transform.position.y &&
                   gameObject.transform.position.y - GameManager.Instance.camHalfHeight < boundariesContainer.transform.GetChild(0).transform.position.y) ||
                   (targetPosition.y + GameManager.Instance.camHalfHeight > boundariesContainer.transform.GetChild(1).transform.position.y &&
                    gameObject.transform.position.y + GameManager.Instance.camHalfHeight > boundariesContainer.transform.GetChild(1).transform.position.y))
@@ -164,10 +182,9 @@ public class CameraScript : MonoBehaviour {
 
             }
         }
-
         //return result;
     }
-    
+
     //set by external scripts
     public void StopCameraMovement()
     {
@@ -186,5 +203,164 @@ public class CameraScript : MonoBehaviour {
         gameObject.transform.position = position;
         oldPosition = position;
     }
-    
+
+    public void ShakeCamera(float amount = 1, float damping = 1, float smootheness = 0.5f)
+    {
+        if (shakeObject == null && shakeEnabled)
+            shakeObject = new CameraShake(amount, damping, smootheness);
+    }
+
+    public void FocusCameraAt(Vector3 position, float speed = 1, float waitDuration = 1)
+    {
+        if(focusObject == null && focusEnabled)
+        {
+            focusObject = new CameraFocus(position, mainCam, speed, waitDuration);
+        }
+    }
+
+    class CameraShake
+    {
+        float amount;
+        float damping;
+        float smoothness;
+
+        float currentAmount;
+
+        Vector3 previousOffset = Vector3.zero;
+        public CameraShake(float amount, float damping, float smoothness)
+        {
+            this.amount = amount;
+            this.damping = damping;
+            this.smoothness = smoothness;
+
+            currentAmount = amount;
+        }
+
+        //Returns a random offset vector3 value
+        public Vector3 ShakeUpdate(ref CameraShake cameraShakeObject)
+        {
+            Vector3 offset = Vector3.zero;
+            ///Random Number Generator
+            /// Get the random number in the range 0 and 1 using Random.value
+            /// To get it in the range (-currentAmount, currentAmount),
+            /// use the formula below
+            ///
+
+            offset.x = Random.value * 2 * currentAmount - currentAmount;
+            offset.y = Random.value * 2 * currentAmount - currentAmount;
+
+            currentAmount -= damping * Time.deltaTime;
+
+            offset = previousOffset * (1 - smoothness) + offset * (smoothness);
+            previousOffset = offset;
+
+            if (currentAmount <= 0)
+            {
+                cameraShakeObject = null;
+            }
+            return offset;
+        }
+    }
+
+    class CameraFocus
+    {
+        Vector3 initialPosition;
+        Vector3 focusPoint;
+        float waitDuration;
+        float speed;
+
+        float waitTimeElapsed = 0.0f;
+
+        Camera mainCam;
+        bool reachedTarget = false;
+        bool waiting = false;
+        bool returnedToInitialPosition = false;
+
+        public delegate void CameraFocusBegin();
+        public event CameraFocusBegin CameraFocusBeginEvent;
+        public delegate void CameraFocusFinished();
+        public event CameraFocusBegin CameraFocusFinishedEvent;
+
+        Vector3 previousDirection;
+        Vector3 direction;
+
+        public CameraFocus(Vector3 focusPoint, Camera mainCam, float speed, float waitDuration)
+        {
+            //Call the camera focus begin event and notify it to all the subscribers
+            if(CameraFocusBeginEvent != null)
+                CameraFocusBeginEvent();
+
+            this.focusPoint = new Vector3(focusPoint.x, focusPoint.y, mainCam.transform.position.z);
+            this.speed = speed;
+            this.waitDuration = waitDuration;
+            this.initialPosition = mainCam.transform.position;
+            this.mainCam = mainCam;
+
+            previousDirection = (focusPoint - initialPosition).normalized;
+            direction = previousDirection;
+        }
+        
+        public Vector3 FocusUpdate(Vector3 cameraPosition, ref CameraFocus focusObject)
+        {
+            //Debug.Log("focus position: " + focusPoint);
+            previousDirection = direction;
+            direction = focusPoint - cameraPosition;
+            Vector3 result = Vector3.zero;
+            result = cameraPosition + (direction * speed) * GameManager.Instance.DeltaTime;
+            //Debug.Log("Speed: " + speed);
+            //Debug.Log("Camera Position: " + cameraPosition);
+            //Debug.Log("Direction: " + direction);
+            if (!reachedTarget)
+            {
+                if(direction.magnitude < 0.5f || Vector3.Dot(direction.normalized, previousDirection) < -0.1f)
+                {
+                    Debug.Log("Reached the Target");
+                    reachedTarget = true;
+                    waiting = true;
+                    focusPoint = initialPosition;
+                    return cameraPosition;
+                }
+                return result;
+            }
+            
+            //If the camera is waiting, return the position of the camera itself
+            if (waiting)
+            {
+                if (waitTimeElapsed > waitDuration)
+                {
+                    waiting = false;
+                    returnedToInitialPosition = false;
+                    Debug.Log("Wait finished");
+                }
+                else
+                {
+                    waitTimeElapsed += GameManager.Instance.DeltaTime;
+                    result = cameraPosition;
+                    return cameraPosition;
+                }
+            }
+
+            if (!returnedToInitialPosition)
+            {
+                if (direction.magnitude < 0.5f || Vector3.Dot(direction.normalized, previousDirection) < 0)
+                {
+                    Debug.Log("Reached initial position");
+
+                    if (CameraFocusFinishedEvent != null)
+                    {
+                        CameraFocusFinishedEvent();
+                    }
+
+                    returnedToInitialPosition = true;
+                    focusObject = null;
+                    return cameraPosition;
+                }
+                return result;
+            }
+
+            focusObject = null;
+            return result;
+        }
+    }
+
 }
