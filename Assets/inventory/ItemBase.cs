@@ -87,7 +87,6 @@ public class ItemBase : MonoBehaviour {
     {
         if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
-
             VirtualJoystick.DisableButton("tag_Item");
         }
     }
