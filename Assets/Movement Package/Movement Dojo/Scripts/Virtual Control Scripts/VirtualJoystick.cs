@@ -12,6 +12,7 @@ public class DynamicButton
     public string tag;  //tag will be the same as the tag of the interactable object
     
     public Button button;
+    public GameObject objectInContactWith;
 }
 
 public class VirtualJoystick : MonoBehaviour {
