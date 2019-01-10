@@ -78,9 +78,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd87ecc58f4b9b848b8ad6e42d2b3fd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: f938dd613e67be24da736dacd3c5f2ab, type: 2}
   speed: 30
   isFromEnemy: 0
+  maxRangeOfThrow: 10
+  maxAngle: 45
 --- !u!212 &212709264163825716
 SpriteRenderer:
   m_ObjectHideFlags: 1

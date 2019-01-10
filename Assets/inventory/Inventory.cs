@@ -161,15 +161,18 @@ public class Inventory : MonoBehaviour {
         
     }
 
-    public virtual void ThrowItem(Vector3 Target, Character character)
+    public virtual void ThrowItem(Vector3 Target, float speed)
     {
         //Throw the item and check the slots 
         if (activeItem.itemProperties.isThrowable)
         {
             activeItem.gameObject.transform.parent = null;
 
-            Debug.Log(activeItem.gameObject.transform.position);
-            activeItem.Throw(Target);
+          //Debug.Log(activeItem.gameObject.transform.position);
+
+            activeItem.maxRangeOfThrow = 6;
+            
+            activeItem.Throw(Target,10);
             UpdateSlotData(activeItem);
             activeSlotCount = ActiveSlotCount();
             Debug.Log("Active slot Count: " + activeSlotCount);

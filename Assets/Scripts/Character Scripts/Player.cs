@@ -68,6 +68,9 @@ public abstract class Character : MonoBehaviour, ICharacter
     protected Inventory inventory;
 
 
+    //Throw direction
+    public bool right;
+
     // pH button show/hide
     public Button phMeterShow;
 
@@ -357,7 +360,6 @@ public class Player : Character
        else
         {
             phMeterAnimator.SetBool("ShowPhMeter", true);
-            Invoke("ShowPhMeter", 15f);
 
         }
     }
@@ -429,6 +431,16 @@ public class Player : Character
             userInputs.xInput = Input.GetAxis("Horizontal");
         else
             userInputs.xInput = VirtualJoystick.horizontalValue;
+
+        if(userInputs.xInput > 0)
+        {
+            right = true;
+        }
+
+        if (userInputs.xInput < 0)
+        {
+            right = false;
+        }
 
         //Jump
         if ((Input.GetKeyDown(KeyCode.Space) || VirtualJoystick.jumpButtonDown))

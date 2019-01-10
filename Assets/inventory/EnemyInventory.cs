@@ -16,7 +16,7 @@ public class EnemyInventory : Inventory {
     ItemBase temp;
 
     //TODO: Remove this after this is integrated with alignpos
-    Vector3 tempLocalScale = new Vector3(0.1f, 0.1f, 0.1f);
+    Vector3 tempLocalScale = new Vector3(0.5f, 0.5f, 0.5f);
 
     // Use this for initialization
     void Start () {
@@ -45,7 +45,7 @@ public class EnemyInventory : Inventory {
     }
 	
 
-   public override void ThrowItem(Vector3 target, Character c)
+ /*  public override void ThrowItem(Vector3 target, Character c)
     {
 
         base.ThrowItem(target, c);
@@ -54,7 +54,7 @@ public class EnemyInventory : Inventory {
 
         Invoke("Reload",reloadTime);
 
-    }
+    }*/
 
     void Reload()
     {

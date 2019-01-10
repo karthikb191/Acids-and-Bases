@@ -12,6 +12,7 @@ public class DynamicButton
     public string tag;  //tag will be the same as the tag of the interactable object
     
     public Button button;
+    public GameObject objectInContactWith;
 }
 
 public class VirtualJoystick : MonoBehaviour {
@@ -80,7 +81,7 @@ public class VirtualJoystick : MonoBehaviour {
         controlCanvas = transform.GetChild(0);
         pickUpButton = transform.GetChild(0).Find("PickUp").gameObject;
         itemSpecialActionButton = transform.GetChild(0).Find("ItemSpecialAction").gameObject;
-        throwButton = transform.GetChild(0).Find("ThrowItem").gameObject;
+        throwButton = transform.GetChild(0).Find("ThrowItemButton").gameObject;
 
         pickUpButton.SetActive(false);
         itemSpecialActionButton.SetActive(false);

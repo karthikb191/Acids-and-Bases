@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using UnityEngine.UI;
 public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     Player player;
@@ -16,7 +16,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void Awake()
     {
-        initialPosition = transform.position;
+      //  initialPosition = transform.position;
     }
     private void Start()
     {
@@ -24,30 +24,39 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     private void Update()
     {
-        if(setTarget)
+        /* if(setTarget)
+         {
+             if(Input.GetMouseButtonUp(1))
+             {
+                 Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                 ThrowItem(targetPosition);
+                 setTarget = false;
+
+                // transform.position = targetPosition;
+             }
+
+
+         }
+
+         if (player.GetComponentInChildren<PlayerInventory>().activeItem == null)
+         {
+
+             this.gameObject.SetActive(false);
+         }
+         else
+         {
+             this.gameObject.SetActive(true);
+         }
+         */
+
+        if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
-            if(Input.GetMouseButtonUp(1))
-            {
-                Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                ThrowItem(targetPosition);
-                setTarget = false;
-
-               // transform.position = targetPosition;
-            }
-
-
-        }
-        
-        if (player.GetComponentInChildren<PlayerInventory>().activeItem == null)
-        {
-            
-            this.gameObject.SetActive(false);
+            this.gameObject.GetComponent<Image>().enabled = true;
         }
         else
         {
-            this.gameObject.SetActive(true);
+            this.gameObject.GetComponent<Image>().enabled = false;
         }
-
     }
 
 
@@ -76,17 +85,37 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             VirtualJoystick.throwButtonButtonDown = false;
             buttonPressed = false;
            
-            //ThrowItem(transform.position);
+            ThrowItem();
           //  setTarget = false;
             //
         }
     }
 
 
-    public void ThrowItem(Vector3 target)
+    public void ThrowItem()
     {
-        player.GetComponentInChildren<PlayerInventory>().ThrowItem(target);
-        ResetPosition();
+        if(player.GetComponentInChildren<PlayerInventory>().activeItem != null)
+        {
+            Vector3 tempTarget = player.Hand.transform.position;
+            Debug.Log(player.right + "o throw");
+            if (player.right)
+            {
+                tempTarget.x += 6;
+            }
+            else
+            {
+                tempTarget.x -= 6;
+                Quaternion temp = player.GetComponentInChildren<PlayerInventory>().activeItem.transform.localRotation;
+                temp.y = 180;
+
+            }
+           
+            Debug.Log("Player position" + player.Hand.transform.position + " <<>><><>" + "Temp target" + tempTarget);
+
+            player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTarget, 5);
+        }
+       
+       // ResetPosition();
     }
 
     public void ResetPosition()
