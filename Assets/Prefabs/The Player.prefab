@@ -1977,8 +1977,6 @@ MonoBehaviour:
   activeItem: {fileID: 0}
   sampleTestSprite: {fileID: 0}
   maxSlotCount: 6
-  inventoryUI: {fileID: 0}
-  panel: {fileID: 224569247758029338}
 --- !u!114 &114643621081287866
 MonoBehaviour:
   m_ObjectHideFlags: 1

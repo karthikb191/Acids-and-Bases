@@ -28,7 +28,11 @@ public class ItemBase : MonoBehaviour {
         {
           ThrowPathFollow();
         }
-              
+
+
+        //Add to item while in throw
+
+        CheckCollision();
     }
 
     public virtual void Use() {
@@ -404,6 +408,11 @@ public class ItemBase : MonoBehaviour {
           //  yield break;
 
         }
+
+    }
+
+    void CheckCollision()
+    {
 
     }
 

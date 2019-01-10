@@ -32,10 +32,7 @@ public class DoorActivation : MonoBehaviour {
     {
 
         CheckSwitchStatus();
-        if(openDoor && Input.GetKeyDown(KeyCode.I) && isOnFocus )
-        {
-            Invoke("OpenDoor", 0.25f);
-        }
+        
 		
 	}
 
@@ -72,18 +69,39 @@ public class DoorActivation : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(tagToCompare))
+        if (collision.gameObject.GetComponent<Player>())
         {
-            isOnFocus = true;
+
+            if (collision.GetComponent<Player>() != null)
+            {
+                //Enable the button
+                DynamicButton d = VirtualJoystick.CreateButton("tag_door");
+                if (!d.active)
+                {
+                    VirtualJoystick.EnableButton(d);
+                    d.button.onClick.AddListener(() =>
+                    {
+                        OpenDoor();
+                        VirtualJoystick.DisableButton(d);
+                    });
+                }
+            }
+        }
+
+        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>())
+        {
+            OpenDoor();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(tagToCompare))
+        if (collision.gameObject.GetComponent<Player>())
         {
-            isOnFocus = false;
+            VirtualJoystick.DisableButton("tag_door");
         }
+
+       
     }
 
 

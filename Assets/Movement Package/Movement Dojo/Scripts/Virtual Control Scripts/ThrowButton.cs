@@ -97,8 +97,8 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if(player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
             Vector3 tempTarget = player.Hand.transform.position;
-            Debug.Log(player.right + "o throw");
-            if (player.right)
+            //Debug.Log(player.right + "o throw");
+            if (player.playerSprite.transform.localScale.x > 0)
             {
                 tempTarget.x += 6;
             }
