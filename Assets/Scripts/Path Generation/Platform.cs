@@ -15,16 +15,16 @@ public class Node
     public Platform platform;
 }
 
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 [ExecuteInEditMode]
 public class Platform : MonoBehaviour {
-
     
     public Node leftNode = new Node();
     
     public Node rightNode = new Node();
 
     SpriteRenderer spriteRenderer;
+    //BoxCollider2D boxCollider;
     public float width = 0;
     public float height = 0;
     private void Start()
@@ -40,8 +40,8 @@ public class Platform : MonoBehaviour {
 
         if(gameObject.tag == "tag_ladder")
         {
-            leftNode.position = new Vector3(-extents.x / 1.1f, 0, 0);
-            rightNode.position = new Vector3(extents.x / 1.1f, 0, 0);
+            leftNode.position = new Vector3(0, -extents.y / 1.1f, 0);
+            rightNode.position = new Vector3(0, extents.y / 1.1f, 0);
         }
         else
         {
@@ -139,8 +139,8 @@ public class Platform : MonoBehaviour {
 
         if (gameObject.tag == "tag_ladder")
         {
-            leftNode.position = new Vector3(-extents.x / 1.1f, 0, 0);
-            rightNode.position = new Vector3(extents.x / 1.1f, 0, 0);
+            leftNode.position = new Vector3(0, -extents.y / 1.1f, 0);
+            rightNode.position = new Vector3(0, extents.y / 1.1f, 0);
         }
         else
         {

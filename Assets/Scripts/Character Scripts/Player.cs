@@ -68,9 +68,6 @@ public abstract class Character : MonoBehaviour, ICharacter
     protected Inventory inventory;
 
 
-    //Throw direction
-    public bool right;
-
     // pH button show/hide
     public Button phMeterShow;
 
@@ -99,11 +96,16 @@ public abstract class Character : MonoBehaviour, ICharacter
         blockRoutine =  StartCoroutine(CharacterUtility.BlockInputs(this, horizontal, vertical, true, duration));
     }
 
-    protected Collider2D[] CastGroundOverlapCircle()
+    //protected Collider2D[] CastGroundOverlapCircle()
+    //{
+    //    return Physics2D.OverlapCircleAll(groundCheck.transform.position, groundCheckCircleRadius, whatToDetect);
+    //}
+
+    protected RaycastHit2D[] CastGroundOverlapCircle()
     {
-        return Physics2D.OverlapCircleAll(groundCheck.transform.position, groundCheckCircleRadius, whatToDetect);
+        return Physics2D.CircleCastAll(groundCheck.transform.position, groundCheckCircleRadius, Vector2.zero, 0, whatToDetect);
     }
-    
+
     //public virtual void SetSoundEffect(AudioClip clipToPlay = null, bool loop = false, bool playOneShot = false, float delay = 0.0f) { }
 
     public virtual void SetAnimations() { }
@@ -309,12 +311,12 @@ struct PlayerStatus
     {
         Debug.Log("Healer used");
         currentHealth += healAmount;
-
-        
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
     }
     public void TakeDamage(float DamageAmount)
     {
         currentHealth -= DamageAmount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
     }
 
     public void SetHealthBar(float amount)
@@ -342,12 +344,14 @@ struct PlayerStatus
 [System.Serializable]
 public class Player : Character
 {
-    Collider2D[] info;
+    RaycastHit2D[] info;
 
     //Player Status Canvas
     PlayerStatus playerStatus;
 
     Animator phMeterAnimator;
+
+    public List<Character> enemiesChasing { get; private set; }
 
    public void ShowPhMeter()
     {
@@ -360,13 +364,15 @@ public class Player : Character
        else
         {
             phMeterAnimator.SetBool("ShowPhMeter", true);
-
+            Invoke("ShowPhMeter", 15f);
         }
     }
 
  
     private void Start()
     {
+        enemiesChasing = new List<Character>();
+
         Debug.Log("script is working");
         State = new IdleState();
 
@@ -432,16 +438,6 @@ public class Player : Character
         else
             userInputs.xInput = VirtualJoystick.horizontalValue;
 
-        if(userInputs.xInput > 0)
-        {
-            right = true;
-        }
-
-        if (userInputs.xInput < 0)
-        {
-            right = false;
-        }
-
         //Jump
         if ((Input.GetKeyDown(KeyCode.Space) || VirtualJoystick.jumpButtonDown))
         {
@@ -452,8 +448,7 @@ public class Player : Character
             userInputs.jumpPressed = false;
             userInputs.jumpReleased = true;
         }
-
-
+        
         //Check for the climb button press. Input later changes to a virtual function
         if (Input.GetKeyDown(KeyCode.C) && !userInputs.climbPressed)
         {
@@ -499,9 +494,9 @@ public class Player : Character
 
     public string[] playerManagedControls = { "tag_ladder" };
 
-    void LadderButtonLogic(Collider2D info)
+    void LadderButtonLogic(RaycastHit2D info)
     {
-        if (info.tag == "tag_ladder")
+        if (info.collider.tag == "tag_ladder")
         {
             //Debug.Log("State:  " + State.ToString());
             if (!State.Equals(typeof(ClimbingState)) && State.Equals(typeof(IdleState)))
@@ -536,12 +531,12 @@ public class Player : Character
     public override void Heal(float healValue)
     {
         if (healthCoroutine == null)
-            healthCoroutine = StartCoroutine(HealthAnimation(Health, Health + healValue));
+            healthCoroutine = StartCoroutine(HealthAnimation(playerStatus.currentHealth, playerStatus.currentHealth + healValue));
         else
         {
             StopCoroutine(healthCoroutine);
             playerStatus.SetHealthBar(playerStatus.currentHealth);
-            healthCoroutine = StartCoroutine(HealthAnimation(Health, Health + healValue));
+            healthCoroutine = StartCoroutine(HealthAnimation(playerStatus.currentHealth, playerStatus.currentHealth + healValue));
         }
 
         playerStatus.Heal(healValue);
@@ -555,7 +550,7 @@ public class Player : Character
         {
             StopCoroutine(healthCoroutine);
             playerStatus.SetHealthBar(playerStatus.currentHealth);
-            healthCoroutine = StartCoroutine(HealthAnimation(playerStatus.currentHealth, playerStatus.currentHealth + damageValue));
+            healthCoroutine = StartCoroutine(HealthAnimation(playerStatus.currentHealth, playerStatus.currentHealth - damageValue));
         }
 
         playerStatus.TakeDamage(damageValue);
@@ -565,16 +560,24 @@ public class Player : Character
     IEnumerator HealthAnimation(float currentHealth, float targetHealth)
     {
         float ch = currentHealth; float th = targetHealth;
-        float speed = 3.0f;
+        float speed = 0.07f;
+        //Debug.Log("current and target: " + currentHealth + "   " + targetHealth);
+        if(targetHealth < 0)
+        {
+            playerStatus.SetHealthBar(0);
+            yield break;
+        }
+
         while(Mathf.Abs(th - ch) > 1.0f)
         {
-            float diff = ((th - ch) / th) * speed;
+            //float diff = ((th - ch) / th) * speed;
+            float diff = ch * (1 - speed) + th * speed;
             //Debug.Log("diff is: " + diff);
-            ch += diff;
+            ch = diff;
             playerStatus.SetHealthBar(ch);
             yield return new WaitForFixedUpdate();
         }
-
+        playerStatus.SetHealthBar(th);
         healthCoroutine = null;
     }
 
@@ -586,9 +589,9 @@ public class Player : Character
         playerStatus.SetpHGraphic(value,phColor);
     }
 
-    void ItemButtonLogic(Collider2D info)
+    void ItemButtonLogic(RaycastHit2D info)
     {
-        if(info.tag == "tag_item")
+        if(info.collider.tag == "tag_item")
         {
             if (State.Equals(typeof(IdleState)) || State.Equals(typeof(RunningState)))
             {
@@ -610,7 +613,7 @@ public class Player : Character
             for(int j = 0; j < info.Length; j++)
             {
                 
-                if (VirtualJoystick.activeDynamicButtons[i].tag == info[j].tag)
+                if (VirtualJoystick.activeDynamicButtons[i].tag == info[j].collider.tag)
                     return;
             }
             VirtualJoystick.DisableButton(VirtualJoystick.activeDynamicButtons[i]);
@@ -624,5 +627,13 @@ public class Player : Character
         userInputs.absorbPressed = false;
     }
 
+    public void AddEnemyChasingPlayer(Character e)
+    {
+        enemiesChasing.Add(e);
+    }
+    public void RemoveEnemyChasingPlayer(Character e)
+    {
+        enemiesChasing.Remove(e);
+    }
 }
 

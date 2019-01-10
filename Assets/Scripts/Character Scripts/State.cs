@@ -9,11 +9,16 @@ interface IEquals<T>
 
 public abstract class States : IEquals<System.Type>
 {
+    protected RaycastHit2D[] info;
     //public States previousState;
     //public States nextState;
     public int index = 1;
-    public virtual void UpdateState(Character c, UserInput input, Collider2D[] info)
+    protected float angle = 0;
+    protected float yCorr = 0;
+
+    public virtual void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
+        CharacterUtility.CastRayAndOrientPlayer(c, info, out angle, out yCorr);
         //Animation for touching the ground is false by default
         c.playerSprite.GetComponent<Animator>().SetFloat("JumpSpeed", c.currentJumpSpeed);
         
@@ -31,14 +36,14 @@ public class IdleState: States
 {
     bool contactWithLadder = false;
     Platform ladder = null;
-    Collider2D[] info;
-    public override void UpdateState(Character c, UserInput input, Collider2D[] info)
+    //RaycastHit2D[] info;
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
         this.info = info;
         base.UpdateState(c, input, info);
         //Debug.Log("Idle state updating");
         c.currentLinearSpeed = input.xInput * c.maxSpeed * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
-
+        
         if (c.StateList.Count == index)
         {
             //Check if character is within the ladder's proximity
@@ -77,7 +82,7 @@ public class IdleState: States
         {
 
             Debug.Log("climbing state initiated");
-            States nextState = new ClimbingState(ladder);
+            States nextState = new ClimbingState(ladder, c);
             nextState.index = c.StateList.Count + 1;
             c.StateList.Add(nextState);
         }
@@ -87,9 +92,10 @@ public class IdleState: States
     {
         for(int i = 0; i < info.Length; i++)
         {
-            if (info[i].GetComponent<Collider2D>().tag == "tag_ladder")
+            //if (info[i].GetComponent<Collider2D>().tag == "tag_ladder")
+            if (info[i].collider.tag == "tag_ladder")
             {
-                ladder = info[i].GetComponent<Platform>();
+                ladder = info[i].collider.GetComponent<Platform>();
                 return contactWithLadder = true;
                 //TODO: Display the virtual button for the ladder climb here and feed the appropriate function to the button
             }
@@ -107,8 +113,8 @@ public class IdleState: States
 
 public class RunningState : States
 {
-    Collider2D[] info;
-    public override void UpdateState(Character c, UserInput input, Collider2D[] info)
+    //RaycastHit2D[] info;
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
         this.info = info;
         //base.UpdateState(c, input);
@@ -180,8 +186,8 @@ public class JumpingState : States
 {
     float jumpDamper = 1;
     bool jumping = false;
-    Collider2D[] info;
-    public override void UpdateState(Character c, UserInput input, Collider2D[] info)
+    //RaycastHit2D[] info;
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
         this.info = info;
         //Debug.Log("Jumping state updating");
@@ -259,13 +265,13 @@ public class FallingState : States
 {
     float jumpDamper = 1;
     float fallTimer = 0;
-    Collider2D[] info;
+    //RaycastHit2D[] info;
     public FallingState(float JumpDamper)
     {
         jumpDamper = JumpDamper;
     }
 
-    public override void UpdateState(Character c, UserInput input, Collider2D[] info)
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
         this.info = info;
         //Debug.Log("Falling state updating");
@@ -293,9 +299,9 @@ public class FallingState : States
 
         //Debug.Log("Fall timer: " + fallTimer);
 
-        float angle = 0;
-        float yCorr = 0;
-        CharacterUtility.CastRayAndOrientPlayer(c, out angle, out yCorr);
+        //float angle = 0;
+        //float yCorr = 0;
+        //CharacterUtility.CastRayAndOrientPlayer(c, out angle, out yCorr);
         //Debug.Log("Angle: " + angle);
 
         if (c.StateList.Count == index)
@@ -311,7 +317,7 @@ public class FallingState : States
             int count = 0;
             for (int i = 0; i < info.Length; i++)
             {
-                if(info[i].gameObject.layer != LayerMask.NameToLayer("Platform"))
+                if(info[i].collider.gameObject.layer != LayerMask.NameToLayer("Platform"))
                 {
                     count++;
                 }
@@ -322,7 +328,7 @@ public class FallingState : States
             if (angle < 65)
             {
                 //Pause player movement for a while
-                if (fallTimer > 0.2f)
+                if (fallTimer > 0.08f)
                 {
                     c.BlockInputs();
                     //Debug.Log("blocking inputs");
@@ -349,8 +355,6 @@ public class FallingState : States
         
         //If the angle with the collider is greater than 65, then set the state as falling cuz player wont be able to walk on it
         
-
-        
     }
 
     public void AnimateState(Character c)
@@ -363,8 +367,8 @@ public class FallingState : States
 
 public class LandState : States
 {
-    Collider2D[] info;
-    public override void UpdateState(Character c, UserInput input, Collider2D[] info)
+    //RaycastHit2D[] info;
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
         this.info = info;
         //play the sound effect for landing
@@ -406,9 +410,11 @@ public class ClimbingState : States
 {
 
     Platform ladder;
-    public ClimbingState(Platform l)
+    public ClimbingState(Platform l, Character c)
     {
         ladder = l;
+        //This call to virtual joystick rotates the arrows
+        VirtualJoystick.RotateArrows(90, c);
     }
 
     bool goingUp = true;
@@ -422,12 +428,12 @@ public class ClimbingState : States
     float minimumDifference = 0.15f;
 
     bool firstUpdateFinished = false;
-    Collider2D[] info;
-    public override void UpdateState(Character c, UserInput input, Collider2D[] info)
+    //RaycastHit2D[] info;
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
         this.info = info;
 
-        Debug.Log("Updating the Climbing state");
+        //Debug.Log("Updating the Climbing state");
         if(!directionSet)
             goingUp  = CheckThePossibleDirection(c);
 
@@ -502,6 +508,7 @@ public class ClimbingState : States
         //If the special button pressed again while climbing, set the state to fall
         if (input.climbPressed)
         {
+            VirtualJoystick.ResetArrows(c);
             Debug.Log("Falling from climbing");
             c.StateList.RemoveAt(c.StateList.Count - 1);
             //Add the falling state
@@ -512,6 +519,7 @@ public class ClimbingState : States
         }
         else if(input.jumpPressed && input.jumpReleased)
         {
+            VirtualJoystick.ResetArrows(c);
             Debug.Log("Transition to jump state");
             c.StateList.RemoveAt(c.StateList.Count - 1);
             //Add the falling state
@@ -523,6 +531,7 @@ public class ClimbingState : States
         else if(input.xInput < 0 && (Mathf.Abs(bottomNode.position.y - c.transform.position.y) < minimumDifference ||
              c.transform.position.y < bottomNode.position.y))
         {
+            VirtualJoystick.ResetArrows(c);
             //If the character is closer to the bottom node and is trying to go down, 
             //transition to idle state
             c.StateList.RemoveAt(c.StateList.Count - 1);
@@ -535,6 +544,7 @@ public class ClimbingState : States
         }
         else if(Mathf.Abs(topNode.position.y - c.transform.position.y) < minimumDifference || c.transform.position.y > topNode.position.y)
         {
+            VirtualJoystick.ResetArrows(c);
             //Player state is set to falling if he attempts to go beyond the ladder proximity
             c.StateList.RemoveAt(c.StateList.Count - 1);
             c.currentJumpSpeed = 0;

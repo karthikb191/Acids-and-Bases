@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour {
         }
 
         // This function disables virtual joystick if the scene under test is the only active scene in build settings
-        if (scene.buildIndex == 0 || scene.buildIndex == SceneManager.sceneCountInBuildSettings - 1)
+        if (scene.name == "StartScreen" || scene.name == "FinalScreen")
         {
             //Check if there's a virtual joystick. If found, destroy it
             if (virtualJoystick != null)

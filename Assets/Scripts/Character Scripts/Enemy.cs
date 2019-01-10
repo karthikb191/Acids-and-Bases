@@ -23,11 +23,12 @@ class Enemy : EnemyBase
 
     public CharacterType characterType = CharacterType.acidic;
 
-    Collider2D[] info;
+    RaycastHit2D[] info;
+
+    bool halt = false;
 
     private void Start()
     {
-
         inventory = GetComponentInChildren<Inventory>();
         //if (inventory != null)
         //{
@@ -64,6 +65,10 @@ class Enemy : EnemyBase
 
         info = CastGroundOverlapCircle();
         //State = StateList[StateList.Count - 1];
+
+        if (halt)
+            return;
+
         GetInput();
         //State.UpdateState(this, userInputs);
         List<States> tempStates = StateList;
@@ -108,7 +113,7 @@ class Enemy : EnemyBase
         //The prompt climb input is obtained from the states itself once the character is close to the ladder
         for (int i = 0; i < info.Length; i++)
         {
-            if (info[i].tag == "tag_ladder")
+            if (info[i].collider.tag == "tag_ladder")
             {
                 promptClimb = true;
                 climbing = true;        //This should later be set by the Enemy behavior script depending on climb prompt
@@ -152,6 +157,7 @@ class Enemy : EnemyBase
     {
         return stunned;
     }
+
     public void SetStunned(bool b)
     {
         stunned = b;
@@ -164,6 +170,17 @@ class Enemy : EnemyBase
         stunned = false;
     }
     #endregion
+
+    public void Halt()
+    {
+        halt = true;
+        playerSprite.GetComponent<Animator>().speed = 0;
+    }
+    public void ResetHalt()
+    {
+        halt = false;
+        playerSprite.GetComponent<Animator>().speed = 1;
+    }
 
     public void GettingAbsorbed(Character c, float duration)
     {

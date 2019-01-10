@@ -72,8 +72,7 @@ public class ItemBase : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
-        Debug.Log("Trigger enter");
+        //Debug.Log("Trigger enter");
         if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
             playerObject = collision.gameObject;
@@ -82,7 +81,7 @@ public class ItemBase : MonoBehaviour {
             if (collision.GetComponent<Player>() != null)
             {
                 //Enable the button
-                DynamicButton d = VirtualJoystick.CreateButton("tag_Item");
+                DynamicButton d = VirtualJoystick.CreateButton("tag_item");
                 if (!d.active)
                 {
                     VirtualJoystick.EnableButton(d);
@@ -101,7 +100,7 @@ public class ItemBase : MonoBehaviour {
     {
         if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
-            VirtualJoystick.DisableButton("tag_Item");
+            VirtualJoystick.DisableButton("tag_item");
         }
     }
 

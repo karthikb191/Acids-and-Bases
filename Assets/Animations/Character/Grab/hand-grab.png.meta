@@ -1,0 +1,1445 @@
+fileFormatVersion: 2
+guid: 5aa337f1fd3b137488aad0534eb44ec1
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: hand-grab_0
+    21300002: hand-grab_1
+    21300004: hand-grab_2
+    21300006: hand-grab_3
+    21300008: hand-grab_4
+    21300010: hand-grab_5
+    21300012: hand-grab_6
+    21300014: hand-grab_8
+    21300016: hand-grab_10
+    21300018: hand-grab_11
+    21300020: hand-grab_12
+    21300022: hand-grab_13
+    21300024: hand-grab_14
+    21300026: hand-grab_15
+    21300028: hand-grab_16
+    21300030: hand-grab_17
+    21300032: hand-grab_19
+    21300034: hand-grab_20
+    21300036: hand-grab_21
+    21300038: hand-grab_22
+    21300040: hand-grab_23
+    21300042: hand-grab_24
+    21300044: hand-grab_25
+    21300046: hand-grab_26
+    21300048: hand-grab_27
+    21300050: hand-grab_28
+    21300052: hand-grab_29
+    21300054: hand-grab_30
+    21300056: hand-grab_31
+    21300058: hand-grab_32
+    21300060: hand-grab_33
+    21300062: hand-grab_34
+    21300064: hand-grab_38
+    21300066: hand-grab_40
+    21300068: hand-grab_41
+    21300070: hand-grab_42
+    21300072: hand-grab_43
+    21300074: hand-grab_44
+    21300076: hand-grab_45
+    21300078: hand-grab_46
+    21300080: hand-grab_50
+    21300082: hand-grab_51
+    21300084: hand-grab_52
+    21300086: hand-grab_53
+    21300088: hand-grab_54
+    21300090: hand-grab_55
+    21300092: hand-grab_56
+    21300094: hand-grab_57
+    21300096: hand-grab_58
+    21300098: hand-grab_59
+    21300100: hand-grab_60
+    21300102: hand-grab_61
+    21300104: hand-grab_7
+    21300106: hand-grab_9
+    21300108: hand-grab_18
+    21300110: hand-grab_35
+    21300112: hand-grab_36
+    21300114: hand-grab_37
+    21300116: hand-grab_39
+    21300118: hand-grab_47
+    21300120: hand-grab_48
+    21300122: hand-grab_49
+  externalObjects: {}
+  serializedVersion: 7
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 170
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: hand-grab_0
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 3653
+        width: 64
+        height: 132
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 895d36dda8d79944a92ec9a0e64349da
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_1
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 3653
+        width: 69
+        height: 132
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd004dc0e212996448724b5d666ceb43
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_2
+      rect:
+        serializedVersion: 2
+        x: 1013
+        y: 3657
+        width: 84
+        height: 130
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 111a8875e6430f9488661825fa01d7bd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_3
+      rect:
+        serializedVersion: 2
+        x: 1489
+        y: 3657
+        width: 82
+        height: 130
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9e35b86e7cfe894d965472ae2ad2436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_4
+      rect:
+        serializedVersion: 2
+        x: 1961
+        y: 3681
+        width: 126
+        height: 114
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f3444a0bb6dc874bba6d205a1b1508a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_5
+      rect:
+        serializedVersion: 2
+        x: 2435
+        y: 3681
+        width: 124
+        height: 114
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f66813bdae3c654fae274c44552164c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_6
+      rect:
+        serializedVersion: 2
+        x: 2925
+        y: 3719
+        width: 136
+        height: 78
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d00ecce6757b3824f9bf411717590fe2
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_7
+      rect:
+        serializedVersion: 2
+        x: 2959
+        y: 3713
+        width: 8
+        height: 10
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98c71db926c8c0144bfa5bded01ad39c
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_8
+      rect:
+        serializedVersion: 2
+        x: 3399
+        y: 3719
+        width: 136
+        height: 78
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e67a782e026d4847b7404d7cfbfe8a3
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_9
+      rect:
+        serializedVersion: 2
+        x: 3433
+        y: 3713
+        width: 8
+        height: 10
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a483f45641124c4bb3137980d097eb8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_10
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 3271
+        width: 136
+        height: 80
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b64f16c846c21c4ea6cdc66135ddb78
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_11
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 3277
+        width: 153
+        height: 80
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cda07678bcc02dc49aa1a57a94588ce0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_12
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 3285
+        width: 140
+        height: 116
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fcb86355f8e76e428a4ba1e993411c5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_13
+      rect:
+        serializedVersion: 2
+        x: 1481
+        y: 3285
+        width: 140
+        height: 116
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d75e102d3206fa4f92c1f31e2b0f18f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_14
+      rect:
+        serializedVersion: 2
+        x: 1955
+        y: 3285
+        width: 140
+        height: 116
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3eb5e94d2230af94a9731ca8e98165ee
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_15
+      rect:
+        serializedVersion: 2
+        x: 2421
+        y: 3279
+        width: 60
+        height: 140
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 682f914e755722849bad6b7ccb1ec56a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_16
+      rect:
+        serializedVersion: 2
+        x: 2895
+        y: 3279
+        width: 60
+        height: 140
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d44ea607424719b4fa817febc474b679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_17
+      rect:
+        serializedVersion: 2
+        x: 3365
+        y: 3283
+        width: 58
+        height: 138
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7f8d5ed2faaf53438d8ac57d85a1906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_18
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 3267
+        width: 8
+        height: 8
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82319374db72f7d42bf022a18bb36e22
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_19
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 2837
+        width: 64
+        height: 138
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb79a79b3d564b048b5f4d094c35e3e8
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_20
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 2827
+        width: 74
+        height: 130
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46459702552116744b8da3dfafcee6d5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_21
+      rect:
+        serializedVersion: 2
+        x: 984
+        y: 2827
+        width: 77
+        height: 130
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 826008baba96da24a924b2332b9959bd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_22
+      rect:
+        serializedVersion: 2
+        x: 1447
+        y: 2827
+        width: 84
+        height: 128
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67d34a35d0a64c741a7e5092b7cd29fa
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_23
+      rect:
+        serializedVersion: 2
+        x: 1923
+        y: 2827
+        width: 84
+        height: 128
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 516c159625b8f2449b8918b768f89ce5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_24
+      rect:
+        serializedVersion: 2
+        x: 2399
+        y: 2827
+        width: 80
+        height: 128
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c566b4e61ca50942b51ac0faba57e42
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_25
+      rect:
+        serializedVersion: 2
+        x: 2895
+        y: 2825
+        width: 96
+        height: 148
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5c29eba63a0b8341a8e6c67daee8610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_26
+      rect:
+        serializedVersion: 2
+        x: 3371
+        y: 2825
+        width: 94
+        height: 148
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b8ed0f56dae187468054e6539d5f70e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_27
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 2377
+        width: 94
+        height: 150
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32cf658222fa4ad44ac19817ba9ef01e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_28
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 2391
+        width: 198
+        height: 154
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ea0fddc6c372b048ab7d8811de5fd63
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_29
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 2391
+        width: 198
+        height: 154
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e22dfdd75bb7d4d4490c3a535177dece
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_30
+      rect:
+        serializedVersion: 2
+        x: 1467
+        y: 2379
+        width: 290
+        height: 170
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9bab0185ff26e340a7f483abe22a378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_31
+      rect:
+        serializedVersion: 2
+        x: 1941
+        y: 2379
+        width: 290
+        height: 170
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9b21b31aab8471478b2f30085f5199e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_32
+      rect:
+        serializedVersion: 2
+        x: 2455
+        y: 2376
+        width: 358
+        height: 165
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f95c6c85fc0bb742b0f12735d5420a6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_33
+      rect:
+        serializedVersion: 2
+        x: 2929
+        y: 2377
+        width: 358
+        height: 164
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 277bd03c6a365e84583042b9af628733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_34
+      rect:
+        serializedVersion: 2
+        x: 3403
+        y: 2376
+        width: 358
+        height: 165
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e562af340d2290949b59229c072c3501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_35
+      rect:
+        serializedVersion: 2
+        x: 2581
+        y: 2371
+        width: 6
+        height: 6
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39b327bfb909f6946be63f4a95d590ad
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_36
+      rect:
+        serializedVersion: 2
+        x: 3055
+        y: 2371
+        width: 6
+        height: 6
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 631de6b9ed520904690564cc6bf9c789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_37
+      rect:
+        serializedVersion: 2
+        x: 3529
+        y: 2371
+        width: 6
+        height: 6
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 951b15998c2fadc439a7df19b4ec2a49
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_38
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 1928
+        width: 358
+        height: 165
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c657ee80584c6f4eb461e19fc5db7b6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_39
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 1924
+        width: 6
+        height: 5
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5416fc82be895d448413869dff65e63
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_40
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 1911
+        width: 358
+        height: 166
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9eae39804964944db960be4ed04d49a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_41
+      rect:
+        serializedVersion: 2
+        x: 1028
+        y: 1911
+        width: 359
+        height: 166
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d4f4c512d8603141a21c60c37def186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_42
+      rect:
+        serializedVersion: 2
+        x: 1503
+        y: 1911
+        width: 358
+        height: 166
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0bd9584b4a505d9428f04d1593d989cd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_43
+      rect:
+        serializedVersion: 2
+        x: 1984
+        y: 1899
+        width: 387
+        height: 176
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 544d3e8fba625a441b2c8aa1ce2150da
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_44
+      rect:
+        serializedVersion: 2
+        x: 2459
+        y: 1899
+        width: 386
+        height: 176
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45d9092853c97484da46ce5a097fe051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_45
+      rect:
+        serializedVersion: 2
+        x: 2933
+        y: 1899
+        width: 386
+        height: 176
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db64a82766e76d747b02d01d704a1d9f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_46
+      rect:
+        serializedVersion: 2
+        x: 3387
+        y: 1859
+        width: 398
+        height: 216
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 278a424e5801df64dab3a2610c7cb90e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_47
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 1905
+        width: 6
+        height: 6
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93d0c6d102ebdca40b240f5ef97f52b7
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_48
+      rect:
+        serializedVersion: 2
+        x: 1161
+        y: 1905
+        width: 8
+        height: 6
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0076e5add0100e446a8659fecde8f09f
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_49
+      rect:
+        serializedVersion: 2
+        x: 1635
+        y: 1905
+        width: 6
+        height: 6
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04e2a844aaa8dd741a80ec25dc9c0b67
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_50
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 1413
+        width: 398
+        height: 216
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c17a05a321988104093ad8c6abafce73
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_51
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 1459
+        width: 392
+        height: 210
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1db199e068fcdc49bc29bd4d34c00d9
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_52
+      rect:
+        serializedVersion: 2
+        x: 1005
+        y: 1459
+        width: 395
+        height: 210
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34de3b93995692441a9fe3575bc2cf85
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_53
+      rect:
+        serializedVersion: 2
+        x: 1511
+        y: 1491
+        width: 374
+        height: 222
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0bd3cf3f3cdb0e4cb5e869fa97476d5
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_54
+      rect:
+        serializedVersion: 2
+        x: 1984
+        y: 1490
+        width: 377
+        height: 223
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 865590a737a70b84886203baba732c05
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_55
+      rect:
+        serializedVersion: 2
+        x: 2455
+        y: 1491
+        width: 358
+        height: 252
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b44f06bb79f443849808cb7fbfca7f9e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_56
+      rect:
+        serializedVersion: 2
+        x: 2929
+        y: 1491
+        width: 358
+        height: 252
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04b21a7e09342eb4eabca8b45a96db73
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_57
+      rect:
+        serializedVersion: 2
+        x: 3397
+        y: 1491
+        width: 350
+        height: 276
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 234c220a55248574d8f1be8d455b6a51
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_58
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 1043
+        width: 350
+        height: 278
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea98ff62527fe8b42a28cd7a5c301efa
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_59
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 1045
+        width: 326
+        height: 324
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c4305d067bcef94aa8d0263193189dd
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_60
+      rect:
+        serializedVersion: 2
+        x: 1017
+        y: 1045
+        width: 324
+        height: 324
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed92db05c3b0a0f42b742b9e5dcc9c3a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hand-grab_61
+      rect:
+        serializedVersion: 2
+        x: 1487
+        y: 1047
+        width: 314
+        height: 338
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61178a8dca6d90f479b0a9b1ef96f8e6
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: f3ab4ec1c5c635642b20e54596b6de9d
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

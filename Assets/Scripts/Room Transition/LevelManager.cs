@@ -82,6 +82,12 @@ public class LevelManager : MonoBehaviour {
                 this.player = player;
                 this.door = door;
                 shifting = true;
+
+                //Halt all the enemies temporarily
+                for(int i = 0; i < player.enemiesChasing.Count; i++)
+                {
+                    player.enemiesChasing[i].GetComponent<Enemy>().Halt();
+                }
                 
                 //TODO: change the block duration to a dynamic value that it gets from the game manager
                 player.BlockInputs(2.5f, true, true);
@@ -90,6 +96,9 @@ public class LevelManager : MonoBehaviour {
                 
                 //Activate the room that is connected to the door
                 door.connectingTo.room.ActivateRoom();
+
+                //Setting the characters to spawn in the destination room once the room has been activated
+                door.connectingTo.room.SetCharactersToSpawn(player.enemiesChasing, door.connectingTo.transform.position);
 
                 //Subscribing to game manager's fade out event so that the shift occurs at the appropriate time
                 GameManager.Instance.FadeOutStartEvent += ShiftRoom;
@@ -102,10 +111,15 @@ public class LevelManager : MonoBehaviour {
             Debug.Log("Room shift failed.");
         }
     }
+
     void ShiftRoom()
     {
         if(shifting && player && door)
         {
+            //Subsrice to the event that spawns the enemies once the fade out is complete
+            GameManager.Instance.FadeOutCompleteEvent += door.connectingTo.room.Spawn;
+
+
             Debug.Log("Shifting the room");
             //Disable the current room
             door.room.DeactivateRoom();
@@ -125,16 +139,26 @@ public class LevelManager : MonoBehaviour {
                 Camera.main.transform.position = cameraPostion;
 
         }
-        //UnSubscribe to game manager's fade out event
+        //Subscribe to game manager's fade out complete event
         GameManager.Instance.FadeOutCompleteEvent += ResetRoomShift;
         
     }
+
     void ResetRoomShift()
     {
         shifting = false;
         GameManager.Instance.FadeOutStartEvent -= ShiftRoom;
         GameManager.Instance.FadeOutCompleteEvent -= ResetRoomShift;
+
+        //Unsubscribe the room spawn once the fade is complete
+        GameManager.Instance.FadeOutCompleteEvent -= door.connectingTo.room.Spawn;
     }
+
+    public bool IsShiftingRoom()
+    {
+        return shifting;
+    }
+
     #endregion
 
     public void StartTimer()

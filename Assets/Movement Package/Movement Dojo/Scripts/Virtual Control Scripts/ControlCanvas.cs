@@ -53,7 +53,5 @@ public class ControlCanvas : MonoBehaviour {
         counter = 0;
         return counter;
     }
-
-	
     
 }
