@@ -295,8 +295,6 @@ public class PathGenerator : MonoBehaviour {
                             nodes[i].rightConnections[k].leftConnections.Remove(nodes[i]);
                             nodes[i].rightConnections.Remove(nodes[i].rightConnections[k]);
                             
-                            
-                            
                         }
                         else
                         {
@@ -429,8 +427,7 @@ public class PathGenerator : MonoBehaviour {
                 }
             }
         }
-
-
+        
     }
 
     public bool displayCompletePath = false;

@@ -12,8 +12,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     bool buttonPressed = false;
 
     bool setTarget;
-
-
+    
     private void Awake()
     {
         initialPosition = transform.position;
@@ -34,8 +33,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                // transform.position = targetPosition;
             }
-
-
+            
         }
         
         if (player.GetComponentInChildren<PlayerInventory>().activeItem == null)

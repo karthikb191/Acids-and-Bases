@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class CharacterMechanics : MonoBehaviour {
 
     protected SpriteRenderer liquidSprite;
-    protected SkinnedMeshRenderer skinnedMeshRenderer;
+    protected Anima2D.SpriteMeshInstance spriteMeshInstance;
     public bool PhTransitionMechanic = true;
 
     [SerializeField]
@@ -13,7 +15,7 @@ public class CharacterMechanics : MonoBehaviour {
     protected float phValue = 7;
     
     Color currentColor = Color.white;
-    
+
 
     Dictionary<float, Color> phColorDictionary = new Dictionary<float, Color>()
     {
@@ -42,22 +44,26 @@ public class CharacterMechanics : MonoBehaviour {
         {
             if(transform.Find("Sprite").transform.Find("Body") != null)
             {
-                skinnedMeshRenderer = transform.Find("Sprite").transform.Find("Body").GetComponent<SkinnedMeshRenderer>();
-                Material mat = Instantiate(skinnedMeshRenderer.GetComponent<Anima2D.SpriteMeshInstance>().sharedMaterial);
+                spriteMeshInstance = transform.Find("Sprite").transform.Find("Body").GetComponent<Anima2D.SpriteMeshInstance>();
+                Material mat = Instantiate(spriteMeshInstance.GetComponent<Anima2D.SpriteMeshInstance>().sharedMaterial);
                 //skinnedMeshRenderer.material = mat;
-                skinnedMeshRenderer.GetComponent<Anima2D.SpriteMeshInstance>().sharedMaterial = mat; 
+                spriteMeshInstance.GetComponent<Anima2D.SpriteMeshInstance>().sharedMaterial = mat; 
             }
             liquidSprite = transform.Find("Sprite").transform.Find("Liquid").GetComponent<SpriteRenderer>();
         }
+
         if (liquidSprite != null)
             liquidSprite.color = phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)];
         else
+        {
             PhTransitionMechanic = false;
+        }
         
         //Checking for the sprite mesh renderer
-        if(skinnedMeshRenderer != null)
+        if(spriteMeshInstance != null)
         {
-            skinnedMeshRenderer.sharedMaterial.SetColor("_LiquidColor", phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)]);
+            Debug.Log("Changed color");
+            spriteMeshInstance.sharedMaterial.SetColor("_LiquidColor", phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)]);
         }
 
     }
@@ -81,7 +87,7 @@ public class CharacterMechanics : MonoBehaviour {
 
             //currentColor = (currentColor + targetColor) / 0.2f;
             //currentColor = currentColor + (targetColor - currentColor) * stepSize;
-            currentColor = (1-stepSize)*currentColor + (targetColor) * stepSize;
+            currentColor = (1-stepSize) * currentColor + (targetColor) * stepSize;
 
             if(Mathf.Abs(currentColor.r - targetColor.r) < 0.05f &&
                 Mathf.Abs(currentColor.g - targetColor.g) < 0.05f &&
@@ -95,19 +101,17 @@ public class CharacterMechanics : MonoBehaviour {
                 Debug.Log("Add a liquid sprite and then try changing the color");
 
             //Changing the color of the liquid in the material of the skinned mesh renderer
-            if (skinnedMeshRenderer != null)
+            if (spriteMeshInstance != null)
             {
-                skinnedMeshRenderer.sharedMaterial.SetColor("_LiquidColor", phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)]);
+                spriteMeshInstance.sharedMaterial.SetColor("_LiquidColor", phColorDictionary[Mathf.FloorToInt(phValue + 0.1f)]);
             }
 
             //TODO: Remove this logic from here and find another place for it
             if (GetComponent<PlayerMechanics>())
             {
                 GetComponent<PlayerMechanics>().player.SetpHCanvasGraphic(phValue,currentColor);
-
             }
         }
-        //This function later changes the pH meter also
     }
 
     public virtual void SetpH(float value)

@@ -15,9 +15,18 @@ public class DynamicButton
     public GameObject objectInContactWith;
 }
 
+[System.Serializable]
+public class ButtonGraphics
+{
+    public Sprite defaultImage;
+    public Sprite ladderImage;
+    public Sprite itemImage;
+    public Sprite doorImage;
+}
+
+
 public class VirtualJoystick : MonoBehaviour {
-
-
+    
     public static bool usingJoystick;
     public static bool jumpButtonDown;
     public static bool jumpButtonUp;
@@ -43,7 +52,13 @@ public class VirtualJoystick : MonoBehaviour {
     static Transform controlCanvas;
     public static List<DynamicButton> dynamicButtonsStore;
     public static List<DynamicButton> activeDynamicButtons;
-    public GameObject dynamicButtonPrefab;
+    public GameObject dynamicButtonPrefab;  //Must be set in the inspector
+    
+    [SerializeField]
+    public ButtonGraphics buttonGraphics;
+
+    //Arrows Holder
+    public static RectTransform arrowsHolder;
 
     private void Awake()
     {
@@ -70,8 +85,7 @@ public class VirtualJoystick : MonoBehaviour {
         pickUpButtonUp = true;
 
         itemSpecialActionButtonUp = true;
-
-
+        
         
         DontDestroyOnLoad(this.gameObject);
 
@@ -86,12 +100,12 @@ public class VirtualJoystick : MonoBehaviour {
         pickUpButton.SetActive(false);
         itemSpecialActionButton.SetActive(false);
 
+        arrowsHolder = gameObject.transform.Find("Controls").Find("Arrows").GetComponent<RectTransform>();
+
         GameManager.Instance.virtualJoystick = this;
 
         Debug.Log("control canvas initiated");
     }
-    
-    
     
 	// Update is called once per frame
 	void LateUpdate() {
@@ -104,12 +118,13 @@ public class VirtualJoystick : MonoBehaviour {
         if (itemSpecialActionButtonDown)
             itemSpecialActionButtonDown = false;
 	}
-
-
+    
+    #region Dynamic Button Functions
     //Button creation and destruction will be done on the respective target object
     //This makes editing them easier
     public static DynamicButton CreateButton(string tag)
     {
+        float buttonSize = 50.0f;
         //Debug.Log("enabling");
         bool buttonFound = false;
 
@@ -140,6 +155,7 @@ public class VirtualJoystick : MonoBehaviour {
             Debug.Log("Button Created");
             GameObject g = new GameObject();
             DynamicButton d = new DynamicButton();
+            
 
             g.AddComponent<Button>();
             g.AddComponent<Image>();
@@ -152,6 +168,11 @@ public class VirtualJoystick : MonoBehaviour {
             d.tag = tag;
             dynamicButtonsStore.Add(d);
 
+            d.button.GetComponent<RectTransform>().sizeDelta = new Vector2(buttonSize, buttonSize);
+
+            //Assign an image to the button depending on the tag
+            AssignImage(d, tag);
+
             return d;
         }
         if (!buttonFound)
@@ -159,6 +180,8 @@ public class VirtualJoystick : MonoBehaviour {
             Debug.Log("Button Created");
             GameObject g = new GameObject();
             DynamicButton d = new DynamicButton();
+
+            
 
             g.AddComponent<Button>();
             g.AddComponent<Image>();
@@ -172,10 +195,37 @@ public class VirtualJoystick : MonoBehaviour {
 
             dynamicButtonsStore.Add(d);
 
+            //Assign an image to the button depending on the tag
+            AssignImage(d, tag);
+
             return d;
         }
         else
             return null;
+    }
+
+    public static void AssignImage(DynamicButton d, string tag)
+    {
+        switch (tag)
+        {
+            case "tag_ladder":
+                d.button.GetComponent<Image>().sprite = GameManager.Instance.virtualJoystick.buttonGraphics.ladderImage;
+                break;
+
+            case "tag_item":
+                Debug.Log("Button graphics: " + GameManager.Instance.virtualJoystick.buttonGraphics.itemImage);
+                Debug.Log("Button graphics: " + d.button);
+                d.button.GetComponent<Image>().sprite = GameManager.Instance.virtualJoystick.buttonGraphics.itemImage;
+                break;
+
+            case "tag_door":
+                d.button.GetComponent<Image>().sprite = GameManager.Instance.virtualJoystick.buttonGraphics.doorImage;
+                break;
+
+            default:
+                d.button.GetComponent<Image>().sprite = GameManager.Instance.virtualJoystick.buttonGraphics.defaultImage;
+                break;
+        }       
     }
 
     public static void EnableButton(DynamicButton b)
@@ -231,7 +281,6 @@ public class VirtualJoystick : MonoBehaviour {
 
     }
     
-
     static void ArrangeButtons()
     {
         float angle = 60 * Mathf.Deg2Rad;
@@ -250,5 +299,46 @@ public class VirtualJoystick : MonoBehaviour {
         }
 
     }
+    #endregion
 
+    #region Arrows Rotation Functions
+    static Coroutine arrowRotationRoutine;
+    static Quaternion initialRotation;
+    //Quaternion previousTragetRotation;
+    public static void RotateArrows(float targetAngle, Character c)
+    {
+        if (c.GetComponent<Player>())
+        {
+            initialRotation = arrowsHolder.localRotation;
+            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, targetAngle));
+            if (arrowRotationRoutine == null)
+                arrowRotationRoutine = GameManager.Instance.virtualJoystick.StartCoroutine(RotateArrows(targetRotation));
+            else
+            {
+                GameManager.Instance.virtualJoystick.StopCoroutine(arrowRotationRoutine);
+                arrowRotationRoutine = null;
+                arrowRotationRoutine = GameManager.Instance.virtualJoystick.StartCoroutine(RotateArrows(targetRotation));
+            }
+        }
+    }
+    public static void ResetArrows(Character c)
+    {
+        RotateArrows(0, c);
+    }
+
+    static IEnumerator RotateArrows(Quaternion targetRotation)
+    {
+        float stepSize = 0.05f;
+        while(Quaternion.Angle(arrowsHolder.localRotation, targetRotation) > 1.0f)
+        {
+            //Arrows are rotated here
+            arrowsHolder.rotation = Quaternion.Lerp(arrowsHolder.rotation, targetRotation, stepSize);
+            yield return new WaitForFixedUpdate();
+        }
+        arrowRotationRoutine = null;
+        
+        yield return null;
+    }
+
+    #endregion
 }

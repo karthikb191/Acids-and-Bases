@@ -293,7 +293,7 @@ public class PlayerMechanics : CharacterMechanics
 
                     //AnimatorClipInfo[] clips = animator.GetNextAnimatorClipInfo(0);
                     stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-                    if(stateInfo.IsName("Grab Start"))
+                    if(stateInfo.IsName("Grab"))
                     {
                         clipSet = true;
                         time = stateInfo.length;
@@ -334,7 +334,7 @@ public class PlayerMechanics : CharacterMechanics
                 {
                     animator.SetBool("Absorb", false);
 
-                    if(!stateInfo.IsName("Grab Start") && !animator.IsInTransition(0))
+                    if(!stateInfo.IsName("Grab") && !animator.IsInTransition(0))
                     {
                         //TODO: Start a different animation here
                         //For now, just disable the character

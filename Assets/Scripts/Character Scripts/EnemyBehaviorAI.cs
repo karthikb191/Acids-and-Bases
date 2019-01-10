@@ -150,6 +150,10 @@ class SpottedBehavior : EnemyBehaviorAI
                     Debug.Log("Chase started");
                     aiComponent.chaseStarted = true;
                     character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+
+                    Debug.Log("Character Added");
+                    //Add the enemy character to player's chasing characters list
+                    chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
                 }
                 //If acid spots a base, then start the chase
                 else 
@@ -170,6 +174,9 @@ class SpottedBehavior : EnemyBehaviorAI
                     Debug.Log("Run away");
                     aiComponent.runaway = true;
                     character.behaviorAI = new RunAwayBehavior(character, aiComponent, chasingCharacter);
+
+                    //Add the enemy character to player's chasing characters list
+                    //chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
                 }
 
                 else
@@ -212,7 +219,7 @@ class ChasingBehavior : EnemyBehaviorAI
 
     public override void BehaviorExitConditions()
     {
-        
+        bool reset = false;
         Vector3 directionToCharacter = chasingCharacter.transform.position - character.transform.position;
 
         //If the distance to the chasing character is less than a certain value, try to attack the character
@@ -222,18 +229,25 @@ class ChasingBehavior : EnemyBehaviorAI
             //Shift to Attacking behavior
             character.behaviorAI = null;
             character.behaviorAI = new AttackingBehavior(character, aiComponent, chasingCharacter);
-
+            //reset = true;
             //aiComponent.ChaseReset();   //Reset chase so that no new nodes are added in the AI component
         }
 
         if (Vector3.SqrMagnitude(directionToCharacter) > Random.Range(90, 100))
-                //&& !character.State.Equals(typeof(JumpingState)) && !character.State.Equals(typeof(FallingState)))
         {
-
             character.behaviorAI = null;
             character.behaviorAI = new RoamingBehavoir(character, aiComponent);
-
+            reset = true;
             aiComponent.ChaseReset();
+        }
+
+        if (reset)
+        {
+            if (chasingCharacter.GetComponent<Player>())
+            {
+                Debug.Log("Character removed");
+                chasingCharacter.GetComponent<Player>().RemoveEnemyChasingPlayer(character);
+            }
         }
     }
 }
@@ -315,17 +329,18 @@ class StunnedBehavior : EnemyBehaviorAI
         }
         else
         {
-            character.SetStunned(false);
+            //character.SetStunned(false);
             BehaviorExitConditions();
         }
     }
     public override void BehaviorExitConditions()
     {
-        if(!character.IsStunned())
-        {
-            character.playerSprite.GetComponent<Animator>().speed = 1;
-            character.behaviorAI = new RoamingBehavoir(character, aiComponent);
-        }
+        //if(!character.IsStunned())
+        //{
+        character.SetStunned(false);
+        character.playerSprite.GetComponent<Animator>().speed = 1;
+        character.behaviorAI = new RoamingBehavoir(character, aiComponent);
+        //}
     }
 }
 
