@@ -87,6 +87,7 @@ public class LevelManager : MonoBehaviour {
                 for(int i = 0; i < player.enemiesChasing.Count; i++)
                 {
                     player.enemiesChasing[i].GetComponent<Enemy>().Halt();
+                    player.enemiesChasing[i].transform.parent = null;
                 }
                 
                 //TODO: change the block duration to a dynamic value that it gets from the game manager
@@ -96,6 +97,12 @@ public class LevelManager : MonoBehaviour {
                 
                 //Activate the room that is connected to the door
                 door.connectingTo.room.ActivateRoom();
+
+                //Make the target characters as children to the next room
+                for (int i = 0; i < player.enemiesChasing.Count; i++)
+                {
+                    player.enemiesChasing[i].transform.parent = door.connectingTo.room.transform;
+                }
 
                 //Setting the characters to spawn in the destination room once the room has been activated
                 door.connectingTo.room.SetCharactersToSpawn(player.enemiesChasing, door.connectingTo.transform.position);
@@ -128,6 +135,7 @@ public class LevelManager : MonoBehaviour {
             player.transform.position = door.connectingTo.transform.position;
             Vector3 cameraPostion = new Vector3(player.transform.position.x, player.transform.position.y,
                                             Camera.main.transform.position.z);
+
             if (Camera.main.GetComponent<CameraScript>() != null)
             {
                 Camera.main.GetComponent<CameraScript>().SetPosition(cameraPostion);

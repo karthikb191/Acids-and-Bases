@@ -16,7 +16,7 @@ public class EnemyInventory : Inventory {
     ItemBase temp;
 
     //TODO: Remove this after this is integrated with alignpos
-    Vector3 tempLocalScale = new Vector3(0.1f, 0.1f, 0.1f);
+    Vector3 tempLocalScale = new Vector3(0.5f, 0.5f, 0.5f);
 
     // Use this for initialization
     void Start () {
@@ -25,8 +25,9 @@ public class EnemyInventory : Inventory {
         for(int i = 0; i<slots.Count;i++)
         {
             slots[i].maxStorage = 10;
+            slots[i].imageSlotPrefab.transform.SetParent(transform);
         }
-
+        
         //Instantiating items
         for(int i = 0;i<maxItem;i++)
         {
@@ -38,12 +39,13 @@ public class EnemyInventory : Inventory {
             ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
            // ItemStored.GetComponent<ItemBase>().playerObject = GetComponentInParent<GameObject>();
             AddItem(ItemStored);
+
         }
         SetActiveItem();   
     }
 	
 
-   public override void ThrowItem(Vector3 target, Character c)
+ /*  public override void ThrowItem(Vector3 target, Character c)
     {
 
         base.ThrowItem(target, c);
@@ -52,7 +54,7 @@ public class EnemyInventory : Inventory {
 
         Invoke("Reload",reloadTime);
 
-    }
+    }*/
 
     void Reload()
     {
@@ -63,18 +65,7 @@ public class EnemyInventory : Inventory {
     {
         for (int i = 0; i<slots.Count; i++)
         {
-           /* for (int j = 0; j < slots[i].itemlist.Count; j++)
-            {
-                if (slots[i].itemlist[j].gameObject !=null && !slots[i].itemlist[j].gameObject.activeSelf)
-                {
-                    activeItem = slots[i].itemlist[j];
-                    activeItem.isFromEnemy = true;
-                    activeItem.AlignPos(this.transform.position, GetComponentInParent<Enemy>());
-                    activeItem.gameObject.SetActive(true);
-                    break;
-
-                }
-            }*/
+          
             if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == ItemStored.itemProperties)
             {
                

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Rock
   maxHoldingCapacity: 10
-  imageSprite: {fileID: 21300002, guid: 75effc999b9525940a63e8291c271920, type: 3}
+  imageSprite: {fileID: 21300004, guid: 726d2784a87b044f182b7487b3b8ebb8, type: 3}
   isEquipable: 1
   isAnInventoryItem: 1
   isConsumable: 0

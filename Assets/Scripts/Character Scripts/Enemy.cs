@@ -202,7 +202,12 @@ class Enemy : EnemyBase
         Debug.Log("Throwing item and attacking the proximity character");
         if (inventory != null)
             if (inventory.activeItem != null)
-                inventory.ThrowItem(c.transform.position, this);
+            {
+
+
+                inventory.ThrowItem(c.transform.position, 20);
+
+            }
     }
 
     public void Die()

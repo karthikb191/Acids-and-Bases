@@ -161,15 +161,18 @@ public class Inventory : MonoBehaviour {
         
     }
 
-    public virtual void ThrowItem(Vector3 Target, Character character)
+    public virtual void ThrowItem(Vector3 Target, float speed)
     {
         //Throw the item and check the slots 
         if (activeItem.itemProperties.isThrowable)
         {
             activeItem.gameObject.transform.parent = null;
 
-            Debug.Log(activeItem.gameObject.transform.position);
-            activeItem.Throw(Target);
+          //Debug.Log(activeItem.gameObject.transform.position);
+
+            activeItem.maxRangeOfThrow = 6;
+            
+            activeItem.Throw(Target,10);
             UpdateSlotData(activeItem);
             activeSlotCount = ActiveSlotCount();
             Debug.Log("Active slot Count: " + activeSlotCount);
@@ -284,13 +287,7 @@ public class Inventory : MonoBehaviour {
         if (slots.Count == 0)
         {
             Debug.Log("MAx slot count"+maxSlotCount);
-            for (int i = 0; i < maxSlotCount; i++)
-            {
-               // Slot tempSlot = new Slot();
-              //  Debug.Log(tempSlot);
-              //  slots.Add(tempSlot);
-              Debug.Log(slots.Count);
-            }
+          
 
             for (int i = 0; i < maxSlotCount; i++)
             {
@@ -342,7 +339,7 @@ public class Inventory : MonoBehaviour {
 
                     
                 }
-            Debug.Log("Active Slot Count :  " + activeSlotCount);
+           // Debug.Log("Active Slot Count :  " + activeSlotCount);
 
            if( activeSlotCount < maxSlotCount && !assigned)
             {
@@ -384,7 +381,7 @@ public class Inventory : MonoBehaviour {
         int c = 0;
         for (int i = 0; i < slots.Count; i++)
         {
-            if(slots[i].imageSlotPrefab.activeSelf)
+            if (slots[i].itemStored != null)
             {
                 c++;
                 continue;

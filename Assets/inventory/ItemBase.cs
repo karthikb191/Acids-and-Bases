@@ -13,9 +13,10 @@ public class ItemBase : MonoBehaviour {
 
     public ItemProperties itemProperties;
 
-    public float speed = 30.0f;
+    public float speed = 20.0f;
 
-    Vector3 targetScale;
+    Vector3 targetScale = Vector3.one;
+
 
 
    public bool isFromEnemy = false;
@@ -23,6 +24,10 @@ public class ItemBase : MonoBehaviour {
 
     private void Update()
     {
+        if(thrown)
+        {
+          ThrowPathFollow();
+        }
               
     }
 
@@ -32,23 +37,36 @@ public class ItemBase : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public virtual void Throw(Vector3 target)
+    public virtual void Throw(Vector3 target,float speed)
     {
-        float angle = 45;
-
-        if((target.x - transform.position.x) < (target.y - transform.position.y))
+    //   if(isFromEnemy)
         {
-            angle = 60;
-        }
-        
+             float angle = 45;
 
-        if (isFromEnemy && GetComponentInParent<Enemy>())
+              if ((target.x - transform.position.x) < (target.y - transform.position.y))
+              {
+                  angle = 60;
+              }
+
+
+              if (isFromEnemy && GetComponentInParent<Enemy>())
+              {
+                  //   playerObject = GetComponentInParent<Enemy>().gameObject;
+                  Debug.Log("From enemy" + playerObject.name);
+              }
+
+              StartCoroutine(ThrowProjectile(target, angle));
+          //  ThrowCalculations(target, speed);
+
+        }
+     //  else
         {
-         //   playerObject = GetComponentInParent<Enemy>().gameObject;
-            Debug.Log( "From enemy" + playerObject.name);
+      //      ThrowCalculations(target, speed);
+            Debug.Log("New throw Called");
         }
 
-        StartCoroutine(ThrowProjectile(target, angle));
+        // StartCoroutine(ThrowPathFollow());
+
     }
 
 
@@ -120,7 +138,7 @@ public class ItemBase : MonoBehaviour {
 
         if (gameObject.transform.position == targetPosition)
         {
-
+           
             yield break;
         }
         else
@@ -286,11 +304,15 @@ public class ItemBase : MonoBehaviour {
 
             playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);
 
-            targetScale = transform.localScale / 5;
+            targetScale = transform.localScale / 2;
 
-            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+           StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+           // StartCoroutine(AlignWithPos( new Quaternion(0,0,0,0),new Vector3(0.1f,0.1f,0.1f),playerObject.GetComponent<Character>().Hand.transform.position));
 
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            gameObject.transform.localScale = targetScale;
+
         }
         else
         {
@@ -301,9 +323,90 @@ public class ItemBase : MonoBehaviour {
             gameObject.SetActive(false);
 
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            gameObject.transform.localScale = targetScale;
+
         }
         setFocus = false;
     }
+
+    public float maxRangeOfThrow = 20;
+    public float maxAngle = 45;
+
+    [Range(0, 45)]
+   public float angleOfThrow;
+
+    Vector3 directionOfThrow;
+
+    Vector3 angleQuatrenion;
+
+   public float timeElapsed = 0;
+
+   public  float timeToReach = 0;
+  public  Vector3 targetToHit;
+
+    Vector3 lastDirection;
+
+    public float throwVelocity = 30;
+
+    private void ThrowCalculations(Vector3 target, float throwVelo)
+    {
+        /////////// set max range deactive later
+
+        Debug.Log("target for throw" + target + "<<<<<<====>>>>>>");
+
+        directionOfThrow = target - gameObject.transform.position;
+
+        if (Mathf.Abs(directionOfThrow.x) <= maxRangeOfThrow)
+        {
+            targetToHit = target;
+
+            throwVelocity = throwVelo;
+
+            angleOfThrow = maxAngle * Mathf.Abs(directionOfThrow.x) / maxRangeOfThrow;
+
+            timeToReach = directionOfThrow.magnitude / throwVelocity;
+
+            angleQuatrenion = Quaternion.AngleAxis(angleOfThrow, Vector3.forward) * directionOfThrow;
+
+            lastDirection = angleQuatrenion;
+
+            thrown = true;
+        }
+
+    }
+
+   private void ThrowPathFollow()
+  //  IEnumerator ThrowPathFollow()
+    {
+        timeElapsed += Time.deltaTime;
+
+        if (timeElapsed > timeToReach / 3.0f)
+        {
+            angleQuatrenion = targetToHit - gameObject.transform.position;
+
+        }
+
+        Vector3 tempDirection = Vector3.Lerp(lastDirection.normalized, angleQuatrenion.normalized, 0.02f);
+
+         gameObject.transform.position += tempDirection.normalized * throwVelocity * Time.deltaTime;
+
+      
+        lastDirection = tempDirection;
+
+       // if (timeElapsed > timeToReach + 0.2f || Mathf.Abs(targetToHit.x - transform.position.x) < 0.5f)
+        if (timeElapsed > timeToReach + 0.2f)
+        {
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+
+            /// particle effect at end of path
+            thrown = false;
+
+          //  yield break;
+
+        }
+
+    }
+
 }
 
 

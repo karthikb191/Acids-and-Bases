@@ -16,14 +16,15 @@ public class PlayerInventory : Inventory
         {
             InventoryButtonAnimator.SetBool("SlideLeft", false);
 
-            ShowInventoryPanel();
+           
         }
         else
         {
             InventoryButtonAnimator.SetBool("SlideLeft", true);
-            Invoke("ShowInventoryPanel", 0.5f);
+           
             
         }
+        ShowInventoryPanel();
     }
 
     private void ShowInventoryPanel()
@@ -44,9 +45,9 @@ public class PlayerInventory : Inventory
 ////////////////////////////////////////Inventory animation//////////////////////////////////////////
 
 
-    [SerializeField]
+   // [SerializeField]
     Canvas inventoryUI;
-    [SerializeField]
+   // [SerializeField]
     RectTransform panel;    //Panel within which the slots are stored   
     Vector3 targerSetTest;
 
@@ -88,7 +89,7 @@ public class PlayerInventory : Inventory
         SelectFromSlots();
         if (InventoryAnimator.GetBool("ShowInventory"))
         {
-            Invoke("DisplaySlots",0.5f);
+            Invoke("DisplaySlots",1.5f);
         }
         else
         { HideSlots(); }
@@ -152,7 +153,9 @@ public class PlayerInventory : Inventory
     {
         if (activeItem.itemProperties.isThrowable)
         {
-            ThrowItem(target, this.gameObject.GetComponent<Character>());
+           
+           // ThrowItem(target, this.gameObject.GetComponent<Character>());
+           
         }
     }
 }

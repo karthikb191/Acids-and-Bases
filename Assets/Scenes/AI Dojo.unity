@@ -3786,6 +3786,30 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114291886980655198, guid: 417ea1cbcab447148b2e95296585460a,
+        type: 2}
+      propertyPath: buttonGraphics.defaultImage
+      value: 
+      objectReference: {fileID: 21300002, guid: 87efaf20c96bd46b2a6e7bf4d4d3fd57,
+        type: 3}
+    - target: {fileID: 114291886980655198, guid: 417ea1cbcab447148b2e95296585460a,
+        type: 2}
+      propertyPath: buttonGraphics.ladderImage
+      value: 
+      objectReference: {fileID: 21300120, guid: cc60722ee33125c4790ac2ba52b93a1f,
+        type: 3}
+    - target: {fileID: 114291886980655198, guid: 417ea1cbcab447148b2e95296585460a,
+        type: 2}
+      propertyPath: buttonGraphics.itemImage
+      value: 
+      objectReference: {fileID: 21300074, guid: da2823a841bb5314490fa1c5decdc88e,
+        type: 3}
+    - target: {fileID: 114291886980655198, guid: 417ea1cbcab447148b2e95296585460a,
+        type: 2}
+      propertyPath: buttonGraphics.doorImage
+      value: 
+      objectReference: {fileID: 21300108, guid: cc60722ee33125c4790ac2ba52b93a1f,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 417ea1cbcab447148b2e95296585460a, type: 2}
   m_IsPrefabAsset: 0

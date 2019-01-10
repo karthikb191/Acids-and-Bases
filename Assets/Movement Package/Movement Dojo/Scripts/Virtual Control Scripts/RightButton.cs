@@ -15,6 +15,7 @@ public class RightButton : MonoBehaviour, IPointerExitHandler, IPointerUpHandler
 	void Update () {
         if (pressed) {
             VirtualJoystick.horizontalValue = 1 * ControlCanvas.StartCounter();
+
         }
 	}
 
