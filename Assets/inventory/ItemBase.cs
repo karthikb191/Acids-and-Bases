@@ -109,7 +109,8 @@ public class ItemBase : MonoBehaviour {
         if (scaleDiff > 0.05f)
             gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, targetScale, 0.2f);
         else
-            gameObject.transform.localScale = Vector3.one/2;
+           // gameObject.transform.localScale = Vector3.one/2;
+            gameObject.transform.localScale = Vector3.one;
 
         if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
         {
@@ -286,7 +287,7 @@ public class ItemBase : MonoBehaviour {
            
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.localScale = Vector3.one/2;
+           gameObject.transform.localScale = Vector3.one;
 
         }
         else
@@ -298,7 +299,7 @@ public class ItemBase : MonoBehaviour {
             gameObject.SetActive(false);
 
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.localScale = Vector3.one / 2;
+            gameObject.transform.localScale = Vector3.one ;
 
         }
         setFocus = false;
@@ -382,12 +383,12 @@ public class ItemBase : MonoBehaviour {
 
     }
 
-
+    public float colliderRadius = 2;
     void OnDrawGizmosSelected()
     {
      
             UnityEditor.Handles.color = Color.green;
-            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), 1f);
+            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
         
     }
 
@@ -396,7 +397,7 @@ public class ItemBase : MonoBehaviour {
     {
 
         timeElapsed += Time.deltaTime;
-        RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), 1, new Vector2(0, 1));
+        RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), colliderRadius, new Vector2(0, 1));
 
         for (int i = 0; i < collidedWith.Length; i++)
         {

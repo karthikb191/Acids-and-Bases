@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Healer
   maxHoldingCapacity: 0
-  imageSprite: {fileID: 21300004, guid: f70e63e89cc75184f85f90e096fec3be, type: 3}
+  imageSprite: {fileID: 21300072, guid: cc60722ee33125c4790ac2ba52b93a1f, type: 3}
   isEquipable: 1
   isAnInventoryItem: 1
   isConsumable: 1
