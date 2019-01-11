@@ -81,6 +81,7 @@ public class EnemyInventory : Inventory {
         ItemStored = temp.GetComponent<ItemBase>();
         temp.transform.parent = GetComponentInParent<Character>().Hand.transform;
         temp.transform.localScale = tempLocalScale;
+        ItemStored.isFromEnemy = true;
         AddItem(ItemStored);
        
     }

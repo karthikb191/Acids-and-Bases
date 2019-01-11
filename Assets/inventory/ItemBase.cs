@@ -26,13 +26,14 @@ public class ItemBase : MonoBehaviour {
     {
         if(thrown)
         {
-          ThrowPathFollow();
+            //ThrowPathFollow();
+            CheckCollision();
+
         }
 
-
+       // CheckCollision();
         //Add to item while in throw
 
-        CheckCollision();
     }
 
     public virtual void Use() {
@@ -60,6 +61,8 @@ public class ItemBase : MonoBehaviour {
               }
 
               StartCoroutine(ThrowProjectile(target, angle));
+
+            thrown = true;
           //  ThrowCalculations(target, speed);
 
         }
@@ -128,13 +131,20 @@ public class ItemBase : MonoBehaviour {
         else
             gameObject.transform.localScale = targetScale;
 
-        if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
+        if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.1f)
         {
-            gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
+            Debug.Log("Lerping Item pos");
+            Debug.Log("Game object position" + transform.position + "<<<<><><><><><> target position" + targetPosition);
+            Debug.Log("reached target");
+            //  gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
+            gameObject.transform.position = targetPosition;
+            yield break;
         }
 
         else
         {
+            Debug.Log("Game object position" + transform.position + "<<<<><><><><><> target position"+ targetPosition);
+            Debug.Log("reached target");
             gameObject.transform.position = targetPosition;
 
         }
@@ -411,9 +421,42 @@ public class ItemBase : MonoBehaviour {
 
     }
 
+
+    void OnDrawGizmosSelected()
+    {
+     
+            UnityEditor.Handles.color = Color.green;
+            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), 1f);
+        
+    }
+
+
     void CheckCollision()
     {
+       
 
+        RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), 1, new Vector2(0, 1));
+
+        for (int i = 0; i < collidedWith.Length; i++)
+        {
+            if(collidedWith[i].transform.CompareTag("tag_platform"))
+            {
+                
+                Debug.Log("HIt Platform & destroyed");
+                Destroy(this.gameObject);
+                break;
+            }
+
+            if (collidedWith[i].transform.GetComponent<SwichAndDoorActivation>() && !isFromEnemy)
+
+            {
+                Debug.Log("Collided with Switch");
+                collidedWith[i].transform.GetComponent<SwichAndDoorActivation>().ActivateDoor();
+                Destroy(this.gameObject);
+                break;
+            }
+
+        }
     }
 
 }

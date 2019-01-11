@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoorActivation : MonoBehaviour {
 
-    public List< SwichAndDoorActivation> switchScripts;
+    public List<SwichAndDoorActivation> switchScripts;
 
     public bool openDoor;
 
@@ -38,6 +38,7 @@ public class DoorActivation : MonoBehaviour {
 
     void CheckSwitchStatus()
     {
+       
         for (int i = 0; i < switchScripts.Count; i++)
         {
             if(switchScripts[i].isActivated)
@@ -45,6 +46,7 @@ public class DoorActivation : MonoBehaviour {
               
                 openDoor = true;
                 doorCollider.isTrigger = true;
+                
                 continue;
             }
 
@@ -53,9 +55,15 @@ public class DoorActivation : MonoBehaviour {
                
                 doorCollider.isTrigger = false;
                 openDoor = false;
+                
                 break;
 
             }
+        }
+
+        if(openDoor)
+        {
+            OpenDoor();
         }
     }
 

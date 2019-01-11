@@ -60,7 +60,7 @@ public class SwichAndDoorActivation : MonoBehaviour
         
     }
 
-    private void ActivateDoor()
+    public void ActivateDoor()
     {
         switchSprite.color = Color.green;
         isActivated = true;

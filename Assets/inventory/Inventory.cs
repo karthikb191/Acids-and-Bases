@@ -218,7 +218,7 @@ public class Inventory : MonoBehaviour {
 
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count-1];
                 activeItem.gameObject.SetActive(true);
-
+                activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
                 activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
                 return true;
             }
