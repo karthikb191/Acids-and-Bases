@@ -13,10 +13,7 @@ public class EnemyInventory : Inventory {
     
     ItemBase ItemStored;
 
-    ItemBase temp;
-
-    //TODO: Remove this after this is integrated with alignpos
-    Vector3 tempLocalScale = new Vector3(0.5f, 0.5f, 0.5f);
+   
 
     // Use this for initialization
     void Start () {
@@ -27,39 +24,19 @@ public class EnemyInventory : Inventory {
             slots[i].maxStorage = 10;
             slots[i].imageSlotPrefab.transform.SetParent(transform);
         }
-        
-        //Instantiating items
-        for(int i = 0;i<maxItem;i++)
-        {
-            GameObject temp = Instantiate(itemPrefab, GetComponentInParent<Character>().Hand.transform.position, Quaternion.identity) as GameObject;
-            ItemStored = temp.GetComponent<ItemBase>();
-            temp.transform.parent = GetComponentInParent<Character>().Hand.transform;
-            temp.transform.localScale = tempLocalScale;
-            temp.gameObject.SetActive(false);
-            ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
-           // ItemStored.GetComponent<ItemBase>().playerObject = GetComponentInParent<GameObject>();
-            AddItem(ItemStored);
 
+        //Instantiating items
+
+        for (int i = 0; i < maxItem; i++)
+        {
+            Add();
         }
         SetActiveItem();   
     }
-	
 
- /*  public override void ThrowItem(Vector3 target, Character c)
-    {
 
-        base.ThrowItem(target, c);
-        
-        activeItem = null;
 
-        Invoke("Reload",reloadTime);
-
-    }*/
-
-    void Reload()
-    {
-        SetActiveItem();
-    }
+   
 
     void SetActiveItem()
     {
@@ -73,16 +50,31 @@ public class EnemyInventory : Inventory {
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
                 activeItem.isFromEnemy = true;
                 activeItem.gameObject.SetActive(true);
+
+               // Debug.Log("Item in slot"+ slots[i].itemStored);
+                Add();
                 break;
             }
         }
+    }
 
+    void Add()
+    {
         GameObject temp = Instantiate(itemPrefab, GetComponentInParent<Character>().Hand.transform.position, Quaternion.identity) as GameObject;
         ItemStored = temp.GetComponent<ItemBase>();
         temp.transform.parent = GetComponentInParent<Character>().Hand.transform;
-        temp.transform.localScale = tempLocalScale;
-        ItemStored.isFromEnemy = true;
-        AddItem(ItemStored);
-       
+        temp.transform.localScale = Vector3.one / 2;
+        temp.gameObject.SetActive(false);
+        ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
+        temp.GetComponent<ItemBase>().isFromEnemy = true;
+
+        //Debug.Log("Calling add function" + temp.GetComponent<ItemBase>().itemProperties.name);
+        AddItem(temp.GetComponent<ItemBase>());
+    }
+
+
+    public void ReloadInventory()
+    {
+        SetActiveItem();
     }
 }

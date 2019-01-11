@@ -71,7 +71,9 @@ public class DoorActivation : MonoBehaviour {
     void OpenDoor()
     {
         doorCollider.isTrigger = true;
-        doorAnimator.SetBool("OpenDoor", true);     
+        doorAnimator.SetBool("OpenDoor", true);
+        doorCollider.enabled = false;
+        
     }
 
 
@@ -96,7 +98,7 @@ public class DoorActivation : MonoBehaviour {
             }
         }
 
-        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>())
+        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy)
         {
             OpenDoor();
         }

@@ -57,9 +57,16 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             this.gameObject.GetComponent<Image>().enabled = false;
         }
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            tempTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.Log("New Target set to: _____ " + tempTarget);
+            ThrowItem();
+        }
     }
 
-
+    Vector3 tempTarget;
     private void FixedUpdate()
     {
       /*  if (buttonPressed && VirtualJoystick.throwButton)
@@ -96,23 +103,29 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if(player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
-            Vector3 tempTarget = player.Hand.transform.position;
+
+            tempTarget.z = 0;
+
+            Vector3 tempTar = player.Hand.transform.position;
             //Debug.Log(player.right + "o throw");
             if (player.playerSprite.transform.localScale.x > 0)
             {
-                tempTarget.x += 6;
+                tempTar.x += 6;
             }
             else
             {
-                tempTarget.x -= 6;
+                tempTar.x -= 6;
                 Quaternion temp = player.GetComponentInChildren<PlayerInventory>().activeItem.transform.localRotation;
                 temp.y = 180;
 
             }
            
             Debug.Log("Player position" + player.Hand.transform.position + " <<>><><>" + "Temp target" + tempTarget);
-
+            if(tempTarget!= null)
             player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTarget, 5);
+
+            else
+                player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTar, 5);
         }
        
        // ResetPosition();

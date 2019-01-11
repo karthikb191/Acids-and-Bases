@@ -29,7 +29,7 @@ class Enemy : EnemyBase
 
     private void Start()
     {
-        inventory = GetComponentInChildren<Inventory>();
+        inventory = GetComponentInChildren<EnemyInventory>();
         //if (inventory != null)
         //{
         //    enemyItem.itemProperties.maxHoldingCapacity = 10000;
@@ -142,7 +142,10 @@ class Enemy : EnemyBase
     }
 
     #region Stun Scripts
+
+
     private void Stun(float duration)
+  // public void Stun(float duration)
     {
         //Revert the enemy behavior to roaming for now. Later there might be a separate stun behavior
         if (behaviorAI.GetType() != typeof(StunnedBehavior))
@@ -207,7 +210,10 @@ class Enemy : EnemyBase
 
                 inventory.ThrowItem(c.transform.position, 20);
 
+                inventory.GetComponent<EnemyInventory>().ReloadInventory();
             }
+
+       
     }
 
     public void Die()

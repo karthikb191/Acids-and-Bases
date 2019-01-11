@@ -109,7 +109,9 @@ public class PlayerInventory : Inventory
                         {
                             if (slots[i].itemlist.Count > 0)
                             {
+
                                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                                
                                 slots[i].itemlist[slots[i].itemlist.Count - 1].gameObject.SetActive(true);
                                 UpdateSlotData(activeItem);
                                 SetActiveSlotCount();
@@ -137,10 +139,10 @@ public class PlayerInventory : Inventory
                 Debug.Log("Target set" + "_____" + targerSetTest);
             }
         }
-        if (activeItem != null && Input.GetKeyDown(KeyCode.D))
+        if (activeItem != null && Input.GetKeyDown(KeyCode.Y))
         {
-            DropItem();
-            activeItem = null;
+           DropItem();
+           activeItem = null;
         }
 
         if (activeItem != null && Input.GetKeyDown(KeyCode.U))

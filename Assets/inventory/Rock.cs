@@ -24,6 +24,6 @@ public class Rock : ItemBase {
     {
         base.Use(c);
       //  c.Heal(itemProperties.HealthRestore);
-        c.TakeDamage(itemProperties.damageDealt);
+      //  c.TakeDamage(itemProperties.damageDealt);
     }
 }
