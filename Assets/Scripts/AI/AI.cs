@@ -756,7 +756,7 @@ public class AI : MonoBehaviour {
     void Move()
     {
         Debug.DrawLine(new Vector3(10, 10, 0), targetNode.position, Color.green);
-
+        
         //this is for the jump speed multiplier
         if (!enemy.State.Equals(typeof(JumpingState)) && !enemy.State.Equals(typeof(FallingState)))
             horizontalMovement = 0;
@@ -906,7 +906,10 @@ public class AI : MonoBehaviour {
                                 if (Mathf.Abs(directionToNode.x) < Random.Range(0.2f, 0.5f) && Mathf.Abs(directionToNode.y) < Random.Range(0.2f, 0.5f))
                                 {
                                     if (Mathf.Abs(directionVector.y) > 0.2f)
+                                    {
+                                        Debug.Log("Skipped");
                                         skip = false;
+                                    }
                                 }
                             }
                         }
@@ -914,7 +917,10 @@ public class AI : MonoBehaviour {
                         //This is the condition to skip the downward jump. If the target platform is below the player,
                         //and closer to him, he won't have to jump
                         if (directionVector.y < 0 && Mathf.Abs(directionVector.x) < Random.Range(2.4f, 2.9f))
+                        {
+                            Debug.Log("Skipped");
                             skip = true;
+                        }
 
                         
                         if (Mathf.Abs(directionVector.x) < 4.0f && !skip)
@@ -941,7 +947,7 @@ public class AI : MonoBehaviour {
                                 //Disable jump if the target node is a ladder
                                 if (currentNode.platform != targetNode.platform)
                                 {
-                                    if (Mathf.Abs(targetNode.position.y - currentNode.position.y) < 0.2f)
+                                    if (Mathf.Abs(targetNode.position.y - currentNode.position.y) < 0.3f)
                                         EnableJump(EvaluateJumpTarget());
                                 }
                             }

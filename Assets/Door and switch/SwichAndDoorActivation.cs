@@ -6,7 +6,7 @@ public class SwichAndDoorActivation : MonoBehaviour
 
 {
     SpriteRenderer switchSprite;
-    bool isOnFocus;
+   
     public bool isActivated;
     [SerializeField]
     string tagToCompare;
@@ -18,24 +18,51 @@ public class SwichAndDoorActivation : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if(isOnFocus && Input.GetKeyDown(KeyCode.O))
-        {
-            switchSprite.color = Color.green;
-            isActivated = true;   
-        }
+       
 	}
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag(tagToCompare))
+   
+
+        if (collision.gameObject.GetComponent<Player>())
         {
-            isOnFocus = true;
+          
+            if (collision.GetComponent<Player>() != null)
+            {
+                //Enable the button
+                DynamicButton d = VirtualJoystick.CreateButton("tag_door");
+                if (!d.active)
+                {
+                    VirtualJoystick.EnableButton(d);
+                    d.button.onClick.AddListener(() =>
+                    {
+                        ActivateDoor();
+                        VirtualJoystick.DisableButton(d);
+                    });
+                }
+            }
+        }
+        Debug.Log("thrown item: " + collision.gameObject.name);
+    
+        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy)
+        {
+            ActivateDoor();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag(tagToCompare))
+      
+        if (collision.gameObject.GetComponent<Player>())
         {
-            isOnFocus = false;
+            VirtualJoystick.DisableButton("tag_door");
         }
+
+        
+    }
+
+    public void ActivateDoor()
+    {
+        switchSprite.color = Color.green;
+        isActivated = true;
     }
 }

@@ -6,29 +6,27 @@ using UnityEngine.UI;
 public class ItemBase : MonoBehaviour {
 
     bool thrown = false;
+
     bool used = false;
     
     bool setFocus;
-   public GameObject playerObject;
+
+    public GameObject playerObject;
 
     public ItemProperties itemProperties;
 
     public float speed = 20.0f;
 
-    Vector3 targetScale = Vector3.one;
+    public Vector3 targetScale = Vector3.one;
 
-
-
-   public bool isFromEnemy = false;
- 
+    public bool isFromEnemy = false;
 
     private void Update()
     {
         if(thrown)
         {
-          ThrowPathFollow();
+            CheckCollision();
         }
-              
     }
 
     public virtual void Use() {
@@ -39,34 +37,21 @@ public class ItemBase : MonoBehaviour {
 
     public virtual void Throw(Vector3 target,float speed)
     {
-    //   if(isFromEnemy)
+        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        if (isFromEnemy)
         {
-             float angle = 45;
-
-              if ((target.x - transform.position.x) < (target.y - transform.position.y))
-              {
-                  angle = 60;
-              }
-
-
-              if (isFromEnemy && GetComponentInParent<Enemy>())
-              {
-                  //   playerObject = GetComponentInParent<Enemy>().gameObject;
-                  Debug.Log("From enemy" + playerObject.name);
-              }
-
-              StartCoroutine(ThrowProjectile(target, angle));
-          //  ThrowCalculations(target, speed);
-
+            playerObject = transform.root.GetComponentInParent<Enemy>().gameObject;
+           
+            thrown = true;
+            StartCoroutine(ThrowProjectile(target, 45));
         }
-     //  else
+        else
         {
-      //      ThrowCalculations(target, speed);
-            Debug.Log("New throw Called");
+            playerObject = transform.root.GetComponentInParent<Player>().gameObject;
+            Debug.Log("Thrown from: ____>>>>" + playerObject.name);
+            ThrowCalculations(target, speed);
+            StartCoroutine(ThrowProjectile(target, angleOfThrow));
         }
-
-        // StartCoroutine(ThrowPathFollow());
-
     }
 
 
@@ -122,11 +107,14 @@ public class ItemBase : MonoBehaviour {
         if (scaleDiff > 0.05f)
             gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, targetScale, 0.2f);
         else
+           // gameObject.transform.localScale = Vector3.one/2;
             gameObject.transform.localScale = targetScale;
 
         if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
         {
             gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
+            gameObject.transform.position = targetPosition;
+            yield break;
         }
 
         else
@@ -160,7 +148,20 @@ public class ItemBase : MonoBehaviour {
     }
     public virtual void Use(Character c)
     {
-        Debug.Log("Use called");
+        Debug.Log("Use called on character");
+
+        if(itemProperties.isThrowable && itemProperties.damageDealt != 0 && isFromEnemy)
+        {
+            c.TakeDamage(itemProperties.damageDealt);
+           
+        }
+
+        if(itemProperties.isThrowable && !isFromEnemy)
+        {
+            c.gameObject.GetComponent<Enemy>().UseItem();
+      
+            Debug.Log("Stun is called");
+        }
     }
 
     //Overload use function for interaction with environment
@@ -227,6 +228,7 @@ public class ItemBase : MonoBehaviour {
         float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
         float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
         float flightDuration = target_Distance / Vx;
+        int directionOfTranslation = (int)Mathf.Sign(Target.x - gameObject.transform.position.x);
 
         //Looking at the target
         Quaternion rotation = Quaternion.LookRotation(Target - transform.position);
@@ -239,31 +241,8 @@ public class ItemBase : MonoBehaviour {
 
         while (elapse_time < flightDuration)
         {
-
-            if(elapse_time > 0.1f)
-            {
-               // Debug.Log("Casting");
-                Collider2D hit = Physics2D.OverlapCircle(new Vector2(this.transform.position.x, this.transform.position.y), transform.localScale.x, LayerMask.GetMask("Character","Platform"));
-               // Debug.Log("overlap circel" , hit);
-              if (hit != null)
-              {
-                   // Debug.Log("Hit on : " + hit.gameObject.name);
-                    if(hit.GetComponent<Character>())
-                    {
-                        Debug.Log("Character hit");
-                        Use(hit.GetComponent<Character>());
-                    }
-
-                    else
-                    {
-                        Use(hit.gameObject);
-                    }
-              }
-            }
-            //Depending on sign, the object goes right(1) or left(0)
-            int directionOfTranslation = (int)Mathf.Sign(Target.x - gameObject.transform.position.x);
-
-            transform.Translate(Vx * Time.deltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
+           
+            transform.Translate(Vx * Time.deltaTime , (Vy - (speed * elapse_time)) * Time.deltaTime,0);
 
             elapse_time += Time.deltaTime;
 
@@ -275,23 +254,19 @@ public class ItemBase : MonoBehaviour {
         {
             transform.rotation = Quaternion.identity;
             elapse_time = 0;
-           // 
-            
-
            if(isFromEnemy)
             {
-                //   transform.position = playerObject.GetComponentInChildren<Character>().Hand.transform.position;
-                //   transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+               
                 gameObject.SetActive(false);
                 Destroy(gameObject);
-             //   GetComponentInParent<Inventory>().AddItem(this);
+            
             }
            else
             {
                 gameObject.SetActive(false);
                 transform.parent = null;
             }
-           // Debug.Log("Flight over");
+          
             yield break;
         }
     }
@@ -304,14 +279,13 @@ public class ItemBase : MonoBehaviour {
 
             playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);
 
-            targetScale = transform.localScale / 2;
+            
 
            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-           // StartCoroutine(AlignWithPos( new Quaternion(0,0,0,0),new Vector3(0.1f,0.1f,0.1f),playerObject.GetComponent<Character>().Hand.transform.position));
-
+           
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.localScale = targetScale;
+           gameObject.transform.localScale = targetScale;
 
         }
         else
@@ -405,6 +379,61 @@ public class ItemBase : MonoBehaviour {
 
         }
 
+    }
+
+    public float colliderRadius = 2;
+    void OnDrawGizmosSelected()
+    {
+     
+            UnityEditor.Handles.color = Color.green;
+            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
+        
+    }
+
+ 
+    void CheckCollision()
+    {
+
+        timeElapsed += Time.deltaTime;
+        RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), colliderRadius, new Vector2(0, 1));
+
+        for (int i = 0; i < collidedWith.Length; i++)
+        {
+            if(collidedWith[i].transform.CompareTag("tag_platform"))
+            {
+                Debug.Log("HIt Platform & destroyed");
+                Destroy(this.gameObject);
+                break;
+            }
+
+            if (collidedWith[i].transform.GetComponent<SwichAndDoorActivation>())
+
+            {
+                Debug.Log("Collided with Switch");
+                collidedWith[i].transform.GetComponent<SwichAndDoorActivation>().ActivateDoor();
+                Destroy(this.gameObject);
+                break;
+            }
+
+            if (timeElapsed > 0.5f)
+            {
+                if (collidedWith[i].transform != null)
+                {
+                    if (collidedWith[i].transform.GetComponent<Character>().gameObject != playerObject.gameObject)
+                    {
+                        Debug.Log("Used called from:   " + playerObject.name);
+                        Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponent<Character>());
+
+
+                        Use(collidedWith[i].transform.root.GetComponentInParent<Character>());
+                        Destroy(this.gameObject);
+
+                        break;
+                    }
+                }
+            }
+
+        }
     }
 
 }

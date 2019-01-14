@@ -36,9 +36,10 @@ public class Door : MonoBehaviour {
             }
         }
     }
+
     private void OnTriggerExit2D(Collider2D collider)
     {
-        if(collider.gameObject == playerOnFocus.gameObject)
+        if (playerOnFocus != null && collider.gameObject == playerOnFocus.gameObject)
         {
             playerOnFocus = null;
 

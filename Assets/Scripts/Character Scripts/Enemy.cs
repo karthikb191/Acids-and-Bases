@@ -22,15 +22,14 @@ class Enemy : EnemyBase
     public bool climbing;   //Must be set by enemy behavior
 
     public CharacterType characterType = CharacterType.acidic;
-
-    [HideInInspector]
-    public RaycastHit2D[] info { get; set; }
+    
+    public RaycastHit2D[] info { get; private set; }
 
     bool halt = false;
 
     private void Start()
     {
-        inventory = GetComponentInChildren<Inventory>();
+        inventory = GetComponentInChildren<EnemyInventory>();
         //if (inventory != null)
         //{
         //    enemyItem.itemProperties.maxHoldingCapacity = 10000;
@@ -143,7 +142,10 @@ class Enemy : EnemyBase
     }
 
     #region Stun Scripts
+
+
     private void Stun(float duration)
+  // public void Stun(float duration)
     {
         //Revert the enemy behavior to roaming for now. Later there might be a separate stun behavior
         if (behaviorAI.GetType() != typeof(StunnedBehavior))
@@ -204,8 +206,14 @@ class Enemy : EnemyBase
         if (inventory != null)
             if (inventory.activeItem != null)
             {
+
+
                 inventory.ThrowItem(c.transform.position, 20);
+
+                inventory.GetComponent<EnemyInventory>().ReloadInventory();
             }
+
+       
     }
 
     public void Die()

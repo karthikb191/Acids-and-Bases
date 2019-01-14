@@ -10,6 +10,7 @@ TagManager:
   - tag_door
   - tag_item
   - tag_PhMeterButton
+  - tag_platform
   layers:
   - Default
   - TransparentFX

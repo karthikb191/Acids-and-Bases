@@ -42,7 +42,7 @@ public class Slot
 
             itemStored = l_itemBase;
             itemlist.Add(l_itemBase);
-         
+            Debug.Log("Item in slot" + itemStored.itemProperties.name);
            // imageSlotPrefab.SetActive(true);
 
             displaySprite.enabled = true;
@@ -108,9 +108,7 @@ public class Inventory : MonoBehaviour {
     public List<Slot> slots = new List<Slot>();
 
     public GameObject imageSlotPrefab;
-
     
-
 
     public ItemBase activeItem;
 
@@ -141,7 +139,7 @@ public class Inventory : MonoBehaviour {
 
         if(activeItem.itemProperties.isConsumable)
         {
-            activeItem.gameObject.transform.parent = null;
+           // activeItem.gameObject.transform.parent = null;
 
            // Debug.Log(gameObject.transform.GetComponentInParent<Character>());
            activeItem.Use(gameObject.transform.GetComponentInParent<Character>());
@@ -166,11 +164,11 @@ public class Inventory : MonoBehaviour {
         //Throw the item and check the slots 
         if (activeItem.itemProperties.isThrowable)
         {
-            activeItem.gameObject.transform.parent = null;
+           // activeItem.gameObject.transform.parent = null;
 
           //Debug.Log(activeItem.gameObject.transform.position);
 
-            activeItem.maxRangeOfThrow = 6;
+            //activeItem.maxRangeOfThrow = 6;
             
             activeItem.Throw(Target,10);
             UpdateSlotData(activeItem);
@@ -214,11 +212,11 @@ public class Inventory : MonoBehaviour {
             if(slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_activeItem.itemProperties )
             {
                 Debug.Log(slots[i].itemStored);
-                Debug.Log(slots[i].itemlist);
+                Debug.Log(slots[i].itemlist.Count);
 
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count-1];
                 activeItem.gameObject.SetActive(true);
-
+                activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
                 activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
                 return true;
             }
@@ -332,7 +330,9 @@ public class Inventory : MonoBehaviour {
                 {
                     if(slots[i].itemStored!=null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
                     {
+
                         slots[i].AddItem(l_ItemBase);
+                        
                     assigned = true;
                         break;
                     }
@@ -381,7 +381,7 @@ public class Inventory : MonoBehaviour {
         int c = 0;
         for (int i = 0; i < slots.Count; i++)
         {
-            if (slots[i].itemStored != null)
+            if (slots[i].itemlist.Count > 0)
             {
                 c++;
                 continue;

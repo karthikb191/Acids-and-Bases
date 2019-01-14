@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoorActivation : MonoBehaviour {
 
-    public List< SwichAndDoorActivation> switchScripts;
+    public List<SwichAndDoorActivation> switchScripts;
 
     public bool openDoor;
 
@@ -32,58 +32,83 @@ public class DoorActivation : MonoBehaviour {
     {
 
         CheckSwitchStatus();
-        if(openDoor && Input.GetKeyDown(KeyCode.I) && isOnFocus )
-        {
-            Invoke("OpenDoor", 0.25f);
-        }
+        
 		
 	}
 
     void CheckSwitchStatus()
     {
+       
         for (int i = 0; i < switchScripts.Count; i++)
         {
             if(switchScripts[i].isActivated)
             {
-              
                 openDoor = true;
-                doorCollider.isTrigger = true;
+                //doorCollider.isTrigger = true;
+                
                 continue;
             }
 
             else
             {
-               
-                doorCollider.isTrigger = false;
+                //doorCollider.isTrigger = false;
                 openDoor = false;
+                
                 break;
-
             }
+        }
+
+        if(openDoor)
+        {
+            OpenDoor();
         }
     }
 
 
     void OpenDoor()
     {
-        doorCollider.isTrigger = true;
-        doorAnimator.SetBool("OpenDoor", true);     
+        //doorCollider.isTrigger = true;
+        doorAnimator.SetBool("OpenDoor", true);
+        doorCollider.enabled = false;
+        
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(tagToCompare))
+        if (collision.gameObject.GetComponent<Player>())
         {
-            isOnFocus = true;
+
+            if (collision.GetComponent<Player>() != null)
+            {
+                //Enable the button
+                DynamicButton d = VirtualJoystick.CreateButton("tag_door");
+                if (!d.active)
+                {
+                    VirtualJoystick.EnableButton(d);
+                    d.button.onClick.AddListener(() =>
+                    {
+                        OpenDoor();
+                        VirtualJoystick.DisableButton(d);
+                    });
+                }
+            }
+        }
+
+        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy)
+        {
+            OpenDoor();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag(tagToCompare))
+        if (collision.gameObject.GetComponent<Player>())
         {
-            isOnFocus = false;
+            VirtualJoystick.DisableButton("tag_door");
         }
+
+       
     }
 
 
