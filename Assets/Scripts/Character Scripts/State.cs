@@ -531,6 +531,7 @@ public class ClimbingState : States
         else if(input.xInput < 0 && (Mathf.Abs(bottomNode.position.y - c.transform.position.y) < minimumDifference ||
              c.transform.position.y < bottomNode.position.y))
         {
+            Debug.Log("X input down");
             VirtualJoystick.ResetArrows(c);
             //If the character is closer to the bottom node and is trying to go down, 
             //transition to idle state
@@ -544,6 +545,7 @@ public class ClimbingState : States
         }
         else if(Mathf.Abs(topNode.position.y - c.transform.position.y) < minimumDifference || c.transform.position.y > topNode.position.y)
         {
+            Debug.Log("reached top");
             VirtualJoystick.ResetArrows(c);
             //Player state is set to falling if he attempts to go beyond the ladder proximity
             c.StateList.RemoveAt(c.StateList.Count - 1);

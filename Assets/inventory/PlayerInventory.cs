@@ -134,7 +134,7 @@ public class PlayerInventory : Inventory
             {
                 targerSetTest = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 targerSetTest.z = 0;
-                Debug.Log("Target set" + "_____" + targerSetTest);
+                //Debug.Log("Target set" + "_____" + targerSetTest);
             }
         }
         if (activeItem != null && Input.GetKeyDown(KeyCode.D))

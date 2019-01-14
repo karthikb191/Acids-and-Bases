@@ -157,6 +157,26 @@ class WorldGrid : MonoBehaviour {
                     return g;
                 }
             }
+            //If there's still no grid cell found, create one
+            GridCell newCell = new GridCell
+            {
+                index =
+                {
+                    x = gridIndex.x,
+                    y = gridIndex.y
+                },
+                worldPosition = new Vector3(gridIndex.x + instance.gridSize / 2, gridIndex.y + instance.gridSize / 2)
+            };
+
+            //After the gridcell is created, make it as a list and feed it to the grid array
+            tempList = new List<GridCell>();
+            tempList.Add(newCell);
+            instance.gridArray[gridIndex.x, gridIndex.y] = tempList;
+
+            g = newCell;
+            //Debug.Log("Yay....Cell created successfully");
+            return g;
+
             Debug.Log("Something fishy is going on");
         }
 

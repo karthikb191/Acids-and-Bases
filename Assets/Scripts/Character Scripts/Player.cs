@@ -353,6 +353,10 @@ public class Player : Character
 
     public List<Character> enemiesChasing { get; private set; }
 
+    public Node currentNodeOfPlayer { get; private set;}
+    
+    private ThrowTapInput tapInput;
+
    public void ShowPhMeter()
     {
         Debug.Log( "Animebool" + phMeterAnimator.GetBool("ShowPhMeter"));
@@ -394,6 +398,9 @@ public class Player : Character
         StateList = new List<States>();
         StateList.Add(new IdleState());
 
+        //Input objects
+        tapInput = new ThrowTapInput(this, GameManager.Instance.virtualJoystick.GetComponent<Canvas>());
+
         //Add health to player initially
         Heal(100);
     }
@@ -402,6 +409,8 @@ public class Player : Character
     {
         //This has the information of all the object the player is currently in contact with
         info = CastGroundOverlapCircle();
+
+        UpdateCurrentNodeOfPlayer();
 
         GetInput();
 
@@ -427,6 +436,27 @@ public class Player : Character
         ResetInputs();
         //SetGridIndex();
         //Reading inputs is left to unity's input functions. So, reset functions work here
+    }
+
+    private void UpdateCurrentNodeOfPlayer()
+    {
+        for(int i = 0; i < info.Length; i++)
+        {
+            Platform p = info[i].collider.GetComponent<Platform>();
+            if (p != null)
+            {
+                //Check the distance between left and right nodes and assign the closest one
+                if(Vector3.SqrMagnitude(p.leftNode.position - gameObject.transform.position) <=
+                    Vector3.SqrMagnitude(p.rightNode.position - gameObject.transform.position))
+                {
+                    currentNodeOfPlayer = p.leftNode;
+                }
+                else
+                {
+                    currentNodeOfPlayer = p.rightNode;
+                }
+            }
+        }
     }
 
     protected override void GetInput()
@@ -478,6 +508,9 @@ public class Player : Character
         }
 
         //VirtualInputs();
+
+        //External input object updates
+        tapInput.Update();
     }
 
     void VirtualInputs()
@@ -485,7 +518,6 @@ public class Player : Character
         //ResetButtons();
         for (int i = 0; i < info.Length; i++)
         {
-            
             LadderButtonLogic(info[i]);
 
             ItemButtonLogic(info[i]);
@@ -635,5 +667,15 @@ public class Player : Character
     {
         enemiesChasing.Remove(e);
     }
+
+    private void OnDrawGizmos()
+    {
+        if (currentNodeOfPlayer != null)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(currentNodeOfPlayer.position, 0.5f);
+        }
+    }
+
 }
 

@@ -23,7 +23,8 @@ class Enemy : EnemyBase
 
     public CharacterType characterType = CharacterType.acidic;
 
-    RaycastHit2D[] info;
+    [HideInInspector]
+    public RaycastHit2D[] info { get; set; }
 
     bool halt = false;
 
@@ -203,10 +204,7 @@ class Enemy : EnemyBase
         if (inventory != null)
             if (inventory.activeItem != null)
             {
-
-
                 inventory.ThrowItem(c.transform.position, 20);
-
             }
     }
 

@@ -10,6 +10,12 @@ public class PathGenerator : MonoBehaviour {
 
     public static List<Node> nodes;
 
+    public float xSpacing = 4.0f;
+    public float ySpacing = 4.0f;
+
+    public float yTolerance = 0.4f;
+    public float xTolerance = 0.5f;
+
     private void Awake()
     {
         platforms = new List<Platform>();
@@ -25,20 +31,19 @@ public class PathGenerator : MonoBehaviour {
         {
             for(int j = i+1; j < platforms.Count; j++)
             {
-                
                 if(platforms[j].transform.position.x < platforms[i].transform.position.x)
                 {
                     Platform temp = platforms[j];
                     platforms[j] = platforms[i];
                     platforms[i] = temp;
                 }
-                
             }
         }
 
         //Form the links between the nodes after sorting is finished
         for(int i = 0; i < platforms.Count; i++)
         {
+            //Go through the sorted platforms one by one. First connect the nodes on the platform
             if(i == 0)
             {
                 platforms[i].leftNode.parent = null;
@@ -66,37 +71,38 @@ public class PathGenerator : MonoBehaviour {
                 nodes.Add(platforms[i].leftNode);
                 nodes.Add(platforms[i].rightNode);
 
-                //Get the previous platform
+                //Loop through previous platforms and check for connection. i has greater x position than j
                 for (int j = i-1; j >= 0; j--)
                 {
                     if (platforms[i].leftNode.position.x < platforms[j].rightNode.position.x &&
-                        platforms[i].leftNode.position.x > platforms[j].leftNode.position.x + 0.5f)
+                        platforms[i].leftNode.position.x > platforms[j].leftNode.position.x + xTolerance)
                     {
                         Debug.Log("positions: " + platforms[i].leftNode.position + "     " + platforms[j].leftNode.position + "    " + platforms[j].rightNode.position);
                         float yDist = platforms[i].leftNode.position.y - platforms[j].leftNode.position.y;
-                        if (Mathf.Abs(yDist) < 4.0f)
+                        if (Mathf.Abs(yDist) < ySpacing)
                         {
                             if (Mathf.Sign(yDist) > 0)
                             {
                                 if (platforms[i].leftNode.parent == null)
                                     platforms[i].leftNode.parent = platforms[j].leftNode;
-                                platforms[j].leftNode.child.Add(platforms[i].leftNode);
-
-                                platforms[i].leftNode.leftConnections.Add(platforms[j].leftNode);
-                                platforms[j].leftNode.rightConnections.Add(platforms[i].leftNode);
-
+                                //Changed. Check this area if the code doesn't work as expected
                                 if (platforms[i].tag == "tag_ladder")
                                 {
                                     platforms[i].leftNode.rightConnections.Add(platforms[j].rightNode);
                                     platforms[j].rightNode.leftConnections.Add(platforms[i].leftNode);
                                     platforms[j].rightNode.child.Add(platforms[i].leftNode);
                                 }
+                                
+                                platforms[j].leftNode.child.Add(platforms[i].leftNode);
+
+                                platforms[i].leftNode.leftConnections.Add(platforms[j].leftNode);
+                                platforms[j].leftNode.rightConnections.Add(platforms[i].leftNode);
 
                             }
                             else
                             {
                                 //if 'i' is below 'j'
-                                if (platforms[i].rightNode.position.x > platforms[j].rightNode.position.x + 0.5f)
+                                if (platforms[i].rightNode.position.x > platforms[j].rightNode.position.x + xTolerance)
                                 {
                                     platforms[i].rightNode.child.Add(platforms[j].rightNode);
 
@@ -104,34 +110,33 @@ public class PathGenerator : MonoBehaviour {
                                     platforms[j].rightNode.rightConnections.Add(platforms[i].rightNode);
                                 }
                             }
-                        }
-
-                        
+                        } 
                     }
 
-                    if (platforms[i].rightNode.position.x < platforms[j].rightNode.position.x - 0.5f &&
+                    if (platforms[i].rightNode.position.x < platforms[j].rightNode.position.x - xTolerance &&
                         platforms[i].rightNode.position.x > platforms[j].leftNode.position.x)
                     {
                         float yDist = platforms[i].rightNode.position.y - platforms[j].rightNode.position.y;
-                        if (Mathf.Abs(yDist) < 4.0f)
+                        if (Mathf.Abs(yDist) < ySpacing)
                         {
                             if (Mathf.Sign(yDist) > 0)
                             {
                                 if (platforms[i].rightNode.parent == null)
                                     platforms[i].rightNode.parent = platforms[j].rightNode;
-                                platforms[j].rightNode.child.Add(platforms[i].rightNode);
 
-                                platforms[i].rightNode.rightConnections.Add(platforms[j].rightNode);
-                                platforms[j].rightNode.leftConnections.Add(platforms[i].rightNode);
-
-                                Debug.Log("Reaching");
-
+                                //Changed this area. If codes doesn't work as expected, check this block
                                 if (platforms[i].tag == "tag_ladder")
                                 {
                                     platforms[i].rightNode.leftConnections.Add(platforms[j].leftNode);
                                     platforms[j].leftNode.rightConnections.Add(platforms[i].rightNode);
                                     platforms[j].leftNode.child.Add(platforms[i].rightNode);
                                 }
+                                
+                                platforms[j].rightNode.child.Add(platforms[i].rightNode);
+                                platforms[i].rightNode.rightConnections.Add(platforms[j].rightNode);
+                                platforms[j].rightNode.leftConnections.Add(platforms[i].rightNode);
+
+                                Debug.Log("Reaching");
 
                             }
                             
@@ -143,9 +148,9 @@ public class PathGenerator : MonoBehaviour {
                     {
                         float yDist = platforms[i].leftNode.position.y - platforms[j].rightNode.position.y;
                         float xDist = platforms[i].leftNode.position.x - platforms[j].rightNode.position.x;
-                        if (Mathf.Abs(yDist) < 4.0f)
+                        if (Mathf.Abs(yDist) < ySpacing)
                         {
-                            if(Mathf.Abs(xDist) < 4.0f)
+                            if(Mathf.Abs(xDist) < xSpacing)
                             {
                                 if (platforms[i].leftNode.parent == null)
                                     platforms[i].leftNode.parent = platforms[j].rightNode;
@@ -158,85 +163,82 @@ public class PathGenerator : MonoBehaviour {
                         }
                     }
                     
-                    if(platforms[j].leftNode.position.x > platforms[i].leftNode.position.x + 0.5f &&
-                       platforms[j].leftNode.position.x < platforms[i].rightNode.position.x - 0.5f)
+                    if(platforms[j].leftNode.position.x > platforms[i].leftNode.position.x + xTolerance &&
+                       platforms[j].leftNode.position.x < platforms[i].rightNode.position.x - xTolerance)
                     {
                         float yDist = platforms[j].leftNode.position.y - platforms[i].leftNode.position.y;
                         //float xDist = platforms[j].leftNode.position.x - platforms[i].leftNode.position.x;
-                        if (Mathf.Abs(yDist) < 4.0f)
+                        if (Mathf.Abs(yDist) < ySpacing)
                         {
                             if (Mathf.Sign(yDist) > 0)
                             {
                                 if (platforms[j].leftNode.parent == null)
                                     platforms[j].leftNode.parent = platforms[i].leftNode;
-                                platforms[i].leftNode.child.Add(platforms[j].leftNode);
-
-
-                                platforms[j].leftNode.leftConnections.Add(platforms[i].leftNode);
-                                platforms[i].leftNode.rightConnections.Add(platforms[j].leftNode);
-
-                                Debug.Log("Reaching");
-
                                 //If the platform is a ladder, connect to the previous platform's right node also
                                 if (platforms[j].tag == "tag_ladder")
                                 {
+                                    //Connect to the right node of the platform also if the platform is a ladder
                                     platforms[j].leftNode.rightConnections.Add(platforms[i].rightNode);
                                     platforms[i].rightNode.leftConnections.Add(platforms[j].leftNode);
                                     platforms[i].rightNode.child.Add(platforms[j].leftNode);
                                 }
+                                
+                                platforms[i].leftNode.child.Add(platforms[j].leftNode);
+                                    
+                                platforms[j].leftNode.leftConnections.Add(platforms[i].leftNode);
+                                platforms[i].leftNode.rightConnections.Add(platforms[j].leftNode);
 
+                                Debug.Log("Reaching");
                             }
                         }
                     }
 
-                    if (platforms[j].rightNode.position.x > platforms[i].leftNode.position.x + 0.5f &&
-                       platforms[j].rightNode.position.x < platforms[i].rightNode.position.x - 0.5f)
+                    if (platforms[j].rightNode.position.x > platforms[i].leftNode.position.x + xTolerance &&
+                       platforms[j].rightNode.position.x < platforms[i].rightNode.position.x - xTolerance)
                     {
                         float yDist = platforms[j].rightNode.position.y - platforms[i].rightNode.position.y;
                         //float xDist = platforms[j].rightNode.position.x - platforms[i].rightNode.position.x;
-                        if (Mathf.Abs(yDist) < 4.0f)
+                        if (Mathf.Abs(yDist) < ySpacing)
                         {
                             if (Mathf.Sign(yDist) > 0)
                             {
                                 if (platforms[j].rightNode.parent == null)
                                     platforms[j].rightNode.parent = platforms[i].rightNode;
-                                platforms[i].rightNode.child.Add(platforms[j].rightNode);
-
-
-                                platforms[j].rightNode.rightConnections.Add(platforms[i].rightNode);
-                                platforms[i].rightNode.leftConnections.Add(platforms[j].rightNode);
-
-                                Debug.Log("Reaching");
 
                                 //If the node belongs to a ladder, connect to the left node also
-                                if(platforms[j].tag == "tag_ladder")
+                                if (platforms[j].tag == "tag_ladder")
                                 {
                                     platforms[j].rightNode.leftConnections.Add(platforms[i].leftNode);
                                     platforms[i].leftNode.rightConnections.Add(platforms[j].rightNode);
                                     platforms[i].leftNode.child.Add(platforms[j].rightNode);
                                 }
+                                
+                                platforms[i].rightNode.child.Add(platforms[j].rightNode);
+
+                                platforms[j].rightNode.rightConnections.Add(platforms[i].rightNode);
+                                platforms[i].rightNode.leftConnections.Add(platforms[j].rightNode);
 
                             }
                         }
                     }
 
-                    if (platforms[j].tag == "tag_ladder")
-                    {
-                        if (platforms[j].leftNode.position.x < platforms[i].leftNode.position.x)
-                        {
-                            float yDist = platforms[j].leftNode.position.y - platforms[i].rightNode.position.y;
-                            float xDist = platforms[j].leftNode.position.x - platforms[i].rightNode.position.x;
-                            if (Mathf.Abs(yDist) < 4.0f)
-                            {
-                                if (Mathf.Abs(xDist) < 4.0f)
-                                {
-                                    platforms[j].leftNode.rightConnections.Add(platforms[i].leftNode);
-                                    platforms[i].leftNode.leftConnections.Add(platforms[j].leftNode);
-                                    platforms[i].leftNode.child.Add(platforms[j].leftNode);
-                                }
-                            }
-                        }
-                    }
+                    //if (platforms[j].tag == "tag_ladder")
+                    //{
+                    //    if (platforms[j].leftNode.position.x < platforms[i].leftNode.position.x)
+                    //    {
+                    //        float yDist = platforms[j].leftNode.position.y - platforms[i].rightNode.position.y;
+                    //        float xDist = platforms[j].leftNode.position.x - platforms[i].rightNode.position.x;
+                    //        if (Mathf.Abs(yDist) < ySpacing)
+                    //        {
+                    //            if (Mathf.Abs(xDist) < xSpacing)
+                    //            {
+                    //                platforms[j].leftNode.rightConnections.Add(platforms[i].leftNode);
+                    //                platforms[i].leftNode.leftConnections.Add(platforms[j].leftNode);
+                    //                platforms[i].leftNode.child.Add(platforms[j].leftNode);
+                    //            }
+                    //        }
+                    //    }
+                    //}
 
                     if (platforms[i].tag == "tag_ladder")
                     {
@@ -266,25 +268,27 @@ public class PathGenerator : MonoBehaviour {
     {
         for(int i = 0; i < nodes.Count; i++)
         {
+            //Debug.Log("Right.....");
             for(int j = 0; j < nodes[i].rightConnections.Count-1; j++)
             {
                 Node n = nodes[i].rightConnections[j];
                 Vector3 d1 = nodes[i].rightConnections[j].position - nodes[i].position;
                 float dist1 = Vector3.Magnitude(d1);
-
+                
+                //Debug.Log("node.....");
                 for (int k = j+1; k < nodes[i].rightConnections.Count; k++)
                 {
                     if (nodes[i].platform.tag == "tag_ladder" || nodes[i].rightConnections[j].platform.tag == "tag_ladder" ||
                                 nodes[i].rightConnections[k].platform.tag == "tag_ladder")
                     {
-                        return;
+                        continue;
                     }
 
                     Vector3 d2 = nodes[i].rightConnections[k].position - nodes[i].position;
                     float dist2 = Vector3.Magnitude(d2);
-                    
+                    Debug.Log("Angle: " + Vector3.Angle(d1, d2));
                     //Angle check
-                    if(Mathf.Abs(Vector3.Angle(d1, d2)) < 15 )
+                    if(Mathf.Abs(Vector3.Angle(d1, d2)) < 35 )
                     {
                          if(dist2 > dist1)
                         {
@@ -305,38 +309,40 @@ public class PathGenerator : MonoBehaviour {
                             nodes[i].rightConnections[j].leftConnections.Remove(nodes[i]);
                             nodes[i].rightConnections.Remove(nodes[i].rightConnections[j]);
                             
-                            
                         }
                     }
 
                     //x distance and y direction checks
                     if (k < nodes[i].rightConnections.Count)
                     {
-                        if (Mathf.Abs(d1.y) < Mathf.Abs(d2.y))
+                        if (Mathf.Abs(Vector3.Angle(d1, d2)) < 15)
                         {
-                            if (Mathf.Abs(d1.x) < 1.5f)
+                            if (Mathf.Abs(d1.y) < Mathf.Abs(d2.y))
                             {
-                                if (d2.y < 0)
+                                if (Mathf.Abs(d1.x) < 1.5f)
                                 {
-                                    nodes[i].rightConnections[k].child.Remove(nodes[i]);
-                                    nodes[i].child.Remove(nodes[i].rightConnections[k]);
+                                    if (d2.y < 0)
+                                    {
+                                        nodes[i].rightConnections[k].child.Remove(nodes[i]);
+                                        nodes[i].child.Remove(nodes[i].rightConnections[k]);
 
-                                    nodes[i].rightConnections[k].leftConnections.Remove(nodes[i]);
-                                    nodes[i].rightConnections.Remove(nodes[i].rightConnections[k]);
+                                        nodes[i].rightConnections[k].leftConnections.Remove(nodes[i]);
+                                        nodes[i].rightConnections.Remove(nodes[i].rightConnections[k]);
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (Mathf.Abs(d2.x) < 1.5f)
+                            else
                             {
-                                if (d1.y < 0)
+                                if (Mathf.Abs(d2.x) < 1.5f)
                                 {
-                                    nodes[i].rightConnections[j].child.Remove(nodes[i]);
-                                    nodes[i].child.Remove(nodes[i].rightConnections[j]);
+                                    if (d1.y < 0)
+                                    {
+                                        nodes[i].rightConnections[j].child.Remove(nodes[i]);
+                                        nodes[i].child.Remove(nodes[i].rightConnections[j]);
 
-                                    nodes[i].rightConnections[j].leftConnections.Remove(nodes[i]);
-                                    nodes[i].rightConnections.Remove(nodes[i].rightConnections[j]);
+                                        nodes[i].rightConnections[j].leftConnections.Remove(nodes[i]);
+                                        nodes[i].rightConnections.Remove(nodes[i].rightConnections[j]);
+                                    }
                                 }
                             }
                         }
@@ -360,7 +366,7 @@ public class PathGenerator : MonoBehaviour {
                     if (nodes[i].platform.tag == "tag_ladder" || nodes[i].leftConnections[j].platform.tag == "tag_ladder" ||
                                 nodes[i].leftConnections[k].platform.tag == "tag_ladder")
                     {
-                        return;
+                        continue;
                     }
 
                     Vector3 d2 = nodes[i].leftConnections[k].position - nodes[i].position;
@@ -376,7 +382,6 @@ public class PathGenerator : MonoBehaviour {
 
                             nodes[i].leftConnections[k].rightConnections.Remove(nodes[i]);
                             nodes[i].leftConnections.Remove(nodes[i].leftConnections[k]);
-                            
                             
                         }
                         else
@@ -395,31 +400,34 @@ public class PathGenerator : MonoBehaviour {
                     //x distance and y direction checks
                     if (k < nodes[i].leftConnections.Count)
                     {
-                        if (Mathf.Abs(d1.y) < Mathf.Abs(d2.y))
+                        if (Mathf.Abs(Vector3.Angle(d1, d2)) < 15)
                         {
-                            if (Mathf.Abs(d1.x) < 1.5f)
+                            if (Mathf.Abs(d1.y) < Mathf.Abs(d2.y))
                             {
-                                if (d2.y < 0)
+                                if (Mathf.Abs(d1.x) < 1.5f)
                                 {
-                                    nodes[i].leftConnections[k].child.Remove(nodes[i]);
-                                    nodes[i].child.Remove(nodes[i].leftConnections[k]);
+                                    if (d2.y < 0)
+                                    {
+                                        nodes[i].leftConnections[k].child.Remove(nodes[i]);
+                                        nodes[i].child.Remove(nodes[i].leftConnections[k]);
 
-                                    nodes[i].leftConnections[k].rightConnections.Remove(nodes[i]);
-                                    nodes[i].leftConnections.Remove(nodes[i].leftConnections[k]);
+                                        nodes[i].leftConnections[k].rightConnections.Remove(nodes[i]);
+                                        nodes[i].leftConnections.Remove(nodes[i].leftConnections[k]);
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (Mathf.Abs(d2.x) < 1.5f)
+                            else
                             {
-                                if (d1.y < 0)
+                                if (Mathf.Abs(d2.x) < 1.5f)
                                 {
-                                    nodes[i].leftConnections[j].child.Remove(nodes[i]);
-                                    nodes[i].child.Remove(nodes[i].leftConnections[j]);
+                                    if (d1.y < 0)
+                                    {
+                                        nodes[i].leftConnections[j].child.Remove(nodes[i]);
+                                        nodes[i].child.Remove(nodes[i].leftConnections[j]);
 
-                                    nodes[i].leftConnections[j].rightConnections.Remove(nodes[i]);
-                                    nodes[i].leftConnections.Remove(nodes[i].leftConnections[j]);
+                                        nodes[i].leftConnections[j].rightConnections.Remove(nodes[i]);
+                                        nodes[i].leftConnections.Remove(nodes[i].leftConnections[j]);
+                                    }
                                 }
                             }
                         }
