@@ -2093,7 +2093,8 @@ MonoBehaviour:
   fadeCanvasPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
     type: 2}
   fadeCanvas: {fileID: 0}
-  globalCanvasPrefab: {fileID: 0}
+  globalCanvasPrefab: {fileID: 1797487650366948, guid: 6836f535d38b2944b8159a2247812a93,
+    type: 2}
   virtualJoystick: {fileID: 0}
 --- !u!4 &1113645025
 Transform:
