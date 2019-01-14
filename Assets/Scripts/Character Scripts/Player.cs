@@ -341,6 +341,19 @@ struct PlayerStatus
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 [System.Serializable]
 public class Player : Character
 {
@@ -360,6 +373,7 @@ public class Player : Character
        if(phMeterAnimator.GetBool("ShowPhMeter"))
         {
             phMeterAnimator.SetBool("ShowPhMeter", false);
+           
         }
        else
         {
@@ -635,5 +649,9 @@ public class Player : Character
     {
         enemiesChasing.Remove(e);
     }
+
+
+
+
 }
 

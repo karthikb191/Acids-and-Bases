@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+
+
+
+
+
+
+
+
+
 public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     Player player;
@@ -13,6 +23,9 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     bool setTarget;
 
+   
+
+   
 
     private void Awake()
     {
@@ -20,34 +33,13 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     private void Start()
     {
+        
+        
         player = FindObjectOfType<Player>();
     }
     private void Update()
     {
-        /* if(setTarget)
-         {
-             if(Input.GetMouseButtonUp(1))
-             {
-                 Vector3 targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                 ThrowItem(targetPosition);
-                 setTarget = false;
-
-                // transform.position = targetPosition;
-             }
-
-
-         }
-
-         if (player.GetComponentInChildren<PlayerInventory>().activeItem == null)
-         {
-
-             this.gameObject.SetActive(false);
-         }
-         else
-         {
-             this.gameObject.SetActive(true);
-         }
-         */
+       
 
         if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
@@ -58,12 +50,19 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             this.gameObject.GetComponent<Image>().enabled = false;
         }
 
-        if(Input.GetMouseButtonDown(1))
+      
+        
+
+        if(buttonPressed)
         {
             tempTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Debug.Log("New Target set to: _____ " + tempTarget);
             ThrowItem();
+            buttonPressed = false;
         }
+
+
+
     }
 
     Vector3 tempTarget;

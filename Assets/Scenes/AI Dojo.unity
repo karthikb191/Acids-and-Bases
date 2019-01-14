@@ -1159,11 +1159,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4638055356294742, guid: f71f60cee0ee8174db557f6654db4f56, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -297.22
+      value: -303.5
       objectReference: {fileID: 0}
     - target: {fileID: 4638055356294742, guid: f71f60cee0ee8174db557f6654db4f56, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -167.87
+      value: -158.3
       objectReference: {fileID: 0}
     - target: {fileID: 4638055356294742, guid: f71f60cee0ee8174db557f6654db4f56, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2702,7 +2702,7 @@ MonoBehaviour:
   camHalfHeight: 0
   camHalfWidth: 0
   currentZValue: 0
-  keyboardControls: 1
+  keyboardControls: 0
   paused: 0
   fadeCanvasPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
     type: 2}
