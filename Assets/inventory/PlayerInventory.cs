@@ -49,7 +49,7 @@ public class PlayerInventory : Inventory
     Canvas inventoryUI;
    // [SerializeField]
     RectTransform panel;    //Panel within which the slots are stored   
-    Vector3 targerSetTest;
+  
 
 
     void CreateSlots()
@@ -130,13 +130,6 @@ public class PlayerInventory : Inventory
                         }
                     }
                 }
-            }
-            ///////////////////////////////////////////////////////////////////Target Setting testing//////////////////////////////////////////////////
-            else
-            {
-                targerSetTest = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                targerSetTest.z = 0;
-                Debug.Log("Target set" + "_____" + targerSetTest);
             }
         }
         if (activeItem != null && Input.GetKeyDown(KeyCode.Y))

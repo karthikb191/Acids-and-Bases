@@ -172,7 +172,7 @@ public class Inventory : MonoBehaviour {
 
             //activeItem.maxRangeOfThrow = 6;
             
-            activeItem.Throw(Target,10);
+            activeItem.Throw(Target,speed);
             UpdateSlotData(activeItem);
             activeSlotCount = ActiveSlotCount();
             Debug.Log("Active slot Count: " + activeSlotCount);
@@ -349,6 +349,8 @@ public class Inventory : MonoBehaviour {
                 {
                     if (!slots[i].imageSlotPrefab.activeSelf && slots[i].itemStored == null)
                     {
+                        
+                        Debug.Log("Adding item to slot");
                         slots[i].AddItem(l_ItemBase);
                       // slots[i].imageSlotPrefab.SetActive(true);
                         slots[i].displaySprite.sprite = l_ItemBase.itemProperties.imageSprite;

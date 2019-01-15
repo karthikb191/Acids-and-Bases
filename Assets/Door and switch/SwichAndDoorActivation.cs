@@ -44,7 +44,7 @@ public class SwichAndDoorActivation : MonoBehaviour
         }
         Debug.Log("thrown item: " + collision.gameObject.name);
     
-        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy)
+        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy && collision.gameObject.GetComponent<ItemBase>().thrown)
         {
             ActivateDoor();
         }

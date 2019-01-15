@@ -55,8 +55,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if(buttonPressed)
         {
-            tempTarget = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log("New Target set to: _____ " + tempTarget);
+          
             ThrowItem();
             buttonPressed = false;
         }
@@ -103,28 +102,29 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if(player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
 
-            tempTarget.z = 0;
-
-            Vector3 tempTar = player.Hand.transform.position;
+            Vector3 tempTar = player.transform.position;
             //Debug.Log(player.right + "o throw");
+
+            float maxRange = player.GetComponentInChildren<PlayerInventory>().activeItem.GetComponent<ItemBase>().maxRangeOfThrow;
             if (player.playerSprite.transform.localScale.x > 0)
             {
-                tempTar.x += 6;
+                tempTar.x += maxRange;
             }
             else
             {
-                tempTar.x -= 6;
-                Quaternion temp = player.GetComponentInChildren<PlayerInventory>().activeItem.transform.localRotation;
-                temp.y = 180;
+                tempTar.x -= maxRange;
+               /* Quaternion temp = player.GetComponentInChildren<PlayerInventory>().activeItem.transform.localRotation;
+                temp.y = 180;*/
 
             }
            
             Debug.Log("Player position" + player.Hand.transform.position + " <<>><><>" + "Temp target" + tempTarget);
-            if(tempTarget!= null)
-            player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTarget, 5);
-
-            else
+           
+            {
                 player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTar, 5);
+                Debug.Log("Auto target called" + tempTar);
+
+            }
         }
        
        // ResetPosition();
