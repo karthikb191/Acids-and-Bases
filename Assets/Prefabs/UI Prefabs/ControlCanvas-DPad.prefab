@@ -331,6 +331,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dynamicButtonPrefab: {fileID: 1103580239510436, guid: f620370fe3f0f9e45b4f6ffccff3644d,
     type: 2}
+  buttonGraphics:
+    defaultImage: {fileID: 21300002, guid: 87efaf20c96bd46b2a6e7bf4d4d3fd57, type: 3}
+    ladderImage: {fileID: 21300120, guid: cc60722ee33125c4790ac2ba52b93a1f, type: 3}
+    itemImage: {fileID: 21300074, guid: da2823a841bb5314490fa1c5decdc88e, type: 3}
+    doorImage: {fileID: 21300108, guid: cc60722ee33125c4790ac2ba52b93a1f, type: 3}
 --- !u!114 &114313551402885840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -718,9 +723,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -480.30005, y: -74.625}
+  m_AnchoredPosition: {x: -480.30005, y: -181.9375}
   m_SizeDelta: {x: 219.40002, y: 429.25}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.25}
 --- !u!224 &224329341242573258
 RectTransform:
   m_ObjectHideFlags: 1

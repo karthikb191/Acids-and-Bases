@@ -108,9 +108,7 @@ public class Inventory : MonoBehaviour {
     public List<Slot> slots = new List<Slot>();
 
     public GameObject imageSlotPrefab;
-
     
-
 
     public ItemBase activeItem;
 

@@ -22,8 +22,8 @@ class Enemy : EnemyBase
     public bool climbing;   //Must be set by enemy behavior
 
     public CharacterType characterType = CharacterType.acidic;
-
-    RaycastHit2D[] info;
+    
+    public RaycastHit2D[] info { get; private set; }
 
     bool halt = false;
 

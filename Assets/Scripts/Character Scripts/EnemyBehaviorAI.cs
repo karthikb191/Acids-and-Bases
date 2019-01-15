@@ -233,7 +233,7 @@ class ChasingBehavior : EnemyBehaviorAI
             //aiComponent.ChaseReset();   //Reset chase so that no new nodes are added in the AI component
         }
 
-        if (Vector3.SqrMagnitude(directionToCharacter) > Random.Range(90, 100))
+        if (Vector3.SqrMagnitude(directionToCharacter) > Random.Range(90, 100) && !aiComponent.persistentChase)
         {
             character.behaviorAI = null;
             character.behaviorAI = new RoamingBehavoir(character, aiComponent);

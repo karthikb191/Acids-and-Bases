@@ -27,6 +27,10 @@ public class Platform : MonoBehaviour {
     //BoxCollider2D boxCollider;
     public float width = 0;
     public float height = 0;
+
+    public float rightNodesSpacingVariable = 1.1f;
+    public float leftNodeSpacingVariable = 1.1f;
+
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -40,13 +44,13 @@ public class Platform : MonoBehaviour {
 
         if(gameObject.tag == "tag_ladder")
         {
-            leftNode.position = new Vector3(0, -extents.y / 1.1f, 0);
-            rightNode.position = new Vector3(0, extents.y / 1.1f, 0);
+            leftNode.position = new Vector3(0, -extents.y / leftNodeSpacingVariable, 0);
+            rightNode.position = new Vector3(0, extents.y / rightNodesSpacingVariable, 0);
         }
         else
         {
-            leftNode.position = new Vector3(-extents.x / 1.1f, extents.y, 0);
-            rightNode.position = new Vector3(extents.x / 1.1f, extents.y, 0);
+            leftNode.position = new Vector3(-extents.x / leftNodeSpacingVariable, extents.y, 0);
+            rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y, 0);
         }
 
         Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.localScale);
@@ -130,22 +134,16 @@ public class Platform : MonoBehaviour {
         #region Temp
         spriteRenderer = GetComponent<SpriteRenderer>();
         Vector3 extents = spriteRenderer.sprite.bounds.extents;
-        //leftNode.position = new Vector3(gameObject.transform.position.x - extents.x,
-        //                                    gameObject.transform.position.y + extents.y,
-        //                                    gameObject.transform.position.z);
-        //rightNode.position = new Vector3(gameObject.transform.position.x + extents.x,
-        //                                    gameObject.transform.position.y + extents.y,
-        //                                    gameObject.transform.position.z);
 
         if (gameObject.tag == "tag_ladder")
         {
-            leftNode.position = new Vector3(0, -extents.y / 1.1f, 0);
-            rightNode.position = new Vector3(0, extents.y / 1.1f, 0);
+            leftNode.position = new Vector3(0, -extents.y / leftNodeSpacingVariable, 0);
+            rightNode.position = new Vector3(0, extents.y / rightNodesSpacingVariable, 0);
         }
         else
         {
-            leftNode.position = new Vector3(-extents.x / 1.1f, extents.y, 0);
-            rightNode.position = new Vector3(extents.x / 1.1f, extents.y, 0);
+            leftNode.position = new Vector3(-extents.x / leftNodeSpacingVariable, extents.y, 0);
+            rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y, 0);
         }
 
         Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.localScale);
