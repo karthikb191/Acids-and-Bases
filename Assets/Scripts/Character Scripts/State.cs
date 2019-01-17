@@ -76,7 +76,7 @@ public class IdleState: States
             nextState.index = c.StateList.Count + 1;
             c.StateList.Add(nextState);
         }
-
+        
         //Shifting to climbing state
         if(contactWithLadder && input.climbPressed && c.StateList.Count == index)
         {
@@ -211,13 +211,13 @@ public class JumpingState : States
 
         if (input.jumpPressed)
         {
-            if (jumpDamper > 0.25f)
+            if (jumpDamper > 0.35f)
             {
-                jumpDamper -= 2 * GameManager.Instance.DeltaTime;
+                jumpDamper -= c.jumpMultiplier * GameManager.Instance.DeltaTime;
             }
             else
             {
-                jumpDamper = 0.25f;
+                jumpDamper = 0.35f;
             }
         }
         
@@ -281,17 +281,17 @@ public class FallingState : States
 
         if (jumpDamper < 1)
         {
-            jumpDamper += 4.0f * GameManager.Instance.DeltaTime;
+            jumpDamper += c.jumpMultiplier * 2 * GameManager.Instance.DeltaTime;
         }
         else
         {
             jumpDamper = 1;
         }
 
-        c.currentJumpSpeed += c.gravity * 4.5f * jumpDamper * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
+        c.currentJumpSpeed += c.gravity * 11.5f * jumpDamper * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
 
-        if (Mathf.Sign(c.currentJumpSpeed) < 0 && Mathf.Abs(c.currentJumpSpeed) > 0.3f)
-            c.currentJumpSpeed = -0.3f;
+        if (Mathf.Sign(c.currentJumpSpeed) < 0 && Mathf.Abs(c.currentJumpSpeed) > 0.45f)
+            c.currentJumpSpeed = -0.45f;
 
 
         //c.currentLinearSpeed = input.xInput * c.maxSpeed * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
@@ -338,6 +338,8 @@ public class FallingState : States
                 //c.State = new LandState();
                 if (c.StateList.Count == index)
                 {
+                    c.currentJumpSpeed = yCorr;
+
                     c.StateList.RemoveAt(c.StateList.Count - 1);
 
                     States nextState = new LandState();

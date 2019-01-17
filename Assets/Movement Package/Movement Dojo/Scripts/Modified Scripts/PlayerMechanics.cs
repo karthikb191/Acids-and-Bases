@@ -170,14 +170,14 @@ public class PlayerMechanics : CharacterMechanics
             else if(absorbButton!=null && !absorbing)
             {
                 Debug.Log("Character is not stunned");
-                VirtualJoystick.DisableButton(absorbButton);
+                VirtualJoystick.DisableDynamicButton(absorbButton);
                 absorbButton = null;
             }
         }
         else if (absorbButton != null && !absorbing)
         {
             Debug.Log("character is null");
-            VirtualJoystick.DisableButton(absorbButton);
+            VirtualJoystick.DisableDynamicButton(absorbButton);
             absorbButton = null;
         }
     }
@@ -213,16 +213,16 @@ public class PlayerMechanics : CharacterMechanics
 
     void EnableAbsorbButton()
     {
-        absorbButton = VirtualJoystick.CreateButton("tag_absorb");
+        absorbButton = VirtualJoystick.CreateDynamicButton("tag_absorb");
         if (!absorbButton.active)
         {
-            VirtualJoystick.EnableButton(absorbButton);
+            VirtualJoystick.EnableDynamicButton(absorbButton);
             absorbButton.button.onClick.AddListener(() =>
             {
                 player.userInputs.absorbPressed = true;
                 Debug.Log("Absorb pressed");
                 //Disable the button
-                VirtualJoystick.DisableButton(absorbButton);
+                VirtualJoystick.DisableDynamicButton(absorbButton);
                 absorbButton = null;
             });
         }

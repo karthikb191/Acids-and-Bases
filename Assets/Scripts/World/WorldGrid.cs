@@ -40,11 +40,12 @@ public class SparseArray
         {
             float code = index1 * 7 + index2 * 9;
             List<GridCell> gridCells = new List<GridCell>();
+            //If the hash table already has a key, then add the grid cell to that hash table
             if (hashValues.ContainsKey(code))
             {
                 gridCells = (List<GridCell>)hashValues[code];
                 gridCells.AddRange(value);
-                hashValues.Add(code, gridCells);
+                //hashValues.Add(code, gridCells);
             }
             else
             {

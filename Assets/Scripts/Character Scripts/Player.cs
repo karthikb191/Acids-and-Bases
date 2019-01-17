@@ -40,6 +40,8 @@ public abstract class Character : MonoBehaviour, ICharacter
     [Range(0.01f, 2.0f)]
     public float groundCheckCircleRadius = 0.2f;    // The ground check radius of the circle cast
     public float ceilingCheckCircleRadius = 0.2f;
+
+    public float jumpMultiplier = 1.0f;
     
     public GameObject Hand { get; set; }
     public GameObject Liquid { get; set; }
@@ -66,8 +68,7 @@ public abstract class Character : MonoBehaviour, ICharacter
 
     //Inventory variables
     protected Inventory inventory;
-
-
+    
     // pH button show/hide
     public Button phMeterShow;
 
@@ -138,8 +139,8 @@ public abstract class Character : MonoBehaviour, ICharacter
                                                 jumpDirection * (velocity.y - 0.001f) * externalVerticalMovementDamp +
                                                 externalSpeed;
 
-            if(!horizontalInputBlock && !verticalInputBlock)
-                gameObject.transform.up = playerUpOrientation;
+            //if(!horizontalInputBlock && !verticalInputBlock)
+            gameObject.transform.up = playerUpOrientation;
 
             gameObject.transform.position += velocity;
 
@@ -473,7 +474,7 @@ public class Player : Character
         {
             userInputs.jumpPressed = true;
         }
-        if (Input.GetKeyUp(KeyCode.Space) || VirtualJoystick.jumpButtonUp)
+        if ((Input.GetKeyUp(KeyCode.Space) || VirtualJoystick.jumpButtonUp) || currentJumpSpeed < 0)
         {
             userInputs.jumpPressed = false;
             userInputs.jumpReleased = true;
@@ -533,10 +534,10 @@ public class Player : Character
             //Debug.Log("State:  " + State.ToString());
             if (!State.Equals(typeof(ClimbingState)) && State.Equals(typeof(IdleState)))
             {
-                DynamicButton d = VirtualJoystick.CreateButton("tag_ladder");
+                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_ladder");
                 if (!d.active)
                 {
-                    VirtualJoystick.EnableButton(d);
+                    VirtualJoystick.EnableDynamicButton(d);
 
                     d.button.onClick.AddListener(() => {
                         if (!State.Equals(typeof(ClimbingState)))
@@ -548,7 +549,7 @@ public class Player : Character
                         else
                         {
                             userInputs.climbPressed = true;
-                            VirtualJoystick.DisableButton("tag_ladder");
+                            VirtualJoystick.DisableDynamicButton("tag_ladder");
                         }
                     });
 
@@ -628,10 +629,10 @@ public class Player : Character
             if (State.Equals(typeof(IdleState)) || State.Equals(typeof(RunningState)))
             {
                 //Create an item button
-                DynamicButton d = VirtualJoystick.CreateButton("tag_item");
+                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
                 if (!d.active)
                 {
-                    VirtualJoystick.EnableButton(d);
+                    VirtualJoystick.EnableDynamicButton(d);
                 }
             }
         }
@@ -648,7 +649,7 @@ public class Player : Character
                 if (VirtualJoystick.activeDynamicButtons[i].tag == info[j].collider.tag)
                     return;
             }
-            VirtualJoystick.DisableButton(VirtualJoystick.activeDynamicButtons[i]);
+            VirtualJoystick.DisableDynamicButton(VirtualJoystick.activeDynamicButtons[i]);
         }
     }
 

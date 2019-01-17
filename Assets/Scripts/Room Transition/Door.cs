@@ -22,16 +22,16 @@ public class Door : MonoBehaviour {
         {
             playerOnFocus = p;
             //Enable the button
-            DynamicButton d = VirtualJoystick.CreateButton("tag_door");
+            DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_door");
             if (!d.active)
             {
-                VirtualJoystick.EnableButton(d);
+                VirtualJoystick.EnableDynamicButton(d);
                 d.button.onClick.AddListener(() =>
                {
                    p.userInputs.doorOpenPressed = true;
 
                    //Disable the button
-                   VirtualJoystick.DisableButton(d);
+                   VirtualJoystick.DisableDynamicButton(d);
                });
             }
         }
@@ -44,7 +44,7 @@ public class Door : MonoBehaviour {
             playerOnFocus = null;
 
             //Disable the button
-            VirtualJoystick.DisableButton("tag_door");
+            VirtualJoystick.DisableDynamicButton("tag_door");
         }
     }
 

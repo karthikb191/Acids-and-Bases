@@ -22,21 +22,21 @@ public class ControlCanvas : MonoBehaviour {
 
     public static bool clickControls;
 
-    Image leftArea;
-    Image rightArea;
-    Image middleArea;
+    public Image LeftArea { get; private set; }
+    public Image RightArea { get; private set; }
+    public Image MiddleArea { get; private set; }
 
-    private float defaultWidth;
-    private float extraWidth = 200;
+    //private float defaultWidth;
+    //private float extraWidth = 200;
 
     void Awake() {
         
-        leftArea = FindObjectOfType<LeftButton>().GetComponent<Image>();
-        rightArea = FindObjectOfType<RightButton>().GetComponent<Image>();
-        middleArea = FindObjectOfType<Jump>().GetComponent<Image>();
+        LeftArea = FindObjectOfType<LeftButton>().GetComponent<Image>();
+        RightArea = FindObjectOfType<RightButton>().GetComponent<Image>();
+        MiddleArea = FindObjectOfType<Jump>().GetComponent<Image>();
 
-        defaultWidth = middleArea.rectTransform.sizeDelta.x;
-        extraWidth = defaultWidth + extraWidth;
+        //defaultWidth = middleArea.rectTransform.sizeDelta.x;
+        //extraWidth = defaultWidth + extraWidth;
         
     }
     private void Start()

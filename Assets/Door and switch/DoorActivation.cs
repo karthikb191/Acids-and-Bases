@@ -82,14 +82,14 @@ public class DoorActivation : MonoBehaviour {
             if (collision.GetComponent<Player>() != null)
             {
                 //Enable the button
-                DynamicButton d = VirtualJoystick.CreateButton("tag_door");
+                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_door");
                 if (!d.active)
                 {
-                    VirtualJoystick.EnableButton(d);
+                    VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
                     {
                         OpenDoor();
-                        VirtualJoystick.DisableButton(d);
+                        VirtualJoystick.DisableDynamicButton(d);
                     });
                 }
             }
@@ -105,7 +105,7 @@ public class DoorActivation : MonoBehaviour {
     {
         if (collision.gameObject.GetComponent<Player>())
         {
-            VirtualJoystick.DisableButton("tag_door");
+            VirtualJoystick.DisableDynamicButton("tag_door");
         }
 
        

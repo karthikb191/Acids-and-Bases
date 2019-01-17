@@ -101,15 +101,15 @@ public class AI : MonoBehaviour {
             //Debug.Log("Halt movement: " + haltMovement);
 
             //TODO: Remove comments later while still enabling testing
-            if (Input.GetMouseButtonDown(0) && !CharacterManager.Instance.characterClicked)
-            {
-                //TODO: change this
-                targetNodePath.Clear();
-                nodesPassed.Clear();
-                targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                //CalculateNodePath(currentNode, player.transform.position);
-                CalculateNodePath(targetLocation);
-            }
+            //if (Input.GetMouseButtonDown(0) && !CharacterManager.Instance.characterClicked)
+            //{
+            //    //TODO: change this
+            //    targetNodePath.Clear();
+            //    nodesPassed.Clear();
+            //    targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+            //    //CalculateNodePath(currentNode, player.transform.position);
+            //    CalculateNodePath(targetLocation);
+            //}
 
             if(chasingCharacter != null && !haltMovement)
             {
@@ -955,7 +955,6 @@ public class AI : MonoBehaviour {
                     }
                 }
             }
-            
         }
     }
     
@@ -964,10 +963,13 @@ public class AI : MonoBehaviour {
         haltMovement = true;
         if (calculateIdleNodes)
         {
-            if (targetNode.platform.leftNode == targetNode)
-                targetNode = targetNode.platform.rightNode;
-            else
-                targetNode = targetNode.platform.leftNode;
+            if (targetNode.platform != null)
+            {
+                if (targetNode.platform.leftNode == targetNode)
+                    targetNode = targetNode.platform.rightNode;
+                else
+                    targetNode = targetNode.platform.leftNode;
+            }
         }
         
         yield return new WaitForSeconds(1);
@@ -1139,14 +1141,17 @@ public class AI : MonoBehaviour {
 
             //TODO: Optimize the persistent chase code
             //This block is for persistently chasing the character
-            if (persistentChase && directionToCharacter.magnitude > visibilityDistance)
+            if (persistentChase &&
+                        (Mathf.Abs(directionToCharacter.x) > visibilityDistance &&
+                        Mathf.Abs(directionToCharacter.y) > visibilityDistance / 6))
             {
+                Debug.Log("Executing block");
                 chasingCharacterWithinProximity = false;
                 Player p = chasingCharacter.GetComponent<Player>();
                 bool layoutPath = false;
                 if (player != null) {
-                    if (directionToCharacter.magnitude > visibilityDistance)// && enemy.State.GetType() != typeof(ClimbingState))
-                    {
+                    //if // && enemy.State.GetType() != typeof(ClimbingState))
+                    //{
                         //Try to reach the player's current node
                         if (lastKnownPlayerNode == null)
                         {
@@ -1160,7 +1165,7 @@ public class AI : MonoBehaviour {
                                 layoutPath = true;
                             }
                         }
-                    }
+                    //}
                     lastKnownPlayerNode = p.currentNodeOfPlayer;
                 }
 
@@ -1178,12 +1183,13 @@ public class AI : MonoBehaviour {
             if (enemy.State.GetType() == typeof(ClimbingState))
                 return;
 
+            
             if (persistentChase && !chasingCharacterWithinProximity)
             {
                 Debug.Log("Character within proximity");
                 chasingCharacterWithinProximity = true;
                 targetNodePath.Clear();
-                //RaycastAndFindFloor(false);
+                RaycastAndFindFloor(false);
             }
 
             
@@ -1239,7 +1245,8 @@ public class AI : MonoBehaviour {
     public void PrepareForEncounter()
     {
         targetNodePath.Clear();
-        RaycastAndFindFloor(false);
+        if(!persistentChase)
+            RaycastAndFindFloor(false);
     }
 
     public void ChaseReset()

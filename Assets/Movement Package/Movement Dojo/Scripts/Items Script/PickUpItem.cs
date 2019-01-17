@@ -68,16 +68,16 @@ public class PickUpItem : MonoBehaviour {
             playerOnFocus = p;
 
             //Enable the button
-            DynamicButton d = VirtualJoystick.CreateButton("tag_item");
+            DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
             if (!d.active)
             {
-                VirtualJoystick.EnableButton(d);
+                VirtualJoystick.EnableDynamicButton(d);
                 d.button.onClick.AddListener(() =>
                 {
                     //p.userInputs.doorOpenPressed = true;
 
                     //Disable the button
-                    VirtualJoystick.DisableButton(d);
+                    VirtualJoystick.DisableDynamicButton(d);
                 });
             }
 
@@ -103,7 +103,7 @@ public class PickUpItem : MonoBehaviour {
                 playerOnFocus = null;
 
                 //Disable the button
-                VirtualJoystick.DisableButton("tag_item");
+                VirtualJoystick.DisableDynamicButton("tag_item");
             }
 
         //if(collider.tag == "tag_player")

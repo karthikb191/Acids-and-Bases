@@ -28,6 +28,8 @@ public class ButtonGraphics
 public class VirtualJoystick : MonoBehaviour {
     
     public static bool usingJoystick;
+
+    private static GameObject jumpButton;
     public static bool jumpButtonDown;
     public static bool jumpButtonUp;
 
@@ -49,7 +51,7 @@ public class VirtualJoystick : MonoBehaviour {
     public static float horizontalValue;
     public static float verticalValue;
 
-    static Transform controlCanvas;
+    static ControlCanvas controlCanvas;
     public static List<DynamicButton> dynamicButtonsStore;
     public static List<DynamicButton> activeDynamicButtons;
     public GameObject dynamicButtonPrefab;  //Must be set in the inspector
@@ -58,7 +60,15 @@ public class VirtualJoystick : MonoBehaviour {
     public ButtonGraphics buttonGraphics;
 
     //Arrows Holder
-    public static RectTransform arrowsHolder;
+    private static RectTransform arrowsHolder;
+
+
+    //Events for button activation and deactivation
+    public delegate void Activatebutton(GameObject button);
+    public static event Activatebutton ActivateButtonEvent;
+
+    public delegate void Deactivatebutton(GameObject button);
+    public static event Deactivatebutton DeactivateButtonEvent;
 
     private void Awake()
     {
@@ -92,10 +102,11 @@ public class VirtualJoystick : MonoBehaviour {
         activeDynamicButtons = new List<DynamicButton>();
         dynamicButtonsStore = new List<DynamicButton>();
 
-        controlCanvas = transform.GetChild(0);
+        controlCanvas = transform.GetComponentInChildren<ControlCanvas>();
         pickUpButton = transform.GetChild(0).Find("PickUp").gameObject;
         itemSpecialActionButton = transform.GetChild(0).Find("ItemSpecialAction").gameObject;
         throwButton = transform.GetChild(0).Find("ThrowItemButton").gameObject;
+        jumpButton = transform.GetChild(0).Find("Jump").gameObject;
 
         pickUpButton.SetActive(false);
         itemSpecialActionButton.SetActive(false);
@@ -122,7 +133,7 @@ public class VirtualJoystick : MonoBehaviour {
     #region Dynamic Button Functions
     //Button creation and destruction will be done on the respective target object
     //This makes editing them easier
-    public static DynamicButton CreateButton(string tag)
+    public static DynamicButton CreateDynamicButton(string tag)
     {
         float buttonSize = 50.0f;
         //Debug.Log("enabling");
@@ -163,7 +174,7 @@ public class VirtualJoystick : MonoBehaviour {
             Navigation nav = new Navigation();
             nav.mode = Navigation.Mode.None;
             d.button.navigation = nav;
-            g.transform.SetParent(controlCanvas);
+            g.transform.SetParent(controlCanvas.transform);
 
             d.tag = tag;
             dynamicButtonsStore.Add(d);
@@ -171,10 +182,11 @@ public class VirtualJoystick : MonoBehaviour {
             d.button.GetComponent<RectTransform>().sizeDelta = new Vector2(buttonSize, buttonSize);
 
             //Assign an image to the button depending on the tag
-            AssignImage(d, tag);
+            AssignImageToDynamicButton(d, tag);
 
             return d;
         }
+
         if (!buttonFound)
         {
             Debug.Log("Button Created");
@@ -189,14 +201,14 @@ public class VirtualJoystick : MonoBehaviour {
             Navigation nav = new Navigation();
             nav.mode = Navigation.Mode.None;
             d.button.navigation = nav;
-            g.transform.SetParent(controlCanvas);
+            g.transform.SetParent(controlCanvas.transform);
             
             d.tag = tag;
 
             dynamicButtonsStore.Add(d);
 
             //Assign an image to the button depending on the tag
-            AssignImage(d, tag);
+            AssignImageToDynamicButton(d, tag);
 
             return d;
         }
@@ -204,8 +216,10 @@ public class VirtualJoystick : MonoBehaviour {
             return null;
     }
 
-    public static void AssignImage(DynamicButton d, string tag)
+    public static void AssignImageToDynamicButton(DynamicButton d, string tag)
     {
+        int buttonSize = 100;
+        d.button.GetComponent<RectTransform>().sizeDelta = new Vector2(buttonSize, buttonSize);
         switch (tag)
         {
             case "tag_ladder":
@@ -228,7 +242,7 @@ public class VirtualJoystick : MonoBehaviour {
         }       
     }
 
-    public static void EnableButton(DynamicButton b)
+    public static void EnableDynamicButton(DynamicButton b)
     {
         if(b!= null)
         {
@@ -245,11 +259,14 @@ public class VirtualJoystick : MonoBehaviour {
             if(!activeDynamicButtons.Contains(b))
                 activeDynamicButtons.Add(b);
 
-            ArrangeButtons();
+            ArrangeDynamicButtons();
+
+            if (ActivateButtonEvent != null)
+                ActivateButtonEvent(b.button.gameObject);
         }
     }
 
-    public static void DisableButton(string tag)
+    public static void DisableDynamicButton(string tag)
     {
         Debug.Log("Disabling button");
         if(activeDynamicButtons.Count > 0)
@@ -262,12 +279,15 @@ public class VirtualJoystick : MonoBehaviour {
                     activeDynamicButtons[i].active = false;
                     activeDynamicButtons[i].button.gameObject.SetActive(false);
                     activeDynamicButtons.RemoveAt(i);
+
+                    if (DeactivateButtonEvent != null)
+                        DeactivateButtonEvent(activeDynamicButtons[i].button.gameObject);
                 }
             }
-            ArrangeButtons();
+            ArrangeDynamicButtons();
         }
     }
-    public static void DisableButton(DynamicButton b)
+    public static void DisableDynamicButton(DynamicButton b)
     {
         if (b != null)
         {
@@ -276,12 +296,15 @@ public class VirtualJoystick : MonoBehaviour {
             b.button.gameObject.SetActive(false);
             b.button.onClick.RemoveAllListeners();
             activeDynamicButtons.Remove(b);
-            ArrangeButtons();
+            ArrangeDynamicButtons();
+
+            if (DeactivateButtonEvent != null)
+                DeactivateButtonEvent(b.button.gameObject);
         }
 
     }
     
-    static void ArrangeButtons()
+    static void ArrangeDynamicButtons()
     {
         float angle = 60 * Mathf.Deg2Rad;
         float radius = 150;
@@ -328,7 +351,7 @@ public class VirtualJoystick : MonoBehaviour {
 
     static IEnumerator RotateArrows(Quaternion targetRotation)
     {
-        float stepSize = 0.05f;
+        float stepSize = 0.15f;
         while(Quaternion.Angle(arrowsHolder.localRotation, targetRotation) > 1.0f)
         {
             //Arrows are rotated here
@@ -341,4 +364,41 @@ public class VirtualJoystick : MonoBehaviour {
     }
 
     #endregion
+
+    #region Button Activation and Deactivation
+
+    public static void ActivateButton(GameObject button)
+    {
+        button.SetActive(true);
+        if (ActivateButtonEvent != null)
+            ActivateButtonEvent(button);
+    }
+    public static void DeactivateButton(GameObject button)
+    {
+        button.SetActive(false);
+        if (DeactivateButtonEvent != null)
+            DeactivateButtonEvent(button);
+    }
+
+    #endregion
+
+    #region get buttons
+    public static GameObject GetJumpButton()
+    {
+        return jumpButton;
+    }
+    public static GameObject GetArrowKeys()
+    {
+        return arrowsHolder.gameObject;
+    }
+    public static GameObject GetLeftArrow()
+    {
+        return arrowsHolder.transform.Find("Left").gameObject;
+    }
+    public static GameObject GetRightArrow()
+    {
+        return arrowsHolder.transform.Find("Right").gameObject;
+    }
+    #endregion
+
 }

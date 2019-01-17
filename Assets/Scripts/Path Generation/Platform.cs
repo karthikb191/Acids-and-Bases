@@ -31,6 +31,8 @@ public class Platform : MonoBehaviour {
     public float rightNodesSpacingVariable = 1.1f;
     public float leftNodeSpacingVariable = 1.1f;
 
+    public float verticalAdjustment = 0.0f;
+
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -44,13 +46,13 @@ public class Platform : MonoBehaviour {
 
         if(gameObject.tag == "tag_ladder")
         {
-            leftNode.position = new Vector3(0, -extents.y / leftNodeSpacingVariable, 0);
-            rightNode.position = new Vector3(0, extents.y / rightNodesSpacingVariable, 0);
+            leftNode.position = new Vector3(verticalAdjustment, -extents.y / leftNodeSpacingVariable, 0);
+            rightNode.position = new Vector3(verticalAdjustment, extents.y / rightNodesSpacingVariable, 0);
         }
         else
         {
-            leftNode.position = new Vector3(-extents.x / leftNodeSpacingVariable, extents.y, 0);
-            rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y, 0);
+            leftNode.position = new Vector3(-extents.x / leftNodeSpacingVariable, extents.y + verticalAdjustment, 0);
+            rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y + verticalAdjustment, 0);
         }
 
         Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.localScale);
@@ -90,10 +92,10 @@ public class Platform : MonoBehaviour {
                 if (p.State.Equals(typeof(IdleState)))
                 {
                     //Enable the button
-                    DynamicButton d = VirtualJoystick.CreateButton("tag_ladder");
+                    DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_ladder");
                     if (!d.active)
                     {
-                        VirtualJoystick.EnableButton(d);
+                        VirtualJoystick.EnableDynamicButton(d);
                         d.button.onClick.AddListener(() =>
                         {
 
@@ -102,7 +104,7 @@ public class Platform : MonoBehaviour {
                             if (p.State.Equals(typeof(ClimbingState)))
                             {
                                 //Disable the button
-                                VirtualJoystick.DisableButton(d);
+                                VirtualJoystick.DisableDynamicButton(d);
                             }
                         });
                     }
@@ -121,7 +123,7 @@ public class Platform : MonoBehaviour {
                 playerOnFocus = null;
 
                 //Disable the button
-                VirtualJoystick.DisableButton("tag_ladder");
+                VirtualJoystick.DisableDynamicButton("tag_ladder");
             }
         }
     }
@@ -137,13 +139,13 @@ public class Platform : MonoBehaviour {
 
         if (gameObject.tag == "tag_ladder")
         {
-            leftNode.position = new Vector3(0, -extents.y / leftNodeSpacingVariable, 0);
-            rightNode.position = new Vector3(0, extents.y / rightNodesSpacingVariable, 0);
+            leftNode.position = new Vector3(verticalAdjustment, -extents.y / leftNodeSpacingVariable, 0);
+            rightNode.position = new Vector3(verticalAdjustment, extents.y / rightNodesSpacingVariable, 0);
         }
         else
         {
-            leftNode.position = new Vector3(-extents.x / leftNodeSpacingVariable, extents.y, 0);
-            rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y, 0);
+            leftNode.position = new Vector3(-extents.x / leftNodeSpacingVariable, extents.y + verticalAdjustment, 0);
+            rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y + verticalAdjustment, 0);
         }
 
         Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.localScale);

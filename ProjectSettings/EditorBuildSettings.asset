@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Start Screen/StartScreen.unity
     guid: 6e7dc3ab67c5e0f47a8c028b2f40a615
   - enabled: 1
-    path: Assets/Scenes/AI Dojo.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/lvl1.unity
+    guid: 41f2fc6ceda91d7429fb175a0e2aac90
   m_configObjects: {}

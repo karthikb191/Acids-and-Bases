@@ -13,6 +13,12 @@ public class LevelManager : MonoBehaviour {
     bool startTimer = false;
     public float timer = 0.0f;
 
+
+    public delegate void RoomShiftComplete();
+    public event RoomShiftComplete RoomShiftCompleteEvent;  //Subscribe to this if you want something to happen on shitfting the room
+
+    private Room currentRoom;
+
     private void Awake()
     {
         if (Instance == null)
@@ -154,6 +160,9 @@ public class LevelManager : MonoBehaviour {
 
     void ResetRoomShift()
     {
+        if (RoomShiftCompleteEvent != null)
+            RoomShiftCompleteEvent();
+
         shifting = false;
         GameManager.Instance.FadeOutStartEvent -= ShiftRoom;
         GameManager.Instance.FadeOutCompleteEvent -= ResetRoomShift;
@@ -166,6 +175,8 @@ public class LevelManager : MonoBehaviour {
     {
         return shifting;
     }
+
+
 
     #endregion
 

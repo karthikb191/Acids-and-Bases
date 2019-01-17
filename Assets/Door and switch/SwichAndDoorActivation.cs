@@ -30,14 +30,14 @@ public class SwichAndDoorActivation : MonoBehaviour
             if (collision.GetComponent<Player>() != null)
             {
                 //Enable the button
-                DynamicButton d = VirtualJoystick.CreateButton("tag_door");
+                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_door");
                 if (!d.active)
                 {
-                    VirtualJoystick.EnableButton(d);
+                    VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
                     {
                         ActivateDoor();
-                        VirtualJoystick.DisableButton(d);
+                        VirtualJoystick.DisableDynamicButton(d);
                     });
                 }
             }
@@ -54,7 +54,7 @@ public class SwichAndDoorActivation : MonoBehaviour
       
         if (collision.gameObject.GetComponent<Player>())
         {
-            VirtualJoystick.DisableButton("tag_door");
+            VirtualJoystick.DisableDynamicButton("tag_door");
         }
 
         

@@ -1,6 +1,7 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 
 public class ItemBase : MonoBehaviour {
@@ -40,14 +41,14 @@ public class ItemBase : MonoBehaviour {
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
         if (isFromEnemy)
         {
-            playerObject = transform.root.GetComponentInParent<Enemy>().gameObject;
-           
+            playerObject = transform.GetComponentInParent<Enemy>().gameObject;
+            Debug.Log("thrown from enemy");
             thrown = true;
             StartCoroutine(ThrowProjectile(target, 45));
         }
         else
         {
-            playerObject = transform.root.GetComponentInParent<Player>().gameObject;
+            playerObject = transform.GetComponentInParent<Player>().gameObject;
             Debug.Log("Thrown from: ____>>>>" + playerObject.name);
             ThrowCalculations(target, speed);
             StartCoroutine(ThrowProjectile(target, angleOfThrow));
@@ -66,14 +67,14 @@ public class ItemBase : MonoBehaviour {
             if (collision.GetComponent<Player>() != null)
             {
                 //Enable the button
-                DynamicButton d = VirtualJoystick.CreateButton("tag_item");
+                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
                 if (!d.active)
                 {
-                    VirtualJoystick.EnableButton(d);
+                    VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
                     {
                         AddItem();
-                        VirtualJoystick.DisableButton(d);                          
+                        VirtualJoystick.DisableDynamicButton(d);                          
                     });
                 }
             }
@@ -85,7 +86,7 @@ public class ItemBase : MonoBehaviour {
     {
         if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
-            VirtualJoystick.DisableButton("tag_item");
+            VirtualJoystick.DisableDynamicButton("tag_item");
         }
     }
 
@@ -349,45 +350,15 @@ public class ItemBase : MonoBehaviour {
 
     }
 
-   private void ThrowPathFollow()
-  //  IEnumerator ThrowPathFollow()
-    {
-        timeElapsed += Time.deltaTime;
 
-        if (timeElapsed > timeToReach / 3.0f)
-        {
-            angleQuatrenion = targetToHit - gameObject.transform.position;
-
-        }
-
-        Vector3 tempDirection = Vector3.Lerp(lastDirection.normalized, angleQuatrenion.normalized, 0.02f);
-
-         gameObject.transform.position += tempDirection.normalized * throwVelocity * Time.deltaTime;
-
-      
-        lastDirection = tempDirection;
-
-       // if (timeElapsed > timeToReach + 0.2f || Mathf.Abs(targetToHit.x - transform.position.x) < 0.5f)
-        if (timeElapsed > timeToReach + 0.2f)
-        {
-            gameObject.GetComponent<SpriteRenderer>().enabled = false;
-
-            /// particle effect at end of path
-            thrown = false;
-
-          //  yield break;
-
-        }
-
-    }
 
     public float colliderRadius = 2;
     void OnDrawGizmosSelected()
     {
-     
-            UnityEditor.Handles.color = Color.green;
-            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
-        
+# if UNITY_EDITOR
+        UnityEditor.Handles.color = Color.green;
+        UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
+#endif
     }
 
  
@@ -399,13 +370,14 @@ public class ItemBase : MonoBehaviour {
 
         for (int i = 0; i < collidedWith.Length; i++)
         {
+            Debug.Log("Collision length: " + collidedWith.Length + collidedWith[i].collider.name);
             if(collidedWith[i].transform.CompareTag("tag_platform"))
             {
                 Debug.Log("HIt Platform & destroyed");
                 Destroy(this.gameObject);
                 break;
             }
-
+            Debug.Log("one");
             if (collidedWith[i].transform.GetComponent<SwichAndDoorActivation>())
 
             {
@@ -414,25 +386,21 @@ public class ItemBase : MonoBehaviour {
                 Destroy(this.gameObject);
                 break;
             }
-
-            if (timeElapsed > 0.5f)
+            
+            if (collidedWith[i].transform.GetComponent<Character>() != null)
             {
-                if (collidedWith[i].transform != null)
+                if (collidedWith[i].transform.GetComponentInParent<Character>().gameObject != playerObject.gameObject)
                 {
-                    if (collidedWith[i].transform.GetComponent<Character>().gameObject != playerObject.gameObject)
-                    {
-                        Debug.Log("Used called from:   " + playerObject.name);
-                        Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponent<Character>());
+                    Debug.Log("Used called from:   " + playerObject.name);
+                    Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponent<Character>());
 
 
-                        Use(collidedWith[i].transform.root.GetComponentInParent<Character>());
-                        Destroy(this.gameObject);
+                    Use(collidedWith[i].collider.transform.GetComponentInParent<Character>());
+                    Destroy(this.gameObject);
 
-                        break;
-                    }
+                    break;
                 }
             }
-
         }
     }
 
