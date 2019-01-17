@@ -1,12 +1,11 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.UI;
 
 public class ItemBase : MonoBehaviour {
 
-    bool thrown = false;
+    public bool thrown = false;
 
     bool used = false;
     
@@ -18,9 +17,12 @@ public class ItemBase : MonoBehaviour {
 
     public float speed = 20.0f;
 
-    public Vector3 targetScale = Vector3.one;
+    Vector3 targetScale = Vector3.one;
 
     public bool isFromEnemy = false;
+
+    public float colliderRadius = 2;
+
 
     private void Update()
     {
@@ -30,8 +32,8 @@ public class ItemBase : MonoBehaviour {
         }
     }
 
-    public virtual void Use() {
-        
+    public virtual void Use()
+    {       
         transform.parent = null;
         gameObject.SetActive(false);
     }
@@ -39,20 +41,19 @@ public class ItemBase : MonoBehaviour {
     public virtual void Throw(Vector3 target,float speed)
     {
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
-        if (isFromEnemy)
-        {
-            playerObject = transform.GetComponentInParent<Enemy>().gameObject;
-            Debug.Log("thrown from enemy");
-            thrown = true;
-            StartCoroutine(ThrowProjectile(target, 45));
-        }
-        else
-        {
-            playerObject = transform.GetComponentInParent<Player>().gameObject;
-            Debug.Log("Thrown from: ____>>>>" + playerObject.name);
-            ThrowCalculations(target, speed);
-            StartCoroutine(ThrowProjectile(target, angleOfThrow));
-        }
+            if (isFromEnemy)
+            {
+                playerObject = transform.root.GetComponentInParent<Enemy>().gameObject;
+                thrown = true;
+                StartCoroutine(ThrowProjectile(target, 45));
+            }
+            else
+            {
+                playerObject = transform.root.GetComponentInParent<Player>().gameObject;
+                Debug.Log("Thrown from: ____>>>>" + playerObject.name);
+                ThrowCalculations(target, speed);
+                StartCoroutine(ThrowProjectile(target, angleOfThrow));
+            }
     }
 
 
@@ -63,7 +64,6 @@ public class ItemBase : MonoBehaviour {
         {
             playerObject = collision.gameObject;
 
-           // Player p = collision.GetComponent<Player>();
             if (collision.GetComponent<Player>() != null)
             {
                 //Enable the button
@@ -141,7 +141,6 @@ public class ItemBase : MonoBehaviour {
     {
         
         targetScale = Vector3.one;
-         // transform.rotation = c.gameObject.transform.rotation;
         transform.position = targetPosition;
         transform.parent = null;
 
@@ -191,35 +190,6 @@ public class ItemBase : MonoBehaviour {
         //Destroy item after use or whenever you see fit
     }
 
-
-    public void AlignWithPos(Quaternion targetRotation, Vector3 targetScale, Vector3 targetPosition)
-    {
-        //Animating the rotation
-        float angle = Quaternion.Angle(gameObject.transform.rotation, targetRotation);
-      
-        if (angle > 0.05f)
-            gameObject.transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, targetRotation, 0.2f);
-        else
-            gameObject.transform.rotation = targetRotation;
-
-        //Animating scale
-        float scaleDiff = Vector3.Distance(gameObject.transform.localScale, targetScale);
-
-        if (scaleDiff > 0.05f)
-            gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, targetScale, 0.2f);
-        else
-            gameObject.transform.localScale = targetScale;
-
-        if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
-        {
-            gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
-        }
-        else
-        {
-            gameObject.transform.position = targetPosition;
-        }
-    }
-
     IEnumerator ThrowProjectile(Vector3 Target, float firingAngle)
     {      
         Debug.Log("Target to reach"+Target);
@@ -256,17 +226,17 @@ public class ItemBase : MonoBehaviour {
             transform.rotation = Quaternion.identity;
             elapse_time = 0;
            if(isFromEnemy)
-            {
+           {
                
                 gameObject.SetActive(false);
                 Destroy(gameObject);
             
-            }
+           }
            else
-            {
+           {
                 gameObject.SetActive(false);
                 transform.parent = null;
-            }
+           }
           
             yield break;
         }
@@ -277,29 +247,20 @@ public class ItemBase : MonoBehaviour {
         if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
             playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
-
-            playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);
-
-            
-
-           StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-           
+            playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);           
+            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));   
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-           gameObject.transform.localScale = targetScale;
+            gameObject.transform.localScale = targetScale;
 
         }
         else
         {
             playerObject.GetComponentInChildren<Inventory>().AddItem(this);
-
             StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-
             gameObject.SetActive(false);
-
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.localScale = targetScale;
-
+            gameObject.transform.localScale = targetScale ;
         }
         setFocus = false;
     }
@@ -308,16 +269,16 @@ public class ItemBase : MonoBehaviour {
     public float maxAngle = 45;
 
     [Range(0, 45)]
-   public float angleOfThrow;
+    public float angleOfThrow;
 
     Vector3 directionOfThrow;
 
     Vector3 angleQuatrenion;
 
-   public float timeElapsed = 0;
+    public float timeElapsed = 0;
 
-   public  float timeToReach = 0;
-  public  Vector3 targetToHit;
+    public  float timeToReach = 0;
+    public  Vector3 targetToHit;
 
     Vector3 lastDirection;
 
@@ -350,18 +311,15 @@ public class ItemBase : MonoBehaviour {
 
     }
 
-
-
-    public float colliderRadius = 2;
     void OnDrawGizmosSelected()
     {
-# if UNITY_EDITOR
-        UnityEditor.Handles.color = Color.green;
-        UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
+#if (UNITY_EDITOR)
+            UnityEditor.Handles.color = Color.green;
+            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
 #endif
     }
 
- 
+
     void CheckCollision()
     {
 
@@ -370,38 +328,44 @@ public class ItemBase : MonoBehaviour {
 
         for (int i = 0; i < collidedWith.Length; i++)
         {
-            Debug.Log("Collision length: " + collidedWith.Length + collidedWith[i].collider.name);
             if(collidedWith[i].transform.CompareTag("tag_platform"))
             {
                 Debug.Log("HIt Platform & destroyed");
                 Destroy(this.gameObject);
                 break;
             }
-            Debug.Log("one");
-            if (collidedWith[i].transform.GetComponent<SwichAndDoorActivation>())
 
+            if (collidedWith[i].transform.GetComponent<SwichAndDoorActivation>())
             {
                 Debug.Log("Collided with Switch");
                 collidedWith[i].transform.GetComponent<SwichAndDoorActivation>().ActivateDoor();
                 Destroy(this.gameObject);
                 break;
             }
-            
-            if (collidedWith[i].transform.GetComponent<Character>() != null)
-            {
-                if (collidedWith[i].transform.GetComponentInParent<Character>().gameObject != playerObject.gameObject)
-                {
-                    Debug.Log("Used called from:   " + playerObject.name);
-                    Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponent<Character>());
 
-
-                    Use(collidedWith[i].collider.transform.GetComponentInParent<Character>());
-                    Destroy(this.gameObject);
-
-                    break;
-                }
+            if (collidedWith[i].transform.GetComponent<Character>() != null && collidedWith[i].transform.GetComponent<Character>().gameObject != playerObject.gameObject)
+            {                 
+                    Use(collidedWith[i].transform.GetComponent<Character>());
+                    if(isFromEnemy)
+                    {
+                        Debug.Log("Used called from:   " + playerObject.name);
+                        Debug.Log("Used on  :    " + collidedWith[i].transform.root.GetComponentInParent<Character>().gameObject);
+                        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                        this.AlignPos(playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position, playerObject.gameObject.GetComponentInParent<Character>());
+                        this.transform.position = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position;
+                        this.transform.parent= playerObject.gameObject.GetComponentInParent<Character>().Hand.transform;
+                        playerObject.gameObject.GetComponentInChildren<EnemyInventory>().AddItem(this);
+                        this.gameObject.SetActive(false);
+                        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                        break;
+                    }
+                    else
+                    {
+                        Destroy(this.gameObject);
+                        break;
+                    }             
             }
-        }
+        }      
     }
 
 }

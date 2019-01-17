@@ -43,18 +43,21 @@ public class DoorActivation : MonoBehaviour {
         {
             if(switchScripts[i].isActivated)
             {
+              
                 openDoor = true;
-                //doorCollider.isTrigger = true;
+                doorCollider.isTrigger = true;
                 
                 continue;
             }
 
             else
             {
-                //doorCollider.isTrigger = false;
+               
+                doorCollider.isTrigger = false;
                 openDoor = false;
                 
                 break;
+
             }
         }
 
@@ -67,7 +70,7 @@ public class DoorActivation : MonoBehaviour {
 
     void OpenDoor()
     {
-        //doorCollider.isTrigger = true;
+        doorCollider.isTrigger = true;
         doorAnimator.SetBool("OpenDoor", true);
         doorCollider.enabled = false;
         

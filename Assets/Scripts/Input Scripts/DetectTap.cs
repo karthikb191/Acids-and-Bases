@@ -150,19 +150,4 @@ public class ThrowTapInput {
           
     }
 
-
-
-
-    /////On update
-    /*
-     * raycast = anyCanvas.
-     * InputCheck();
-     * 
-     * if(TargetSet())
-     * {
-     * call throw....
-     * }
-     * 
-     * 
-     */
 }

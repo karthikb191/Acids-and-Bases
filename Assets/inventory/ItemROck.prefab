@@ -81,7 +81,6 @@ MonoBehaviour:
   playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: 005a17f93caf30c478065ff7c85ac351, type: 2}
   speed: 30
-  targetScale: {x: 5, y: 5, z: 5}
   isFromEnemy: 0
   maxRangeOfThrow: 20
   maxAngle: 45
@@ -90,7 +89,7 @@ MonoBehaviour:
   timeToReach: 0
   targetToHit: {x: 0, y: 0, z: 0}
   throwVelocity: 0
-  colliderRadius: 2
+  colliderRadius: 0.75
 --- !u!212 &212498842860357256
 SpriteRenderer:
   m_ObjectHideFlags: 1
