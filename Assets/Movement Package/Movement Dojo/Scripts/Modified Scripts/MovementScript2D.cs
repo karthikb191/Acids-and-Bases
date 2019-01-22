@@ -280,7 +280,7 @@ public class MovementScript2D : MonoBehaviour {
                 jumpDamper = 1; //Setting the jump damper value to 1 once the jump starts
 
                 //set the vertical velocity
-                currentJumpSpeed = maxJumpSpeed * 0.03f * 0.03f;
+                currentJumpSpeed = maxJumpSpeed * GameManager.Instance.stepSize * GameManager.Instance.stepSize;
 
                 //Jump release variable is set here to false because we want this function to execute only on jump button press
                 jumpButtonReleased = false;

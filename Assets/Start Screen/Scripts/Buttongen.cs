@@ -55,6 +55,7 @@ public class Buttongen : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log("Level selected: " + levelSelected);
         StartCoroutine(GameManager.Instance.GoToLevelWithFade(levelSelected));
     }
 

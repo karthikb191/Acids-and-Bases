@@ -7,6 +7,8 @@ abstract class EnemyBehaviorAI
 {
     protected Enemy character;
     protected AI aiComponent;
+
+    protected bool forceChase;
     
     public EnemyBehaviorAI(Enemy e, AI ai)
     {
@@ -17,6 +19,13 @@ abstract class EnemyBehaviorAI
     public int mood = 0;    //Negative mood leads to depressions and higher positive mood leads to anger and aggression
     public abstract void BehaviorUpdate();
     public abstract void BehaviorExitConditions();
+    
+    public static void ForceChaseBehavior(Enemy e, Character chaseCharacter)
+    {
+        Debug.Log("Forced behavior");
+        e.GetComponent<AI>().ResetChaseAndRunAway();
+        e.behaviorAI = new ChasingBehavior(e, e.GetComponent<AI>(), chaseCharacter);
+    }
 }
 
 class RoamingBehavoir : EnemyBehaviorAI
@@ -65,32 +74,6 @@ class RoamingBehavoir : EnemyBehaviorAI
 
         //TODO: Filter the characters to find the ones that are withing this character's FOV
         return proximityCharacters;
-
-        /*loop through characters and find the player
-        for (int i = 0; i < charactersInProximity.Count; i++)
-        {
-            if (charactersInProximity[i].GetComponent<Player>())
-            {
-                //chaseStarted = true;
-                runaway = true;
-                chasingCharacter = charactersInProximity[i];
-                targetNodePath.Clear();
-        
-                if (chaseStarted)
-                {
-                    targetNodePath.Add(new Node { position = chasingCharacter.transform.position });
-                    targetNode = targetNodePath[0];
-                }
-                if (runaway)
-                {
-                    targetNodePath.Clear();
-                    //RunAwayAI();
-                }
-        
-                break;
-            }
-        }*/
-
     }
 
 
@@ -120,6 +103,7 @@ class SpottedBehavior : EnemyBehaviorAI
     }
     public override void BehaviorUpdate()
     {
+        
         //Debug.Log("Spotted Behavior");
         //We are searching for player character for now. More behavior will be added later
         foreach(Character c in charactersWithinProximity)
@@ -138,9 +122,20 @@ class SpottedBehavior : EnemyBehaviorAI
 
         BehaviorExitConditions();
     }
+
     public override void BehaviorExitConditions()
     {
         //TODO: Add more interesting behavior later
+        if (aiComponent.ignoreOtherEnemies && chasingCharacter != null)
+        {
+            Debug.Log("Chase started");
+            aiComponent.chaseStarted = true;
+            character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+
+            Debug.Log("Character Added");
+            
+        }
+
         if (chasingCharacter != null)
         {
             if (character.characterType == CharacterType.acidic)
@@ -153,11 +148,11 @@ class SpottedBehavior : EnemyBehaviorAI
 
                     Debug.Log("Character Added");
                     //Add the enemy character to player's chasing characters list
-                    chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
+                    //chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
                 }
                 //If acid spots a base, then start the chase
                 else 
-                if (chasingCharacter.GetComponent<Enemy>())
+                if (chasingCharacter.GetComponent<Enemy>() && !aiComponent.ignoreOtherEnemies)
                     if(chasingCharacter.GetComponent<Enemy>().characterType == CharacterType.basic)
                     {
                         Debug.Log("Chase started");
@@ -180,7 +175,7 @@ class SpottedBehavior : EnemyBehaviorAI
                 }
 
                 else
-                if(chasingCharacter.GetComponent<Enemy>())
+                if(chasingCharacter.GetComponent<Enemy>() && !aiComponent.ignoreOtherEnemies)
                     if (chasingCharacter.GetComponent<Enemy>().characterType == CharacterType.acidic)
                     {
                         aiComponent.runaway = true;
@@ -207,10 +202,14 @@ class ChasingBehavior : EnemyBehaviorAI
         character = e; aiComponent = ai;
         chasingCharacter = c;
         aiComponent.PrepareForEncounter();
+
+        //Add the enemy character to player's chasing characters list
+        if (chasingCharacter.GetComponent<Player>() != null)
+            chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
     }
     public override void BehaviorUpdate()
     {
-        //Debug.Log("Chasing Behavior");
+        Debug.Log("Chasing Behavior");
         aiComponent.chaseStarted = true;
         aiComponent.chasingCharacter = chasingCharacter;
 
@@ -221,6 +220,8 @@ class ChasingBehavior : EnemyBehaviorAI
     {
         bool reset = false;
         Vector3 directionToCharacter = chasingCharacter.transform.position - character.transform.position;
+
+        //TODO: Add attack pattern for base here
 
         //If the distance to the chasing character is less than a certain value, try to attack the character
         //TODO: Add more interesting attack pattern
@@ -283,8 +284,15 @@ class RunAwayBehavior : EnemyBehaviorAI
 
         if (RunAwayReset())
         {
-            character.behaviorAI = null;
-            character.behaviorAI = new RoamingBehavoir(character, aiComponent);
+            if (!aiComponent.persistentChase)
+            {
+                character.behaviorAI = null;
+                character.behaviorAI = new RoamingBehavoir(character, aiComponent);
+            }
+            else
+            {
+                character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+            }
         }
     }
 
@@ -321,7 +329,7 @@ class StunnedBehavior : EnemyBehaviorAI
         //Debug.Log("Stunned");
         if(timeElapsed < duration)
         {
-            timeElapsed += Time.deltaTime;
+            timeElapsed += GameManager.Instance.DeltaTime;
             if(character.IsStunned())
             {
                 character.playerSprite.GetComponent<Animator>().speed = 0;
@@ -374,7 +382,7 @@ class GettingAbsorbedBehavior : EnemyBehaviorAI
     }
     bool TimerUpdate()
     {
-        passedTime += Time.deltaTime;
+        passedTime += GameManager.Instance.DeltaTime;
         if (passedTime > time)
             return false;
         return true;
@@ -398,7 +406,7 @@ class AttackingBehavior : EnemyBehaviorAI
         if(character.State.GetType() == typeof(IdleState) || character.State.GetType() == typeof(RunningState))
             if (timeElapsed < coolDownTime)
             {
-                timeElapsed += Time.deltaTime;
+                timeElapsed += GameManager.Instance.DeltaTime;
                 if (!attacked)
                 {
                     //Debug.Log("Attacked");
@@ -488,16 +496,22 @@ class ApproachedCharacterBehavior : EnemyBehaviorAI
     }
 }
 
-class GiveUpBehavior : EnemyBehaviorAI
+class ForceChaseBehavior : EnemyBehaviorAI
 {
-    public GiveUpBehavior(Enemy e, AI ai) : base(e, ai)
+    Character chasingCharacter;
+
+    public ForceChaseBehavior(Enemy e, AI ai, Character c) : base(e, ai)
     {
+        forceChase = true;
         character = e; aiComponent = ai;
+        chasingCharacter = c;
     }
+
     public override void BehaviorUpdate()
     {
-
+        character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
     }
+
     public override void BehaviorExitConditions()
     {
 

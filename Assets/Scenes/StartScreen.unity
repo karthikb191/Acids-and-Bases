@@ -188,7 +188,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 657559776}
+      - m_Target: {fileID: 0}
         m_MethodName: HaldiKumKum
         m_Mode: 1
         m_Arguments:
@@ -943,7 +943,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 657559776}
+      - m_Target: {fileID: 0}
         m_MethodName: DIYParachute
         m_Mode: 1
         m_Arguments:
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 657559776}
+      - m_Target: {fileID: 0}
         m_MethodName: ColorAddition
         m_Mode: 1
         m_Arguments:
@@ -1583,7 +1583,6 @@ GameObject:
   - component: {fileID: 657559774}
   - component: {fileID: 657559773}
   - component: {fileID: 657559772}
-  - component: {fileID: 657559776}
   m_Layer: 5
   m_Name: Amazon Canvas
   m_TagString: Untagged
@@ -1667,17 +1666,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1280, y: 720}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &657559776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 657559771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &719927471
 Prefab:
   m_ObjectHideFlags: 0
@@ -2096,6 +2084,7 @@ MonoBehaviour:
   globalCanvasPrefab: {fileID: 1797487650366948, guid: 6836f535d38b2944b8159a2247812a93,
     type: 2}
   virtualJoystick: {fileID: 0}
+  stepSize: 0
 --- !u!4 &1113645025
 Transform:
   m_ObjectHideFlags: 0
@@ -2926,7 +2915,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 657559776}
+      - m_Target: {fileID: 0}
         m_MethodName: DCMotor
         m_Mode: 1
         m_Arguments:

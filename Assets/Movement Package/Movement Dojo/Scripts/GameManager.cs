@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour {
 
     public List<Level> levelsCleared = new List<Level>();
 
+    [HideInInspector]
+    public float stepSize;
     
     private void Awake()
     {
@@ -77,8 +79,11 @@ public class GameManager : MonoBehaviour {
         virtualJoystick = FindObjectOfType<VirtualJoystick>();
 
         //Limiting frame rate to <__> fps
-        QualitySettings.vSyncCount = 0;
+        //QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
+        stepSize = 1 / (float)Application.targetFrameRate;
+        Debug.Log("Target frame rate: " + stepSize);
+        Debug.Log("Frame Rate: " + Application.targetFrameRate);
 
         if (Application.isPlaying)
         {
@@ -116,7 +121,11 @@ public class GameManager : MonoBehaviour {
             Debug.Log("Fade canvas instantiated");
 
             DontDestroyOnLoad(fadeCanvas);
-            
+
+            //Once the fade canvas has been initialized, it must be deacivated
+            if (fadeCanvas.activeSelf)
+                StartCoroutine(DeactivateFadeCanvas());
+
         }
         //Instantiate the global canvas
         if(globalCanvasPrefab != null)
@@ -136,7 +145,7 @@ public class GameManager : MonoBehaviour {
             DontDestroyOnLoad(globalCanvas);
         }
 
-        if (SceneManager.GetActiveScene().buildIndex == 0)
+        if (SceneManager.GetActiveScene().name == "StartScreen")
         {
             if(virtualJoystick != null)
                 virtualJoystick.gameObject.SetActive(false);
@@ -155,7 +164,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //Debug.Log("sddds: " + virtualJoystick.gameObject.name);
-        deltaTime = Time.deltaTime > 0.03f ? 0.03f : Time.deltaTime;
+        deltaTime = Time.deltaTime > stepSize ? stepSize : Time.deltaTime;
         //Debug.Log("Delta time is: " + deltaTime);
 
         SetCameraBounds();
@@ -252,11 +261,11 @@ public class GameManager : MonoBehaviour {
             CameraBounds[4] = new Vector3( mainCam.transform.position.x - camHalfWidth,
                                             mainCam.transform.position.y - camHalfHeight,
                                             mainCam.transform.position.z);
-            Debug.DrawLine(Vector3.zero, CameraBounds[0]);
-            Debug.DrawLine(Vector3.zero, CameraBounds[1]);
-            Debug.DrawLine(Vector3.zero, CameraBounds[2]);
-            Debug.DrawLine(Vector3.zero, CameraBounds[3]);
-            Debug.DrawLine(Vector3.zero, CameraBounds[4]);
+            //Debug.DrawLine(Vector3.zero, CameraBounds[0]);
+            //Debug.DrawLine(Vector3.zero, CameraBounds[1]);
+            //Debug.DrawLine(Vector3.zero, CameraBounds[2]);
+            //Debug.DrawLine(Vector3.zero, CameraBounds[3]);
+            //Debug.DrawLine(Vector3.zero, CameraBounds[4]);
         }
         else
         {
@@ -271,7 +280,7 @@ public class GameManager : MonoBehaviour {
         fadeCanvas.SetActive(true);
         fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
         yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
-        
+        Debug.Log("Going to level: " + index);
         SceneManager.LoadScene(index);
     }
 

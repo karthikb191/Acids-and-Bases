@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1027104322242278}
+  m_IsPrefabParent: 1
+--- !u!1 &1027104322242278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4310921041224514}
+  - component: {fileID: 114791005561812276}
+  - component: {fileID: 114656555600586396}
+  - component: {fileID: 58266320146168034}
+  m_Layer: 9
+  m_Name: Light
+  m_TagString: tag_light
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4310921041224514
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1027104322242278}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.06693665, y: -0.010727922, z: -0.005924008}
+  m_LocalScale: {x: 0.14239037, y: 0.14239034, z: 0.14239034}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &58266320146168034
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1027104322242278}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 5
+--- !u!114 &114656555600586396
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1027104322242278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f11eb8b5f015344b78934c90d1513d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightMesh: {fileID: 0}
+  lightColor: {r: 1, g: 0, b: 0, a: 1}
+  noFadeDistance: 0.2
+  distance: 6.58
+  angle: 5
+  fog: 44.93
+  lightMixtureAdjustmentController: 0.4
+  isAPixelLight: 1
+  lightMat: {fileID: 0}
+  perpendicularRightVector: {x: 0, y: 0, z: 0}
+  perpendicularLeftVector: {x: 0, y: 0, z: 0}
+  perpendicularLeftFogVector: {x: 0, y: 0, z: 0}
+  perpendicularRightFogVector: {x: 0, y: 0, z: 0}
+  actualRightVector: {x: 0, y: 0, z: 0}
+  actualLeftVector: {x: 0, y: 0, z: 0}
+  actualLeftFogVector: {x: 0, y: 0, z: 0}
+  actualRightFogVector: {x: 0, y: 0, z: 0}
+  rightEndPoint: {x: 0, y: 0, z: 0}
+  leftEndPoint: {x: 0, y: 0, z: 0}
+  topEndPoint: {x: 0, y: 0, z: 0}
+  lightAngle: 0
+  lightIsActive: 1
+--- !u!114 &114791005561812276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1027104322242278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716d535ea99782d4eaa262e91e575abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightObject: {fileID: 1027104322242278}
+  lightMapMeshPrefab: {fileID: 1195152069480974, guid: 89b32c0d8c16de6459f08e7b5faa3c36,
+    type: 2}
+  lightMapMaterialPrefab: {fileID: 2100000, guid: 8452e521879fae74f8f92a1fec8cb881,
+    type: 2}
+  lightMapMesh: {fileID: 0}
+  lightMapMaterial: {fileID: 0}
+  lb: {fileID: 0}
+  angle: 360
+  horizontalDivisions: 0
+  verticalDivisions: 0
+  leftX: 0
+  rightX: 0
+  topY: 0
+  bottomY: 0

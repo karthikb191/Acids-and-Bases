@@ -201,7 +201,7 @@ public class JumpingState : States
             c.SetSoundEffect(c.playerAudio.jump, false, false);
 
             jumping = true;
-            c.currentJumpSpeed = c.maxJumpSpeed * 0.03f * 0.03f;
+            c.currentJumpSpeed = c.maxJumpSpeed * GameManager.Instance.stepSize * GameManager.Instance.stepSize;
             //This is set so that the jump in the next frame is not detected
             input.jumpReleased = false;
         }
@@ -211,13 +211,13 @@ public class JumpingState : States
 
         if (input.jumpPressed)
         {
-            if (jumpDamper > 0.35f)
+            if (jumpDamper > 0.25f)
             {
                 jumpDamper -= c.jumpMultiplier * GameManager.Instance.DeltaTime;
             }
             else
             {
-                jumpDamper = 0.35f;
+                jumpDamper = 0.25f;
             }
         }
         
@@ -281,7 +281,7 @@ public class FallingState : States
 
         if (jumpDamper < 1)
         {
-            jumpDamper += c.jumpMultiplier * 2 * GameManager.Instance.DeltaTime;
+            jumpDamper += c.jumpMultiplier * 5 * GameManager.Instance.DeltaTime;
         }
         else
         {
@@ -290,8 +290,8 @@ public class FallingState : States
 
         c.currentJumpSpeed += c.gravity * 11.5f * jumpDamper * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
 
-        if (Mathf.Sign(c.currentJumpSpeed) < 0 && Mathf.Abs(c.currentJumpSpeed) > 0.45f)
-            c.currentJumpSpeed = -0.45f;
+        if (Mathf.Sign(c.currentJumpSpeed) < 0 && Mathf.Abs(c.currentJumpSpeed) > 0.65f)
+            c.currentJumpSpeed = -0.65f;
 
 
         //c.currentLinearSpeed = input.xInput * c.maxSpeed * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
@@ -502,7 +502,7 @@ public class ClimbingState : States
             c.currentLinearSpeed = (ladder.transform.position.x - c.transform.position.x) * 5 * Time.deltaTime;
         }
 
-        c.currentJumpSpeed = input.xInput * Time.deltaTime * climbSpeed;
+        c.currentJumpSpeed = input.xInput * GameManager.Instance.DeltaTime * climbSpeed;
     }
 
     void StateExitConditions(Character c, UserInput input)

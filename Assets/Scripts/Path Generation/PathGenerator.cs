@@ -77,7 +77,7 @@ public class PathGenerator : MonoBehaviour {
                     if (platforms[i].leftNode.position.x < platforms[j].rightNode.position.x &&
                         platforms[i].leftNode.position.x > platforms[j].leftNode.position.x + xTolerance)
                     {
-                        Debug.Log("positions: " + platforms[i].leftNode.position + "     " + platforms[j].leftNode.position + "    " + platforms[j].rightNode.position);
+                        //Debug.Log("positions: " + platforms[i].leftNode.position + "     " + platforms[j].leftNode.position + "    " + platforms[j].rightNode.position);
                         float yDist = platforms[i].leftNode.position.y - platforms[j].leftNode.position.y;
                         if (Mathf.Abs(yDist) < ySpacing)
                         {

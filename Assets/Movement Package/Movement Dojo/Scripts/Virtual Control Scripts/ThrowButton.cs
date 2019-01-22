@@ -24,22 +24,18 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     bool setTarget;
 
    
-
-   
-
     private void Awake()
     {
       //  initialPosition = transform.position;
     }
     private void Start()
     {
-        
-        
         player = FindObjectOfType<Player>();
     }
     private void Update()
     {
-       
+       if(player == null)
+        player = FindObjectOfType<Player>();
 
         if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {

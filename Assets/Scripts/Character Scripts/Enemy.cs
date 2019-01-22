@@ -60,6 +60,11 @@ class Enemy : EnemyBase
         StateList[0].UpdateState(this, userInputs, info);
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
     private void Update()
     {
 
@@ -77,11 +82,7 @@ class Enemy : EnemyBase
         for (int i = 0; i < StateList.Count; i++)
             StateList[i].UpdateState(this, userInputs, info);
 
-        //Update behavior
-        if (behaviorAI != null)
-            behaviorAI.BehaviorUpdate();
-
-
+        
         MoveCharacter();
 
         State = StateList[StateList.Count - 1];
@@ -91,6 +92,10 @@ class Enemy : EnemyBase
 
     private void LateUpdate()
     {
+        //Update behavior
+        if (behaviorAI != null)
+            behaviorAI.BehaviorUpdate();
+
         UpdatePositionInWorld();
     }
 

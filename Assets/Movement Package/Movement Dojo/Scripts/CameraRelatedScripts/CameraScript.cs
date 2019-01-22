@@ -84,7 +84,12 @@ public class CameraScript : MonoBehaviour {
         {
             if (focusObject != null)
             {
-                gameObject.transform.position = focusObject.FocusUpdate(gameObject.transform.position, ref focusObject);
+                Vector3 target;
+                target = focusObject.FocusUpdate(gameObject.transform.position, ref focusObject);
+                if (shakeObject != null)
+                    target += shakeObject.ShakeUpdate(ref shakeObject);
+
+                gameObject.transform.position = target;
                 return;
             }
 
@@ -330,6 +335,7 @@ public class CameraScript : MonoBehaviour {
                 {
                     waiting = false;
                     returnedToInitialPosition = false;
+                    speed *= 2;
                     Debug.Log("Wait finished");
                 }
                 else

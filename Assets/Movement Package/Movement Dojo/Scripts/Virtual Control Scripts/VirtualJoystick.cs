@@ -26,6 +26,8 @@ public class ButtonGraphics
 
 
 public class VirtualJoystick : MonoBehaviour {
+
+    public static VirtualJoystick Instance { get; set; }
     
     public static bool usingJoystick;
 
@@ -72,19 +74,25 @@ public class VirtualJoystick : MonoBehaviour {
 
     private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
 
-        VirtualJoystick[] virtualJoysticks;
-        virtualJoysticks = FindObjectsOfType<VirtualJoystick>();
+        GameManager.Instance.virtualJoystick = this;
 
-        foreach (VirtualJoystick v in virtualJoysticks)
-        {
-            if (GameManager.Instance.virtualJoystick != this.gameObject && GameManager.Instance.virtualJoystick != null)
-            {
-                DestroyImmediate(this.gameObject);
-            }
-            //if (v.gameObject != this.gameObject)
-            //    Destroy(this.gameObject);
-        }
+        //VirtualJoystick[] virtualJoysticks;
+        //virtualJoysticks = FindObjectsOfType<VirtualJoystick>();
+        //
+        //foreach (VirtualJoystick v in virtualJoysticks)
+        //{
+        //    if (GameManager.Instance.virtualJoystick != this.gameObject && GameManager.Instance.virtualJoystick != null)
+        //    {
+        //        DestroyImmediate(this.gameObject);
+        //    }
+        //    //if (v.gameObject != this.gameObject)
+        //    //    Destroy(this.gameObject);
+        //}
     }
 
     void Start () {
@@ -139,28 +147,31 @@ public class VirtualJoystick : MonoBehaviour {
         //Debug.Log("enabling");
         bool buttonFound = false;
 
-        //If the button is present in the active dynamic buttons list
-        for(int i = 0; i < activeDynamicButtons.Count; i++)
-        {
-            if (activeDynamicButtons[i].tag == tag)
-                return activeDynamicButtons[i];
-        }
 
-        if(dynamicButtonsStore.Count > 0)
-        {
-            for(int i = 0; i < dynamicButtonsStore.Count; i++)
+        //If the button is present in the active dynamic buttons list
+        if (activeDynamicButtons != null)
+            for (int i = 0; i < activeDynamicButtons.Count; i++)
             {
-                //If a button is already present in the list with that tag, enable it
-                if(dynamicButtonsStore[i].tag == tag)
+                if (activeDynamicButtons[i].tag == tag)
+                    return activeDynamicButtons[i];
+            }
+
+        if(dynamicButtonsStore != null)
+            if(dynamicButtonsStore.Count > 0)
+            {
+                for(int i = 0; i < dynamicButtonsStore.Count; i++)
                 {
-                    buttonFound = true;
-                    dynamicButtonsStore[i].button.gameObject.SetActive(true);
+                    //If a button is already present in the list with that tag, enable it
+                    if(dynamicButtonsStore[i].tag == tag)
+                    {
+                        buttonFound = true;
+                        dynamicButtonsStore[i].button.gameObject.SetActive(true);
                     
-                    //Set the position of thr button
-                    return dynamicButtonsStore[i];
+                        //Set the position of thr button
+                        return dynamicButtonsStore[i];
+                    }
                 }
             }
-        }
         else
         {
             Debug.Log("Button Created");

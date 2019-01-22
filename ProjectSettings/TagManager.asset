@@ -11,6 +11,7 @@ TagManager:
   - tag_item
   - tag_PhMeterButton
   - tag_platform
+  - tag_light
   layers:
   - Default
   - TransparentFX
@@ -23,8 +24,8 @@ TagManager:
   - Platform
   - Interactable
   - Character
-  - 
-  - 
+  - Light
+  - LightBlocker
   - 
   - 
   - 

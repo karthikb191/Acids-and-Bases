@@ -45,7 +45,7 @@ public class ControlCanvas : MonoBehaviour {
     }
 
     public static float StartCounter() {
-        counter += Time.deltaTime;
+        counter += 1.7f * GameManager.Instance.DeltaTime;
         return Mathf.Clamp(counter, 0, 1);
     }
 

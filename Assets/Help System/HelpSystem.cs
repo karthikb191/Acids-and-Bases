@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class HelpSystem : MonoBehaviour {
 
+    public static HelpSystem Instance { get; set; }
+
     public LevelHelpBase levelHelper;
 
     public Image backgroundSprite;
@@ -23,10 +25,19 @@ public class HelpSystem : MonoBehaviour {
     float timer;
 
     public Sprite hintTriggerSprite;
- 
+
+    public delegate void StartedShowingHint();
+    public static StartedShowingHint startedShowingHintEvent;
+
+    public delegate void FinishedShowingHint();
+    public static FinishedShowingHint FinishedShowingHintEvent;
 
     private void Start()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
      //   levelHelper = GetComponentInChildren<LevelHelpBase>();
         //Try to find the helper for the scene when the scene is loaded
         SceneManager.sceneLoaded += OnSceneLoad;
@@ -89,6 +100,9 @@ public class HelpSystem : MonoBehaviour {
         hintTriggered.enabled = false;
         hintTriggered.sprite = null;
 
+        //Calls the event when the hint had finished displaying
+        if(FinishedShowingHintEvent != null)
+            FinishedShowingHintEvent();
     }
     bool showHint = true;
     public void ShowHint()
@@ -96,5 +110,13 @@ public class HelpSystem : MonoBehaviour {
         displayHelp.SetActive(true);
         startTimer = true;
         showHint = true;
+
+        if(startedShowingHintEvent != null)
+            startedShowingHintEvent();
+    }
+    public static void Help()
+    {
+        Debug.Log("help Displayed");
+        Instance.ShowHint();
     }
 }

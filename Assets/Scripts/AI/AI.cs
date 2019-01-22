@@ -15,6 +15,8 @@ public class AI : MonoBehaviour {
 
     public bool persistentChase = false;    //Enable this if the enemies must chase the character at all times
 
+    public bool ignoreOtherEnemies = true;
+
     [SerializeField]
     public List<Node> targetNodePath;
 
@@ -56,10 +58,15 @@ public class AI : MonoBehaviour {
 
     bool haltMovement = false;
 
-    private void Start()
+    private void Awake()
     {
         targetNodePath = new List<Node>();
         nodesPassed = new List<Node>();
+        
+    }
+
+    private void Start()
+    {
 
         enemy = GetComponent<Enemy>();
         player = FindObjectOfType<Player>();
@@ -91,7 +98,9 @@ public class AI : MonoBehaviour {
         if (enemy!=null)
         {
             distanceToTarget = Mathf.Infinity;
-            directionFacing = (int)enemy.playerSprite.transform.localScale.x;
+
+            if(enemy.playerSprite != null)
+                directionFacing = (int)enemy.playerSprite.transform.localScale.x;
 
             //Debug.Log("node path count: " + targetNodePath.Count);
             //Set the target position
@@ -1200,7 +1209,7 @@ public class AI : MonoBehaviour {
             }
             
             //New nodes are inserted at certain intervals
-            t += Time.deltaTime;
+            t += GameManager.Instance.DeltaTime;
             for(int i = 0; i < targetNodePath.Count; i++)
             {
                 if(t > 0.3f && Mathf.Abs(directionToCharacter.y) < maxJumpHeight + 1.5f)
@@ -1354,7 +1363,7 @@ public class AI : MonoBehaviour {
             }
         }
 
-        t += Time.deltaTime;
+        t += GameManager.Instance.DeltaTime;
         if (t > 2)
             t = 0;
     }

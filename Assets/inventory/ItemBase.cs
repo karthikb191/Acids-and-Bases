@@ -43,13 +43,13 @@ public class ItemBase : MonoBehaviour {
         gameObject.GetComponent<BoxCollider2D>().enabled = false;
             if (isFromEnemy)
             {
-                playerObject = transform.root.GetComponentInParent<Enemy>().gameObject;
+                playerObject = transform.GetComponentInParent<Enemy>().gameObject;
                 thrown = true;
                 StartCoroutine(ThrowProjectile(target, 45));
             }
             else
             {
-                playerObject = transform.root.GetComponentInParent<Player>().gameObject;
+                playerObject = transform.GetComponentInParent<Player>().gameObject;
                 Debug.Log("Thrown from: ____>>>>" + playerObject.name);
                 ThrowCalculations(target, speed);
                 StartCoroutine(ThrowProjectile(target, angleOfThrow));
@@ -349,7 +349,7 @@ public class ItemBase : MonoBehaviour {
                     if(isFromEnemy)
                     {
                         Debug.Log("Used called from:   " + playerObject.name);
-                        Debug.Log("Used on  :    " + collidedWith[i].transform.root.GetComponentInParent<Character>().gameObject);
+                        Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponentInParent<Character>().gameObject);
                         this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
                         this.AlignPos(playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position, playerObject.gameObject.GetComponentInParent<Character>());
                         this.transform.position = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position;
