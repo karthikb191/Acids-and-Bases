@@ -1175,11 +1175,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4638055356294742, guid: f71f60cee0ee8174db557f6654db4f56, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -303.5
+      value: -312.44
       objectReference: {fileID: 0}
     - target: {fileID: 4638055356294742, guid: f71f60cee0ee8174db557f6654db4f56, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -158.3
+      value: -165.27
       objectReference: {fileID: 0}
     - target: {fileID: 4638055356294742, guid: f71f60cee0ee8174db557f6654db4f56, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2756,6 +2756,7 @@ MonoBehaviour:
   globalCanvasPrefab: {fileID: 1797487650366948, guid: 6836f535d38b2944b8159a2247812a93,
     type: 2}
   virtualJoystick: {fileID: 0}
+  stepSize: 0
 --- !u!4 &1065110183
 Transform:
   m_ObjectHideFlags: 0

@@ -53,7 +53,7 @@
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				fixed4 finalCol;
+				//fixed4 finalCol;
 				fixed4 col = tex2D(_MainTex, i.uv);
 				fixed4 lightsCol = tex2D(_LightsTexture, i.lightsUv);
 
@@ -66,23 +66,23 @@
 				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, -_SampleRate)));
 				
 				half dist45 = _SampleRate * 0.707;
-				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(dist45, dist45)));
-				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(dist45, -dist45)));
-				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, dist45)));
-				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, -dist45)));
-				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, dist45)));
-				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, -dist45)));
-				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, 0)));
-				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, -0)));
+				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(dist45, dist45)));
+				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(dist45, -dist45)));
+				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, dist45)));
+				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, -dist45)));
+				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, dist45)));
+				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, -dist45)));
+				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, 0)));
+				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, -0)));
 				
 				
 				//lightsCol = lerp(lightsCol, maxLight, 0.1);
 				ambienceCol = lerp(lightsCol, maxLight, 0.8);
 				
 				col.rgb = col.rgb * _BrightnessMultiplier * (lightsCol.rgb) * ambienceCol.rgb;// *ambienceCol.rgb; // *(0, 0, 0, lightsCol.a);
-				finalCol = col + lightsCol * _Emission;
+				
 
-				return finalCol;
+				return col;
 			}
 			ENDCG
 		}
