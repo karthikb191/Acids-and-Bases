@@ -58,11 +58,8 @@ public class PlayerInventory : Inventory
 
         for (int i = 0; i < slots.Count; i++)
         {
-         Debug.Log(slots[i].imageSlotPrefab.transform.name);
-           // slots[i].imageSlotPrefab.transform.parent = panel.transform;
-
+            Debug.Log(slots[i].imageSlotPrefab.transform.name);
             slots[i].imageSlotPrefab.transform.SetParent(panel.transform);
-
         }
 
     }
@@ -112,7 +109,8 @@ public class PlayerInventory : Inventory
 
                                 activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
                                 
-                                slots[i].itemlist[slots[i].itemlist.Count - 1].gameObject.SetActive(true);
+                               // slots[i].itemlist[slots[i].itemlist.Count - 1].gameObject.SetActive(true);
+                                activeItem.gameObject.SetActive(true);
                                 UpdateSlotData(activeItem);
                                 SetActiveSlotCount();
                             }

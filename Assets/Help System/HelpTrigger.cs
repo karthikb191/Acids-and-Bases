@@ -12,6 +12,8 @@ public class HelpTrigger : MonoBehaviour {
 
     public LevelHelpBase levelHelper;
 
+    public GameObject arrowPointer;
+
 	// Use this for initialization
 	void Start () {
         levelHelper = GetComponentInParent<LevelHelpBase>();

@@ -1136,6 +1136,7 @@ MonoBehaviour:
   visibilityDistance: 6
   nodeReachTolerance: 0.25
   persistentChase: 0
+  ignoreOtherEnemies: 1
   targetLocation: {x: 0, y: 0, z: 0}
   runaway: 0
   chaseStarted: 0

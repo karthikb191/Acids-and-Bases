@@ -1,13 +1,21 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class ItemBase : MonoBehaviour {
 
     public bool thrown = false;
 
-    bool used = false;
+
+    public ParticleSystem travelParticles;
+    public ParticleSystem destroyParticles;
+
+    ParticleSystem travelParticlesTemp;
+     ParticleSystem destroyParticlesTemp;
+
+
+   // bool used = false;
     
     bool setFocus;
 
@@ -24,12 +32,25 @@ public class ItemBase : MonoBehaviour {
     public float colliderRadius = 2;
 
 
+    private void Start()
+    {
+        travelParticlesTemp = Instantiate(travelParticles,transform);
+        travelParticlesTemp.transform.position = this.transform.position;
+        destroyParticlesTemp = Instantiate(destroyParticles, transform);
+        destroyParticlesTemp.transform.position = this.transform.position;
+    }
+
+
     private void Update()
     {
         if(thrown)
         {
             CheckCollision();
+            TravelParticleEffect();
+            
         }
+
+     //   TravelParticleEffect();
     }
 
     public virtual void Use()
@@ -40,7 +61,7 @@ public class ItemBase : MonoBehaviour {
 
     public virtual void Throw(Vector3 target,float speed)
     {
-        gameObject.GetComponent<BoxCollider2D>().enabled = false;
+       // gameObject.GetComponent<BoxCollider2D>().enabled = false;
             if (isFromEnemy)
             {
                 playerObject = transform.GetComponentInParent<Enemy>().gameObject;
@@ -213,7 +234,7 @@ public class ItemBase : MonoBehaviour {
         while (elapse_time < flightDuration)
         {
            
-            transform.Translate(Vx * Time.deltaTime , (Vy - (speed * elapse_time)) * Time.deltaTime,0);
+            transform.Translate(Vx * Time.deltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
 
             elapse_time += Time.deltaTime;
 
@@ -227,14 +248,19 @@ public class ItemBase : MonoBehaviour {
             elapse_time = 0;
            if(isFromEnemy)
            {
-               
-                gameObject.SetActive(false);
-                Destroy(gameObject);
-            
-           }
+                this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                this.AlignPos(playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position, playerObject.gameObject.GetComponentInParent<Character>());
+                this.transform.position = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position;
+                this.transform.parent = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform;
+                playerObject.gameObject.GetComponentInChildren<EnemyInventory>().AddItem(this);
+                this.gameObject.SetActive(false);
+                this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+
+            }
            else
            {
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
+                DestroyParticleEffect();
                 transform.parent = null;
            }
           
@@ -262,7 +288,7 @@ public class ItemBase : MonoBehaviour {
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             gameObject.transform.localScale = targetScale ;
         }
-        setFocus = false;
+       // setFocus = false;
     }
 
     public float maxRangeOfThrow = 20;
@@ -308,7 +334,7 @@ public class ItemBase : MonoBehaviour {
 
             thrown = true;
         }
-
+        
     }
 
     void OnDrawGizmosSelected()
@@ -331,7 +357,8 @@ public class ItemBase : MonoBehaviour {
             if(collidedWith[i].transform.CompareTag("tag_platform"))
             {
                 Debug.Log("HIt Platform & destroyed");
-                Destroy(this.gameObject);
+                // Destroy(this.gameObject);
+                DestroyParticleEffect();
                 break;
             }
 
@@ -339,7 +366,7 @@ public class ItemBase : MonoBehaviour {
             {
                 Debug.Log("Collided with Switch");
                 collidedWith[i].transform.GetComponent<SwichAndDoorActivation>().ActivateDoor();
-                Destroy(this.gameObject);
+                DestroyParticleEffect();
                 break;
             }
 
@@ -361,11 +388,45 @@ public class ItemBase : MonoBehaviour {
                     }
                     else
                     {
-                        Destroy(this.gameObject);
+                        DestroyParticleEffect();
                         break;
                     }             
             }
         }      
+    }
+
+    void TravelParticleEffect()
+    {
+
+     //    travelParticles.transform.position = playerObject.transform.position;
+     //   travelParticles.Play();
+
+       // travelParticlesTemp.transform.position = playerObject.transform.position; 
+        
+
+        if(!travelParticlesTemp.isPlaying)
+        {
+            travelParticlesTemp.Play();
+          //  Debug.Log("PLaying particle");
+        }
+    }
+
+    void DestroyParticleEffect()
+    {
+        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+
+        // destroyParticlesTemp.transform.position = playerObject.transform.position;
+
+        if (!destroyParticlesTemp.isPlaying)
+        {
+            Debug.Log("destroy play particle");
+            destroyParticlesTemp.Play();
+        }
+
+        /*destroyParticles.transform.position = playerObject.transform.position;
+        destroyParticles.Play();*/
+
+        Destroy(this.gameObject,1f);
     }
 
 }

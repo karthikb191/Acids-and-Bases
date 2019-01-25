@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791576765500196}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -13.9, y: 14.7, z: 0}
+  m_LocalPosition: {x: -312.44, y: -165.27, z: -0.49380222}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,10 +78,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd87ecc58f4b9b848b8ad6e42d2b3fd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thrown: 0
+  travelParticles: {fileID: 198549758489193066, guid: 1c522a1013d318e4c99542c9a74e2a5b,
+    type: 2}
+  destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
+    type: 2}
   playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: f938dd613e67be24da736dacd3c5f2ab, type: 2}
   speed: 30
   isFromEnemy: 0
+  colliderRadius: 2
   maxRangeOfThrow: 10
   maxAngle: 45
   angleOfThrow: 0
@@ -89,7 +95,6 @@ MonoBehaviour:
   timeToReach: 0
   targetToHit: {x: 0, y: 0, z: 0}
   throwVelocity: 30
-  colliderRadius: 2
 --- !u!212 &212709264163825716
 SpriteRenderer:
   m_ObjectHideFlags: 1

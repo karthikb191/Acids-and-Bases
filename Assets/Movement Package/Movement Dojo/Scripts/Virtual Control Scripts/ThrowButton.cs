@@ -23,6 +23,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     bool setTarget;
 
+    Vector3 tempRightClickTar = Vector3.zero;
    
     private void Awake()
     {
@@ -55,8 +56,13 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             ThrowItem();
             buttonPressed = false;
         }
+//for testing remove later
 
-
+        if(Input.GetMouseButtonDown(1))
+        {
+            tempRightClickTar = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            tempRightClickTar.z = 0;
+        }
 
     }
 
@@ -102,19 +108,26 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             //Debug.Log(player.right + "o throw");
 
             float maxRange = player.GetComponentInChildren<PlayerInventory>().activeItem.GetComponent<ItemBase>().maxRangeOfThrow;
-            if (player.playerSprite.transform.localScale.x > 0)
+            if (tempRightClickTar == Vector3.zero)
             {
-                tempTar.x += maxRange;
+                if (player.playerSprite.transform.localScale.x > 0)
+                {
+                    tempTar.x += maxRange;
+                }
+                else
+                {
+                    tempTar.x -= maxRange;
+                    /* Quaternion temp = player.GetComponentInChildren<PlayerInventory>().activeItem.transform.localRotation;
+                     temp.y = 180;*/
+
+                }
             }
             else
             {
-                tempTar.x -= maxRange;
-               /* Quaternion temp = player.GetComponentInChildren<PlayerInventory>().activeItem.transform.localRotation;
-                temp.y = 180;*/
-
+                tempTar = tempRightClickTar;
             }
            
-            Debug.Log("Player position" + player.Hand.transform.position + " <<>><><>" + "Temp target" + tempTarget);
+          //  Debug.Log("Player position" + player.Hand.transform.position + " <<>><><>" + "Temp target" + tempTarget);
            
             {
                 player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTar, 5);

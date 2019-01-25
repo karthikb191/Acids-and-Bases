@@ -49,7 +49,12 @@ public class LevelHelpBase : MonoBehaviour {
                 helpTriggers[i].isActivated = false;
 
                 //To show multiple times remove the below line
-             //   helpTriggers[i].isShown = true;
+                helpTriggers[i].isShown = true;
+
+                if (helpTriggers[i].arrowPointer != null)
+                {
+                    helpSystem.arrowDisplay = helpTriggers[i].arrowPointer;
+                }
                 break;
             }
         }

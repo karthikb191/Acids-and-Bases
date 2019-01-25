@@ -22,6 +22,8 @@ public class HelpSystem : MonoBehaviour {
 
     public GameObject displayHelp;
 
+    public GameObject arrowDisplay;
+
     float timer;
 
     public Sprite hintTriggerSprite;
@@ -100,8 +102,15 @@ public class HelpSystem : MonoBehaviour {
         hintTriggered.enabled = false;
         hintTriggered.sprite = null;
 
+        if (arrowDisplay != null)
+        {
+            arrowDisplay.SetActive(false);
+        }
+
+        arrowDisplay = null;
+
         //Calls the event when the hint had finished displaying
-        if(FinishedShowingHintEvent != null)
+        if (FinishedShowingHintEvent != null)
             FinishedShowingHintEvent();
     }
     bool showHint = true;
@@ -110,6 +119,9 @@ public class HelpSystem : MonoBehaviour {
         displayHelp.SetActive(true);
         startTimer = true;
         showHint = true;
+
+        if (arrowDisplay != null)
+            arrowDisplay.SetActive(true);
 
         if(startedShowingHintEvent != null)
             startedShowingHintEvent();
