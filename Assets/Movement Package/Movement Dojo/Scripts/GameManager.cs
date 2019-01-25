@@ -393,4 +393,13 @@ public class GameManager : MonoBehaviour {
         yield break;
     }
 
+    public void Pause()
+    {
+        paused = true;
+    }
+    public void Resume()
+    {
+        paused = false;
+    }
+
 }

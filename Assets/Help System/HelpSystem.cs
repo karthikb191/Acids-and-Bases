@@ -10,7 +10,7 @@ public class HelpSystem : MonoBehaviour {
 
     public LevelHelpBase levelHelper;
 
-    public Image backgroundSprite;
+   // public Image backgroundSprite;
 
     public Text textToDisplay;
 
@@ -26,7 +26,7 @@ public class HelpSystem : MonoBehaviour {
 
     float timer;
 
-    public Sprite hintTriggerSprite;
+ //   public Sprite hintTriggerSprite;
 
     public delegate void StartedShowingHint();
     public static StartedShowingHint startedShowingHintEvent;
@@ -59,15 +59,15 @@ public class HelpSystem : MonoBehaviour {
     }
     
 
-    public void HelpDisplay(string helpMessage, Sprite bgSprite)
+    public void HelpDisplay(string helpMessage)
     {
         textToDisplay.text = helpMessage;
-        backgroundSprite.sprite = bgSprite;       
+       // backgroundSprite.sprite = bgSprite;       
         Debug.Log("Triggered hint activated>>>>><<<><><><><>");
         hintTriggered.enabled = true;
-        hintTriggered.sprite = hintTriggerSprite;
+       // hintTriggered.sprite = hintTriggerSprite;
 
-        Debug.Log(hintTriggered.sprite.name);
+        //Debug.Log(hintTriggered.sprite.name);
     }
 
    
@@ -94,13 +94,18 @@ public class HelpSystem : MonoBehaviour {
     
     public void CloseHint()
     {
-        displayHelp.SetActive(false);
+        GameManager.Instance.Resume();
+
+        // displayHelp.SetActive(false);
+        displayHelp.GetComponent<Animator>().SetBool("PopUp", false);
         timer = 0;
         startTimer = false;
         Debug.Log("bjjgjgj");
         showHint = false;
+
         hintTriggered.enabled = false;
-        hintTriggered.sprite = null;
+       // hintTriggered.sprite = null;
+
 
         if (arrowDisplay != null)
         {
@@ -113,10 +118,13 @@ public class HelpSystem : MonoBehaviour {
         if (FinishedShowingHintEvent != null)
             FinishedShowingHintEvent();
     }
-    bool showHint = true;
+    bool showHint = false;
     public void ShowHint()
     {
-        displayHelp.SetActive(true);
+        // displayHelp.SetActive(true);
+        GameManager.Instance.Pause();
+        displayHelp.GetComponent<Animator>().SetBool("PopUp", true);
+
         startTimer = true;
         showHint = true;
 

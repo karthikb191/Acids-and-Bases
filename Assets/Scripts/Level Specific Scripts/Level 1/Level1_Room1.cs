@@ -62,7 +62,7 @@ public class Level1_Room1 : LevelScripts {
     void ShowHint()
     {
         Debug.Log("Showing Hint Now");
-        HelpSystem.Help();
+       // HelpSystem.Help();
         GameManager.Instance.FadeOutCompleteEvent -= ShowHint;
 
         //When player enters the trigger enter region, the trigger number is checked and the next sequence of events happens

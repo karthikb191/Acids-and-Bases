@@ -59,9 +59,11 @@ public class ItemBase : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public virtual void Throw(Vector3 target,float speed)
+    public virtual void Throw(Vector3 target, float speed)
     {
-       // gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        // gameObject.GetComponent<BoxCollider2D>().enabled = false;
+        if (gameObject.activeSelf)
+        { 
             if (isFromEnemy)
             {
                 playerObject = transform.GetComponentInParent<Enemy>().gameObject;
@@ -75,6 +77,7 @@ public class ItemBase : MonoBehaviour {
                 ThrowCalculations(target, speed);
                 StartCoroutine(ThrowProjectile(target, angleOfThrow));
             }
+        }
     }
 
 
@@ -233,7 +236,10 @@ public class ItemBase : MonoBehaviour {
 
         while (elapse_time < flightDuration)
         {
-           
+           if(isFromEnemy)
+            transform.Translate(Vx * Time.deltaTime, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
+
+           else
             transform.Translate(Vx * Time.deltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
 
             elapse_time += Time.deltaTime;
