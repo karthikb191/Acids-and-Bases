@@ -20,6 +20,7 @@ public class LightSystem2D : MonoBehaviour {
     /// This shader in this material is directly responsible for all the effects
     /// </summary>
     public Material OverlayMaterial;
+    public Material pHScannerMaterial;
 
     float LightPixelsPerUnit { get { return 1 / lightSize; } }
 
@@ -30,6 +31,7 @@ public class LightSystem2D : MonoBehaviour {
     RenderTexture lightsTexture;
     RenderTexture obstaclesTexture;
     RenderTexture ambientTexture;
+    RenderTexture pHTexture;
 
     
     float rawCameraHeight;
@@ -73,6 +75,8 @@ public class LightSystem2D : MonoBehaviour {
 
         obstaclesTexture = new RenderTexture(lightsRenderTextureSize.x, lightsRenderTextureSize.y, 0, RenderTextureFormat.ARGB32);
         
+        pHTexture = new RenderTexture(lightsRenderTextureSize.x, lightsRenderTextureSize.y, 0, RenderTextureFormat.ARGB32);
+        
 	}
 	
 
@@ -101,7 +105,6 @@ public class LightSystem2D : MonoBehaviour {
 
     void RenderLightSources()
     {
-
         lightsTexture.DiscardContents();
         //The camera doesn't need to be enables to force it to render
         lightCamera.enabled = false;
@@ -122,14 +125,21 @@ public class LightSystem2D : MonoBehaviour {
         lightCamera.cullingMask = 0;
         
     }
+    
 
     void OverlayEffects(RenderTexture source, RenderTexture destination)
     {
         //Source contains everything besides the lights and light obstacles
         OverlayMaterial.SetTexture("_MainTex", source);
         finalScreenBlitTexture.DiscardContents();
+
         Graphics.Blit(null, finalScreenBlitTexture, OverlayMaterial);
-        Graphics.Blit(finalScreenBlitTexture, destination);
+        
+        //pH Shader overlay, if it is activated
+        
+        //finalScreenBlitTexture.DiscardContents();
+
+        Graphics.Blit(finalScreenBlitTexture, destination, pHScannerMaterial);
         //GL.Clear(true, true, new Color(0, 0, 0, 0));
     }
 

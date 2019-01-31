@@ -22,6 +22,7 @@ public class ButtonGraphics
     public Sprite ladderImage;
     public Sprite itemImage;
     public Sprite doorImage;
+    public Sprite pHImage;
 }
 
 
@@ -79,8 +80,6 @@ public class VirtualJoystick : MonoBehaviour {
         else
             Destroy(this.gameObject);
 
-        GameManager.Instance.virtualJoystick = this;
-
         //VirtualJoystick[] virtualJoysticks;
         //virtualJoysticks = FindObjectsOfType<VirtualJoystick>();
         //
@@ -121,7 +120,8 @@ public class VirtualJoystick : MonoBehaviour {
 
         arrowsHolder = gameObject.transform.Find("Controls").Find("Arrows").GetComponent<RectTransform>();
 
-        GameManager.Instance.virtualJoystick = this;
+        if(Instance == this)
+            GameManager.Instance.virtualJoystick = this;
 
         Debug.Log("control canvas initiated");
     }
@@ -203,7 +203,6 @@ public class VirtualJoystick : MonoBehaviour {
             Debug.Log("Button Created");
             GameObject g = new GameObject();
             DynamicButton d = new DynamicButton();
-
             
 
             g.AddComponent<Button>();
@@ -286,7 +285,9 @@ public class VirtualJoystick : MonoBehaviour {
             {
                 if(activeDynamicButtons[i].tag == tag)
                 {
+                    //Remove all the active listeners on this button
                     activeDynamicButtons[i].button.onClick.RemoveAllListeners();
+
                     activeDynamicButtons[i].active = false;
                     activeDynamicButtons[i].button.gameObject.SetActive(false);
                     activeDynamicButtons.RemoveAt(i);
@@ -305,6 +306,10 @@ public class VirtualJoystick : MonoBehaviour {
             //Debug.Log("Disabling button " + b.tag);
             b.active = false;
             b.button.gameObject.SetActive(false);
+
+            //Remove all the active listeners for this button
+            b.button.onClick.RemoveAllListeners();
+
             b.button.onClick.RemoveAllListeners();
             activeDynamicButtons.Remove(b);
             ArrangeDynamicButtons();

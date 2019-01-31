@@ -246,6 +246,28 @@ public class ItemBase : MonoBehaviour {
     {
         if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
+            //Changed......
+            if (GetComponent<PH>())
+            {
+                playerObject.GetComponentInChildren<Inventory>().AddItem(this);
+                //StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+                gameObject.SetActive(false);
+                transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+                gameObject.transform.localScale = targetScale;
+
+                //Get the player component. If player is null, log error.
+                if (playerObject.GetComponent<Player>())
+                {
+                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+                }
+                else
+                {
+                    Debug.LogError("No player detected. Check your code");
+                }
+
+                return;
+            }
+
             playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
             playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);           
             StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));   
@@ -335,10 +357,10 @@ public class ItemBase : MonoBehaviour {
                 break;
             }
 
-            if (collidedWith[i].transform.GetComponent<SwichAndDoorActivation>())
+            if (collidedWith[i].transform.GetComponent<Switch>())
             {
                 Debug.Log("Collided with Switch");
-                collidedWith[i].transform.GetComponent<SwichAndDoorActivation>().ActivateDoor();
+                collidedWith[i].transform.GetComponent<Switch>().ActivateDoor();
                 Destroy(this.gameObject);
                 break;
             }

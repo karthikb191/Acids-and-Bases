@@ -134,7 +134,8 @@ class WorldGrid : MonoBehaviour {
                     x = gridIndex.x,
                     y = gridIndex.y
                 },
-                worldPosition = new Vector3(gridIndex.x + instance.gridSize/2, gridIndex.y + instance.gridSize / 2)
+                //worldPosition = new Vector3(gridIndex.x + instance.gridSize/2, gridIndex.y + instance.gridSize / 2)
+                worldPosition = new Vector3(gridIndex.x * instance.gridSize, gridIndex.y * instance.gridSize)
             };
 
             //After the gridcell is created, make it as a list and feed it to the grid array
@@ -166,7 +167,8 @@ class WorldGrid : MonoBehaviour {
                     x = gridIndex.x,
                     y = gridIndex.y
                 },
-                worldPosition = new Vector3(gridIndex.x + instance.gridSize / 2, gridIndex.y + instance.gridSize / 2)
+                //worldPosition = new Vector3(gridIndex.x + instance.gridSize / 2, gridIndex.y + instance.gridSize / 2)
+                worldPosition = new Vector3(gridIndex.x * instance.gridSize, gridIndex.y * instance.gridSize)
             };
 
             //After the gridcell is created, make it as a list and feed it to the grid array
@@ -183,6 +185,32 @@ class WorldGrid : MonoBehaviour {
 
         return g;
     }
+
+    public static GridCell GetTheWorldGridCellWithoutCreatingNewCells(GridIndex index)
+    {
+        GridCell g = null;
+
+        GridIndex gridIndex = index;
+
+        if (instance.gridArray[gridIndex.x, gridIndex.y] == null)
+        {
+            return null;
+        }
+        else
+        {
+            List<GridCell> tempList = instance.gridArray[gridIndex.x, gridIndex.y];
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                if (tempList[i].index.x == gridIndex.x && tempList[i].index.y == gridIndex.y)
+                {
+                    g = tempList[i];
+                    return g;
+                }
+            }
+        }
+        return g;
+    }
+
 
     public static void AddToCell(Character c, GridCell cell)
     {

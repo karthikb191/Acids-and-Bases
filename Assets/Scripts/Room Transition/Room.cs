@@ -73,7 +73,7 @@ public class Room : MonoBehaviour {
 
             //Reset the halt of the enemy so that he resumes his movement
             if(charactersThatMustBeSpawned[i].GetComponent<Enemy>())
-                charactersThatMustBeSpawned[i].GetComponent<Enemy>().ResetHalt();
+                charactersThatMustBeSpawned[i].GetComponent<Enemy>().ResumeMovement();
         }
     }
 

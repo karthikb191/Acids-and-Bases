@@ -16,7 +16,7 @@ public class SpikeTrap : MonoBehaviour {
     public bool isActive = true;
 
     [SerializeField]
-    SwichAndDoorActivation switchScript;
+    Switch switchScript;
 
     // Use this for initialization
     void Start () {

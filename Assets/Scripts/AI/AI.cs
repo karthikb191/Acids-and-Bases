@@ -119,6 +119,8 @@ public class AI : MonoBehaviour {
             //    //CalculateNodePath(currentNode, player.transform.position);
             //    CalculateNodePath(targetLocation);
             //}
+            if (haltMovement)
+                return;
 
             if(chasingCharacter != null && !haltMovement)
             {
@@ -143,7 +145,6 @@ public class AI : MonoBehaviour {
                 CalculatePath();
 
                 EvaluateTargetNode();
-                
             }
             
             Move();
@@ -151,7 +152,7 @@ public class AI : MonoBehaviour {
             previousDirection = gameObject.transform.right;
         }
     }
-
+    
 
     void UpdateCurrentNode()
     {
@@ -999,6 +1000,15 @@ public class AI : MonoBehaviour {
         enemy.BlockInputs(duration, horizontal, vertical);  //Finally, block the inputs on the base character class
     }
 
+    public void HaltMovement()
+    {
+        haltMovement = true;
+
+        StopAllCoroutines();
+
+        horizontalMovement = 0;
+    }
+
     public void ResumeMovement()
     {
         haltMovement = false;
@@ -1042,7 +1052,6 @@ public class AI : MonoBehaviour {
         jump = true;
         jumpRelease = false;
         jumpRoutine = StartCoroutine(JumpToFalse(duration));
-
     }
 
     IEnumerator JumpToFalse(float duration)

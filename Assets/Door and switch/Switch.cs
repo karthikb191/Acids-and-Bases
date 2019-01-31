@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwichAndDoorActivation : MonoBehaviour
+public class Switch : MonoBehaviour
 
 {
     SpriteRenderer switchSprite;
@@ -22,11 +22,9 @@ public class SwichAndDoorActivation : MonoBehaviour
 	}
     private void OnTriggerEnter2D(Collider2D collision)
     {
-   
-
         if (collision.gameObject.GetComponent<Player>())
         {
-          
+            
             if (collision.GetComponent<Player>() != null)
             {
                 //Enable the button
@@ -51,12 +49,11 @@ public class SwichAndDoorActivation : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-      
+        
         if (collision.gameObject.GetComponent<Player>())
         {
             VirtualJoystick.DisableDynamicButton("tag_door");
         }
-
         
     }
 

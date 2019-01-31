@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Slot
 {
-    
     public Image displaySprite;
     public ItemBase itemStored; 
     public int itemCount;
@@ -25,7 +24,7 @@ public class Slot
 
     public virtual void AddItem(ItemBase l_itemBase)
     {
-        
+
         if (itemStored != null)
         {
             if (l_itemBase.itemProperties.name == itemStored.itemProperties.name && itemCount < maxStorage)
@@ -39,18 +38,26 @@ public class Slot
         }
         else
         {
+            itemlist.Add(l_itemBase);
+            itemCount++;
+
+            //Added this..... Needs to be arranged properly
+            if (l_itemBase.GetComponent<PH>())
+            {
+                Debug.Log("PH item");
+                return;
+            }
+
+            Debug.Log("Out of PH Block");
 
             itemStored = l_itemBase;
-            itemlist.Add(l_itemBase);
             Debug.Log("Item in slot" + itemStored.itemProperties.name);
-           // imageSlotPrefab.SetActive(true);
+            // imageSlotPrefab.SetActive(true);
 
             displaySprite.enabled = true;
-           displaySprite.sprite = itemStored.itemProperties.imageSprite;
-            itemCount++;
+            displaySprite.sprite = itemStored.itemProperties.imageSprite;
            
-         
-
+            
         }
         UpdateUI();
     }

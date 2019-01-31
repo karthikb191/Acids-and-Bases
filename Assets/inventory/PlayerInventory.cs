@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerInventory : Inventory
 {
+    Player player;
+
 
 ////////////////////////////////////////Inventory animation//////////////////////////////////////////
      Animator InventoryAnimator;
@@ -76,6 +78,7 @@ public class PlayerInventory : Inventory
     // Use this for initialization
     void Start()
     {
+        player = GetComponentInParent<Player>();
         inventoryUI = transform.GetChild(0).GetComponent<Canvas>();
         panel = transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         InventoryAnimator = transform.GetChild(0).GetChild(0).GetComponent<Animator>();
@@ -105,6 +108,18 @@ public class PlayerInventory : Inventory
                 {
                     if (RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
                     {
+                        //Check if the selected item is an indicator item
+                        if (slots[i].itemStored.GetComponent<PH>())
+                        {
+                            //If it is, and player doesn't have any active indicator, add it to his indicator list
+                            if(player.GetPlayerStatus().pHIndicator == null)
+                            {
+                                player.GetPlayerStatus().SetpHIndicator(slots[i].itemStored.GetComponent<PH>());
+                                Debug.Log("New pH Indicator has been set.");
+                            }
+                        }
+
+
                         if (activeItem == null)
                         {
                             if (slots[i].itemlist.Count > 0)

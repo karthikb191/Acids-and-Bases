@@ -209,7 +209,7 @@ class ChasingBehavior : EnemyBehaviorAI
     }
     public override void BehaviorUpdate()
     {
-        Debug.Log("Chasing Behavior");
+        //Debug.Log("Chasing Behavior");
         aiComponent.chaseStarted = true;
         aiComponent.chasingCharacter = chasingCharacter;
 
