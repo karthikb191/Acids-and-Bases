@@ -113,6 +113,7 @@ public class Level1_Room1 : LevelScripts {
             spawnAt = focusObject.transform.position;
             for(int i = 0; i < objectsToSpawn.Count; i++)
             {
+                objectsToSpawn[i].transform.position = spawnAt;
                 objectsToSpawn[i].SetActive(true);
                 //set the chasing behavior for these guys
                 Invoke("StartChase", 1.0f);

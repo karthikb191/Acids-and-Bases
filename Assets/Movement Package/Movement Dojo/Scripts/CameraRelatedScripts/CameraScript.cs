@@ -223,6 +223,44 @@ public class CameraScript : MonoBehaviour {
         }
     }
 
+
+    private float tempOrthographicSize;
+    static bool cameraMoving;
+    static Coroutine c;
+
+    public void ChangeCameraProjectionSize(float value, float speed)
+    {
+        tempOrthographicSize = Camera.main.orthographicSize;
+        if (cameraMoving)
+        {
+            if (c != null)
+            {
+                StopCoroutine(c);
+                c = null;
+            }
+
+        }
+        c = StartCoroutine(ChangeCameraSize(value));
+    }
+
+    IEnumerator ChangeCameraSize(float orthographicSize, float speed = 1)
+    {
+        cameraMoving = true;
+        while (Camera.main.orthographicSize > orthographicSize + 0.05f || Camera.main.orthographicSize < orthographicSize - 0.05f)
+        {
+            Camera.main.orthographicSize = tempOrthographicSize;
+            yield return new WaitForFixedUpdate();
+
+            if (Camera.main.orthographicSize > orthographicSize + 0.05f)
+                tempOrthographicSize -= GameManager.Instance.DeltaTime * speed;
+
+            else if (Camera.main.orthographicSize < orthographicSize - 0.05f)
+                tempOrthographicSize += GameManager.Instance.DeltaTime * speed;
+        }
+        Camera.main.orthographicSize = orthographicSize;
+        cameraMoving = false;
+    }
+
     class CameraShake
     {
         float amount;

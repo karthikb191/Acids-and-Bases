@@ -220,9 +220,9 @@ public class JumpingState : States
                 jumpDamper = 0.25f;
             }
         }
-        
         //There has to be a default downwardforce acting all the time, which is gravity
         c.currentJumpSpeed += c.gravity * 4.5f * jumpDamper * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
+        //Debug.Log("Current jump speed: " + c.currentJumpSpeed);
 
 
         if (c.StateList.Count == index)

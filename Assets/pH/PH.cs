@@ -7,7 +7,7 @@ public class PH : ItemBase {
 
     public Sprite PHIndicatorImage { get; set; }
 
-    public PHIndicatorList indicator;
+    public IndicatorsList indicator;
 
     [SerializeField]
     private int useCount = 3;

@@ -428,12 +428,20 @@ public class GameManager : MonoBehaviour {
 
     public bool FadeInProgress() { return fadeInProgress; }
 
+
+    public bool IsPaused()
+    {
+        return paused;
+    }
+
     public void Pause()
     {
+        Time.timeScale = 0;
         paused = true;
     }
     public void Resume()
     {
+        Time.timeScale = 1;
         paused = false;
     }
 }

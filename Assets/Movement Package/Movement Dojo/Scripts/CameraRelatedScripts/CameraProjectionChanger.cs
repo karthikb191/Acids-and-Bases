@@ -31,6 +31,7 @@ public class CameraProjectionChanger : MonoBehaviour {
             
         }
     }
+    
 
     IEnumerator ChangeCameraSize()
     {

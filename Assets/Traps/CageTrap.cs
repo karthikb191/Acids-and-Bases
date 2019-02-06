@@ -19,7 +19,7 @@ public class CageTrap : MonoBehaviour {
     public bool resetTrapIfNothingCaught;
 
     public delegate void CharacterCaught();
-    public event CharacterCaught CharacterCaughtEvent;
+    public static event CharacterCaught CharacterCaughtEvent;
 
 	// Use this for initialization
 	void Start () {

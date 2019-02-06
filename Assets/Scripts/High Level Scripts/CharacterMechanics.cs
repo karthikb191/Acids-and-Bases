@@ -106,11 +106,11 @@ public class CharacterMechanics : MonoBehaviour {
         return revealpH;
     }
 
-    void SelectpHDictionary(PHIndicatorList indicator)
+    void SelectpHDictionary(IndicatorsList indicator)
     {
         switch (indicator)
         {
-            case PHIndicatorList.pH_Paper:
+            case IndicatorsList.pH_Paper:
                 phColorDictionary = new Dictionary<float, Color>()
                                         {
                                             {0, new Color(1, 0 , 0)}, {1, new Color(0.9568f, 0.3921f, 0.1960f)},
@@ -131,7 +131,7 @@ public class CharacterMechanics : MonoBehaviour {
 
                                         };
                 break;
-            case PHIndicatorList.Turmeric:
+            case IndicatorsList.Turmeric:
                 phColorDictionary = new Dictionary<float, Color>()
                                         {
                                             {0, new Color(1, 0 , 0)}, {1, new Color(0.9568f, 0.3921f, 0.1960f)},
@@ -152,7 +152,7 @@ public class CharacterMechanics : MonoBehaviour {
 
                                         };
                 break;
-            case PHIndicatorList.Vermilion:
+            case IndicatorsList.Vermilion:
                 phColorDictionary = new Dictionary<float, Color>()
                                         {
                                             {0, new Color(1, 0 , 0)}, {1, new Color(0.9568f, 0.3921f, 0.1960f)},
@@ -173,7 +173,7 @@ public class CharacterMechanics : MonoBehaviour {
 
                                         };
                 break;
-            case PHIndicatorList.Bromythol_Blue:
+            case IndicatorsList.Bromythol_Blue:
                 phColorDictionary = new Dictionary<float, Color>()
                                         {
                                             {0, new Color(1, 0 , 0)}, {1, new Color(0.9568f, 0.3921f, 0.1960f)},

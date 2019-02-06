@@ -487,6 +487,14 @@ public class Player : Character
     
     private void Update()
     {
+        //TODO: Remove this test later
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log("Pressed P....Opening Journal");
+            Journal.Instance.ToggleJournal();
+        }
+
+
         //This has the information of all the object the player is currently in contact with
         info = CastGroundOverlapCircle();
 

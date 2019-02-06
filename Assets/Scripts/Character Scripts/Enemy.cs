@@ -39,7 +39,9 @@ class Enemy : EnemyBase
 
         enemy = this;
         aiComponent = GetComponent<AI>();
-        behaviorAI = new RoamingBehavoir(enemy, aiComponent);
+
+        if(!aiComponent.persistentChase)
+            behaviorAI = new RoamingBehavoir(enemy, aiComponent);
 
         Debug.Log("script is working");
         State = new IdleState();

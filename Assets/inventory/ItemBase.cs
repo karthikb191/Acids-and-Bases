@@ -23,6 +23,8 @@ public class ItemBase : MonoBehaviour {
 
     public float colliderRadius = 2;
 
+    public delegate void ItemPickedUp(ItemBase i);
+    public static event ItemPickedUp ItemPickedUpEvent;
 
     private void Update()
     {
@@ -74,6 +76,9 @@ public class ItemBase : MonoBehaviour {
                     d.button.onClick.AddListener(() =>
                     {
                         AddItem();
+                        if(ItemPickedUpEvent != null)
+                            ItemPickedUpEvent(this);
+
                         VirtualJoystick.DisableDynamicButton(d);                          
                     });
                 }
