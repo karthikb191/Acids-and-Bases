@@ -50,6 +50,11 @@ public class PlayerMechanics : CharacterMechanics
     [SerializeField]
     public LiquidInformation liquidInformation;
 
+    //Mechanics Objects
+    AbsorbMechanic absMec = null;
+
+    PHScanMechanic scan = null;
+
     private void Start()
     {
         base.Start();
@@ -61,7 +66,7 @@ public class PlayerMechanics : CharacterMechanics
         //TODO: Change this to a more automated form
         SetpH(phValue);
 
-        bodySkinnedMeshRenderer = player.playerSprite.GetComponent<SpriteRenderer>();
+        //bodySkinnedMeshRenderer = player.playerSprite.GetComponent<SpriteRenderer>();
 
         //liquidBounds = player.Liquid.GetComponent<SpriteRenderer>().bounds;
     }
@@ -69,17 +74,28 @@ public class PlayerMechanics : CharacterMechanics
     private new void Update()
     {
         base.Update();
-        
-        if (canAbsorbEnemy)
+
+        if (Application.isPlaying)
         {
-            if(absMec == null)
-                AbsorbCharacter();
-            else
+            if (canAbsorbEnemy)
             {
-                absMec.StunUpdate(ref absMec);
-            }   
+                if (absMec == null)
+                    AbsorbCharacter();
+                else
+                {
+                    absMec.StunUpdate(ref absMec);
+                }
+            }
+
+            //TODO: remove this input code later. This is only for testing
+            if (Input.GetKeyDown(KeyCode.S))
+                StartScan();
+
+            if (scan != null)
+                scan.Update(ref scan, ref player);
+
+            SetVolume();
         }
-        SetVolume();
     }
 
     void SetVolume()
@@ -108,7 +124,6 @@ public class PlayerMechanics : CharacterMechanics
     }
 
 
-    AbsorbMechanic absMec = null;
     
     private void LateUpdate()
     {
@@ -399,6 +414,162 @@ public class PlayerMechanics : CharacterMechanics
         }
         
     }
+
+
+    #region pH Scan Functions
+
+    public void StartScan()
+    {
+        if (scan == null)
+            scan = new PHScanMechanic(player.GetGridCell(), player.transform.position, (int)player.playerSprite.transform.localScale.x);
+        else
+            Debug.Log("Scan is already in progress");
+    }
+
+    public class PHScanMechanic
+    {
+        public PHScanMechanic(GridCell gridCell, Vector3 startPosition, int direction)
+        {
+            this.gridCell = gridCell;
+            this.startPosition = startPosition;
+            currentScanPosition = this.startPosition;
+            this.direction = direction;
+            previousScanPosition = currentScanPosition;
+
+            verticalNodeSearchCount = Mathf.FloorToInt(verticalReach / WorldGrid.Instance.gridSize);
+            horizontalNodeSearchCount = Mathf.FloorToInt(horizontalReach / WorldGrid.Instance.gridSize);
+        }
+        GridCell gridCell;
+        Vector3 startPosition;
+        Vector3 previousScanPosition = Vector3.zero;
+        Vector3 currentScanPosition;
+
+        int verticalReach = 25;
+        int horizontalReach = 20;
+
+        int verticalNodeSearchCount;
+        int horizontalNodeSearchCount;
+
+        int direction;
+
+        float speed = 10.0f;
+
+        public void Update(ref PHScanMechanic scan, ref Player player)
+        {
+            if(!ContinuepHScan(ref scan, ref player))
+            {
+                scan = null;
+                return;
+            }
+
+            currentScanPosition.x += speed * direction * GameManager.Instance.DeltaTime;
+
+            //Debug.Log("current scan position: " + currentScanPosition);
+            //Debug.DrawLine(Vector3.zero, currentScanPosition);
+            Debug.DrawLine(new Vector3(currentScanPosition.x, currentScanPosition.y - verticalReach, currentScanPosition.z),
+                            new Vector3(currentScanPosition.x, currentScanPosition.y + verticalReach, currentScanPosition.z),
+                            Color.red);
+
+            //Search all the nodes starting from the top range of the player's node
+            if (direction > 0)
+            {
+                if (currentScanPosition.x > startPosition.x + horizontalReach)
+                {
+                    scan = null;
+                    return;
+                }
+            }
+            else
+            {
+                if (currentScanPosition.x < startPosition.x - horizontalReach)
+                {
+                    scan = null;
+                    return;
+                }
+            }
+
+            GridCell previousCell = null;
+            //Iterate the grid cells from bottom to top in the column searching for the items and enemies 
+            for(int i = -verticalReach; i < verticalReach; i++)
+            {
+                GridCell cellToCheck = null;
+                List<GridCell> gridCells = WorldGrid.Instance.gridArray[gridCell.index.x, gridCell.index.y + i];
+                List<Character> enemiesList = new List<Character>();
+
+                //if the grid cells exist, get the correct grid cell to check for enemies and items
+                Vector3 positionToCheck = new Vector3(currentScanPosition.x, currentScanPosition.y + i, currentScanPosition.z);
+                cellToCheck = WorldGrid.GetTheWorldGridCellWithoutCreatingNewCells(WorldGrid.GetGridIndex(positionToCheck));
+                if (cellToCheck == previousCell)
+                    continue;
+                else
+                    previousCell = cellToCheck;
+
+                if (cellToCheck == null)
+                {
+                    Debug.LogError("Cell to check is null...Breaking out of the function");
+                    continue;
+                }
+
+                Debug.Log("Cell to check position: " + cellToCheck.worldPosition);
+                enemiesList = cellToCheck.character;
+                Debug.Log("Drawing line");
+                Debug.DrawLine(Vector3.zero, cellToCheck.worldPosition, Color.red);
+                
+
+                if (enemiesList != null)
+                {
+                    for(int j = 0; j < enemiesList.Count; j++)
+                    {
+                        if(direction > 0)
+                        {
+                            if (enemiesList[j].transform.position.x <= currentScanPosition.x)
+                            {
+                                Debug.Log("marked the enemy....Revealing pH");
+                                if (enemiesList[j].GetComponent<CharacterMechanics>())
+                                {
+                                    RevealpH(enemiesList[j].GetComponent<CharacterMechanics>(), ref player);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (enemiesList[j].transform.position.x >= currentScanPosition.x)
+                            {
+                                Debug.Log("marked the enemy....revealing pH");
+                                if (enemiesList[j].GetComponent<CharacterMechanics>())
+                                {
+                                    RevealpH(enemiesList[j].GetComponent<CharacterMechanics>(), ref player);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        bool ContinuepHScan(ref PHScanMechanic scan, ref Player player)
+        {
+            if(player.GetPlayerStatus().pHIndicator == null || player.GetPlayerStatus().pHUseCounter <= 0)
+            {
+                Debug.Log("use counter: " + player.GetPlayerStatus().pHUseCounter + "  indicator: " + player.GetPlayerStatus().pHIndicator);
+                scan = null;
+                return false;
+            }
+            return true;
+        }
+
+        void RevealpH(CharacterMechanics mech, ref Player player)
+        {
+            if (!mech.IspHrevealed())
+            {
+                //Decrese the pH count of the player
+                mech.RevealpH(true);
+                player.DecrementpHUse();
+            }
+
+        }
+    }
+    #endregion
 
 }
 

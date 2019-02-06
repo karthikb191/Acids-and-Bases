@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorActivation : MonoBehaviour {
+public class SwitchResponder : MonoBehaviour {
 
-    public List<SwichAndDoorActivation> switchScripts;
+    public List<Switch> switchScripts;
 
-    public bool openDoor;
 
     bool isOnFocus;
 
@@ -17,12 +16,15 @@ public class DoorActivation : MonoBehaviour {
     Animator doorAnimator;
     BoxCollider2D doorCollider;
 
+    public bool createDynamicButton = true;
+    bool doorOpened = false;
 
-
+    public delegate void DoorOpened();
+    public event DoorOpened DoorOpenedEvent;
+    
     // Use this for initialization
     void Start ()
     {
-        
         doorAnimator = gameObject.GetComponent<Animator>();
         doorCollider = gameObject.GetComponent<BoxCollider2D>();
 	}
@@ -30,52 +32,62 @@ public class DoorActivation : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-
         CheckSwitchStatus();
-        
-		
 	}
 
     void CheckSwitchStatus()
     {
-       
+        bool openDoor = false;
         for (int i = 0; i < switchScripts.Count; i++)
         {
             if(switchScripts[i].isActivated)
             {
               
                 openDoor = true;
-                doorCollider.isTrigger = true;
-                
+                //doorCollider.isTrigger = true;
                 continue;
             }
-
             else
             {
-               
-                doorCollider.isTrigger = false;
+                //doorCollider.isTrigger = false;
                 openDoor = false;
                 
                 break;
-
             }
         }
 
-        if(openDoor)
+        if(openDoor && !doorOpened)
         {
             OpenDoor();
+            doorOpened = true;
         }
     }
-
 
     void OpenDoor()
     {
         doorCollider.isTrigger = true;
-        doorAnimator.SetBool("OpenDoor", true);
-        doorCollider.enabled = false;
-        
+        if(doorAnimator != null)
+            doorAnimator.SetBool("OpenDoor", true);
+
+        //doorCollider.enabled = false;
+
+        if(DoorOpenedEvent != null)
+            DoorOpenedEvent();
     }
 
+    public bool IsDoorOpen()
+    {
+        return doorOpened;
+    }
+
+    public void ResetSwitches()
+    {
+        for (int i = 0; i < switchScripts.Count; i++)
+        {
+            switchScripts[i].isActivated = false;
+            doorOpened = false;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -98,9 +110,10 @@ public class DoorActivation : MonoBehaviour {
             }
         }
 
-        if (collision.gameObject.GetComponent<ItemBase>() != null && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy)
+        if (collision.gameObject.GetComponent<ItemBase>() != null)
         {
-            OpenDoor();
+            if(collision.gameObject.GetComponent<ItemBase>().thrown && !collision.gameObject.GetComponent<ItemBase>().isFromEnemy)
+                OpenDoor();
         }
     }
 

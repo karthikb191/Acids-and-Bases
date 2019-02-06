@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class PlayerInventory : Inventory
 {
+    Player player;
+
 
 ////////////////////////////////////////Inventory animation//////////////////////////////////////////
      Animator InventoryAnimator;
@@ -179,7 +181,11 @@ public class PlayerInventory : Inventory
     // Use this for initialization
     void Start()
     {
+
         character = GetComponentInParent<Character>();
+
+        player = GetComponentInParent<Player>();
+
         inventoryUI = transform.GetChild(0).GetComponent<Canvas>();
         extendedPanel = inventoryUI.transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<RectTransform>();
         displayPanel = inventoryUI.transform.GetChild(0).GetComponent<RectTransform>();
@@ -220,6 +226,7 @@ public class PlayerInventory : Inventory
                 {
                     if (RectTransformUtility.RectangleContainsScreenPoint(displaySlotList[i].panel, Input.mousePosition))
                     {
+
                         if(displaySlotList[i].itemStored != null)
                 {
                             Debug.Log("Inside display panel:>>><<><><><>  " + displaySlotList[i].itemStored.name);
@@ -230,6 +237,19 @@ public class PlayerInventory : Inventory
                             Debug.Log("Inside display panel:>>><<><><><>  Item is  null");
 
                         }
+
+                        //Check if the selected item is an indicator item
+                        if (slots[i].itemStored.GetComponent<PH>())
+                        {
+                            //If it is, and player doesn't have any active indicator, add it to his indicator list
+                            if(player.GetPlayerStatus().pHIndicator == null)
+                            {
+                                player.GetPlayerStatus().SetpHIndicator(slots[i].itemStored.GetComponent<PH>());
+                                Debug.Log("New pH Indicator has been set.");
+                            }
+                        }
+
+
 
                         if (activeItem == null)
                         {

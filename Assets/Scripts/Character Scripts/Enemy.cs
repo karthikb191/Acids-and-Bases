@@ -39,7 +39,9 @@ class Enemy : EnemyBase
 
         enemy = this;
         aiComponent = GetComponent<AI>();
-        behaviorAI = new RoamingBehavoir(enemy, aiComponent);
+
+        if(!aiComponent.persistentChase)
+            behaviorAI = new RoamingBehavoir(enemy, aiComponent);
 
         Debug.Log("script is working");
         State = new IdleState();
@@ -67,15 +69,13 @@ class Enemy : EnemyBase
 
     private void Update()
     {
-
-        info = CastGroundOverlapCircle();
-        //State = StateList[StateList.Count - 1];
-
         if (halt)
             return;
 
+        info = CastGroundOverlapCircle();
+        //State = StateList[StateList.Count - 1];
+        
         GetInput();
-        //State.UpdateState(this, userInputs);
         List<States> tempStates = StateList;
 
         //Debug.Log("States count: " + StateList.Count);
@@ -86,8 +86,7 @@ class Enemy : EnemyBase
         MoveCharacter();
 
         State = StateList[StateList.Count - 1];
-
-        //Debug.Log("Stunned: " + IsStunned());
+        
     }
 
     private void LateUpdate()
@@ -178,18 +177,7 @@ class Enemy : EnemyBase
         stunned = false;
     }
     #endregion
-
-    public void Halt()
-    {
-        halt = true;
-        playerSprite.GetComponent<Animator>().speed = 0;
-    }
-    public void ResetHalt()
-    {
-        halt = false;
-        playerSprite.GetComponent<Animator>().speed = 1;
-    }
-
+    
     public void GettingAbsorbed(Character c, float duration)
     {
         //Change the behavior to getting absorbed
@@ -238,6 +226,23 @@ class Enemy : EnemyBase
         return null;
     }
 
+    public override void StopMovement(bool stopAnimations = true, bool horizontal = true, bool vertical = true)
+    {
+        halt = true;
+        base.StopMovement();
+        aiComponent.HaltMovement();
+        if(stopAnimations)
+            playerSprite.GetComponent<Animator>().speed = 0;
+    }
+
+    public override void ResumeMovement()
+    {
+        halt = false;
+        base.ResumeMovement();
+        aiComponent.ResumeMovement();
+        playerSprite.GetComponent<Animator>().speed = 1;
+    }
+    
     protected override void RoamAround()
     {
 

@@ -19,7 +19,7 @@ public class NextScene : MonoBehaviour {
 
     public void Startgame()
     {
-        if (!clicked) {
+        if (!clicked && !GameManager.Instance.FadeInProgress()) {
             //canvasanim.SetBool("over", true);
             Nextscene();
             clicked = true;

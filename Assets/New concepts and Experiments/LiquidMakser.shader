@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_Color("Color", Color) = (1, 1, 1, 1)
+		[PerRendererData]_Color("Color", Color) = (1, 1, 1, 1)
 		_MainTex ("Texture", 2D) = "white" {}
 		_BodyTex("Body Texture", 2D) = "white"{}
 		_LiquidColor("Liquid Color", Color) = (1, 1, 1, 1)

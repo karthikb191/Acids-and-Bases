@@ -92,7 +92,7 @@ public class LevelManager : MonoBehaviour {
                 //Halt all the enemies temporarily
                 for(int i = 0; i < player.enemiesChasing.Count; i++)
                 {
-                    player.enemiesChasing[i].GetComponent<Enemy>().Halt();
+                    player.enemiesChasing[i].GetComponent<Enemy>().StopMovement();
                     player.enemiesChasing[i].transform.parent = null;
                 }
                 

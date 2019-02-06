@@ -5,7 +5,6 @@ using UnityEngine;
 public class CameraEditor : Editor{
     override public void OnInspectorGUI()
     {
-        
         //target is the object under inspection
         CameraScript cameraScript = target as CameraScript;
 

@@ -119,6 +119,8 @@ public class AI : MonoBehaviour {
             //    //CalculateNodePath(currentNode, player.transform.position);
             //    CalculateNodePath(targetLocation);
             //}
+            if (haltMovement)
+                return;
 
             if(chasingCharacter != null && !haltMovement)
             {
@@ -143,7 +145,6 @@ public class AI : MonoBehaviour {
                 CalculatePath();
 
                 EvaluateTargetNode();
-                
             }
             
             Move();
@@ -151,7 +152,7 @@ public class AI : MonoBehaviour {
             previousDirection = gameObject.transform.right;
         }
     }
-
+    
 
     void UpdateCurrentNode()
     {
@@ -777,12 +778,12 @@ public class AI : MonoBehaviour {
         if (!haltMovement)
         {
             Vector3 directionVector = directionToTarget;
-            
+            //Debug.Log("State: " + enemy.State);
             float dotProduct = Vector3.Dot(directionToTargetNormalized, Vector3.right);
             //Debug.Log("target node position: " + targetNode.position);
             //change movement direction only when the character is on the ground
 
-            
+            //Conditions for jump when character is in climbing state
             if (enemy.State.Equals(typeof(ClimbingState)))
             {
                 //If the current node is not the platform, but the character is still trying to climb
@@ -909,18 +910,23 @@ public class AI : MonoBehaviour {
                             //This block considers the case where the platform of target node is null
                             //Used Mostly for chasing
                             skip = true;
-                            for(int i = 0; i < enemy.gridCell.node.Count; i++)
+                            if (Mathf.Abs(directionVector.y) > 1.0f)
                             {
-                                Vector3 directionToNode = enemy.gridCell.node[i].position - gameObject.transform.position;
-                                if (Mathf.Abs(directionToNode.x) < Random.Range(0.2f, 0.5f) && Mathf.Abs(directionToNode.y) < Random.Range(0.2f, 0.5f))
-                                {
-                                    if (Mathf.Abs(directionVector.y) > 0.2f)
-                                    {
-                                        Debug.Log("Skipped");
-                                        skip = false;
-                                    }
-                                }
+                                Debug.Log("Skipped");
+                                skip = false;
                             }
+                            //for (int i = 0; i < enemy.gridCell.node.Count; i++)
+                            //{
+                            //    Vector3 directionToNode = enemy.gridCell.node[i].position - gameObject.transform.position;
+                            //    if (Mathf.Abs(directionToNode.x) < Random.Range(0.2f, 0.5f) && Mathf.Abs(directionToNode.y) < Random.Range(0.2f, 0.5f))
+                            //    {
+                            //        if (Mathf.Abs(directionVector.y) > 0.2f)
+                            //        {
+                            //            Debug.Log("Skipped");
+                            //            skip = false;
+                            //        }
+                            //    }
+                            //}
                         }
 
                         //This is the condition to skip the downward jump. If the target platform is below the player,
@@ -951,7 +957,7 @@ public class AI : MonoBehaviour {
 
                         if (Mathf.Abs(directionVector.y) < 0.5f && !skip)
                         {
-                            if (Mathf.Abs(directionVector.x) > 0.4f && currentNode.platform != targetNode.platform)
+                            if (Mathf.Abs(directionVector.x) > 0.4f && currentNode.platform != targetNode.platform && targetNode.platform != null)
                             {
                                 //Disable jump if the target node is a ladder
                                 if (currentNode.platform != targetNode.platform)
@@ -999,8 +1005,18 @@ public class AI : MonoBehaviour {
         enemy.BlockInputs(duration, horizontal, vertical);  //Finally, block the inputs on the base character class
     }
 
+    public void HaltMovement()
+    {
+        haltMovement = true;
+
+        StopAllCoroutines();
+
+        horizontalMovement = 0;
+    }
+
     public void ResumeMovement()
     {
+        Debug.Log("AI Movement resumed");
         haltMovement = false;
         if (pauseRoutine != null)
             StopCoroutine(pauseRoutine);
@@ -1042,7 +1058,6 @@ public class AI : MonoBehaviour {
         jump = true;
         jumpRelease = false;
         jumpRoutine = StartCoroutine(JumpToFalse(duration));
-
     }
 
     IEnumerator JumpToFalse(float duration)
@@ -1210,15 +1225,15 @@ public class AI : MonoBehaviour {
             
             //New nodes are inserted at certain intervals
             t += GameManager.Instance.DeltaTime;
-            for(int i = 0; i < targetNodePath.Count; i++)
+            //for(int i = 0; i < targetNodePath.Count; i++)
+            //{
+            if(t > 0.3f)// && Mathf.Abs(directionToCharacter.y) < maxJumpHeight + 1.5f)
             {
-                if(t > 0.3f && Mathf.Abs(directionToCharacter.y) < maxJumpHeight + 1.5f)
-                {
-                    targetNodePath.Insert(0, new Node { position = chasingCharacter.transform.position });
-                    destinationNode = targetNodePath[0];
-                    t = 0;
-                }
+                targetNodePath.Insert(0, new Node { position = chasingCharacter.transform.position });
+                destinationNode = targetNodePath[0];
+                t = 0;
             }
+            //}
 
             //if (Vector3.SqrMagnitude(directionToCharacter) > Random.Range(90, 100)
             //    && !enemy.State.Equals(typeof(JumpingState)) && !enemy.State.Equals(typeof(FallingState)))

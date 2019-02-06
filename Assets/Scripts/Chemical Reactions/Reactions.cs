@@ -38,8 +38,7 @@ class Reactions
         { Chemical.HCl, Salt.NaCl }
     };
 
-
-
+    
     //Parent Dictionary
     public static Dictionary<Chemical, Dictionary<Chemical, Salt>> reactionDictionary =
         new Dictionary<Chemical, Dictionary<Chemical, Salt>>()

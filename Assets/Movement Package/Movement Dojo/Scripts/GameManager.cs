@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour {
 
     [HideInInspector]
     public float stepSize;
+
+    bool fadeInProgress;
+    Coroutine fadeRoutine;
     
     private void Awake()
     {
@@ -120,6 +123,8 @@ public class GameManager : MonoBehaviour {
             fadeCanvas.SetActive(true);
             Debug.Log("Fade canvas instantiated");
 
+            fadeInProgress = true;
+
             DontDestroyOnLoad(fadeCanvas);
 
             //Once the fade canvas has been initialized, it must be deacivated
@@ -155,7 +160,6 @@ public class GameManager : MonoBehaviour {
 
         //Set up a function that is called everytime a scene is loaded
         //Deactivate the fade canvas.
-
         
         SceneManager.sceneLoaded += OnSceneLoad;
         SetCameraBounds();
@@ -168,7 +172,6 @@ public class GameManager : MonoBehaviour {
         //Debug.Log("Delta time is: " + deltaTime);
 
         SetCameraBounds();
-        
 	}
 
 
@@ -176,9 +179,7 @@ public class GameManager : MonoBehaviour {
     {
         return levelsCleared[LevelNumber];
     }
-
-
-
+    
     void OnSceneLoad(Scene scene, LoadSceneMode scenMode)
     {
         Debug.Log("New scene loaded");
@@ -228,6 +229,7 @@ public class GameManager : MonoBehaviour {
 
             if (virtualJoystick == null)
                 virtualJoystick = FindObjectOfType<VirtualJoystick>();
+
             if (virtualJoystick != null)
             {
                 virtualJoystick.gameObject.SetActive(true);
@@ -246,15 +248,15 @@ public class GameManager : MonoBehaviour {
             // 0 for the center 
             CameraBounds[0] = mainCam.transform.position;
             //1 for top left
-            CameraBounds[1] = new Vector3( mainCam.transform.position.x - camHalfWidth,
+            CameraBounds[1] = new Vector3(mainCam.transform.position.x - camHalfWidth,
                                             mainCam.transform.position.y + camHalfHeight,
                                             mainCam.transform.position.z);
             //2 for top right
-            CameraBounds[2] = new Vector3( mainCam.transform.position.x + camHalfWidth,
+            CameraBounds[2] = new Vector3(mainCam.transform.position.x + camHalfWidth,
                                             mainCam.transform.position.y + camHalfHeight,
                                             mainCam.transform.position.z);
             //3 for bottom right
-            CameraBounds[3] = new Vector3( mainCam.transform.position.x + camHalfWidth,
+            CameraBounds[3] = new Vector3(mainCam.transform.position.x + camHalfWidth,
                                             mainCam.transform.position.y - camHalfHeight,
                                             mainCam.transform.position.z);
             //4 for bottom left
@@ -273,15 +275,22 @@ public class GameManager : MonoBehaviour {
         }
 
     }
+    
 
     public IEnumerator GoToLevelWithFade(int index)
     {
         //set fade canvas to true
-        fadeCanvas.SetActive(true);
-        fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
-        yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
-        Debug.Log("Going to level: " + index);
-        SceneManager.LoadScene(index);
+        //fadeCanvas.SetActive(true);
+        //fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
+        //yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
+        Debug.Log("Fade in Progress: " + fadeInProgress);
+        if (!fadeInProgress)
+        {
+            yield return new WaitForSeconds(ActivateFadeCanvas());
+            Debug.Log("Going to level: " + index);
+            SceneManager.LoadScene(index);
+        }
+        yield break;
     }
 
     public IEnumerator FadeIn()
@@ -289,33 +298,51 @@ public class GameManager : MonoBehaviour {
         if(FadeInStartEvent != null)
             FadeInStartEvent();
 
-        Instance.fadeCanvas.SetActive(true);
-        Instance.fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
-        
-        float duration = Instance.fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f;
-        yield return new WaitForSeconds(duration);
+        //Instance.fadeCanvas.SetActive(true);
+        //Instance.fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
+        //
+        //float duration = Instance.fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f;
+        if (!fadeInProgress)
+        {
+            yield return new WaitForSeconds(ActivateFadeCanvas());
 
-        StartCoroutine(Instance.DeactivateFadeCanvas());
+            StartCoroutine(Instance.DeactivateFadeCanvas());
+        }
+        yield break;
     }
     
     public IEnumerator IncreaseLevelWithFade()
     {
+        Debug.Log("Fade in progress: " + fadeInProgress);
         //set fade canvas to true
+
+        //fadeCanvas.SetActive(true);
+        //fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
+
+        //yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
+        if (!fadeInProgress)
+        {
+            yield return new WaitForSeconds(ActivateFadeCanvas());
+        
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        yield break;
+    }
+
+    public float ActivateFadeCanvas()
+    {
+        float duration = 0;
+        
+        fadeInProgress = true;
+        
         if (fadeCanvas != null)
         {
             fadeCanvas.SetActive(true);
             fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", true);
-            yield return new WaitForSeconds(fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f);
+            duration = fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 1.5f;
         }
 
-        //The flag must be set properly to increase the level
-      /*  while (!Goal.gameManagerCanIncreaseLevel)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        Goal.gameManagerCanIncreaseLevel = false;*/
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        
+        return duration;
     }
 
     public IEnumerator DeactivateFadeCanvas()
@@ -323,15 +350,22 @@ public class GameManager : MonoBehaviour {
         if (FadeOutStartEvent != null)
             FadeOutStartEvent();
 
-        Debug.Log("Deactivating Fade canvas");
-        fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", false);
-        AnimatorStateInfo ass = fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
-        yield return new WaitForSeconds(ass.length);
+        if(fadeCanvas != null)
+        {
+            Debug.Log("Deactivating Fade canvas");
+            fadeCanvas.transform.GetChild(0).GetComponent<Animator>().SetBool("FadeIn", false);
+            AnimatorStateInfo ass = fadeCanvas.transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0);
+            yield return new WaitForSeconds(ass.length);
+        }
 
         if (FadeOutCompleteEvent != null)
             FadeOutCompleteEvent();
 
+        fadeInProgress = false;
+
         fadeCanvas.SetActive(false);
+
+        yield break;
     }
 
     public void RestartLevel()
@@ -340,6 +374,7 @@ public class GameManager : MonoBehaviour {
         DeactivatePausePanel();
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
     public void GoToMainMenu()
     {
         StartCoroutine(GoToLevelWithFade(0));
@@ -347,8 +382,7 @@ public class GameManager : MonoBehaviour {
         //SceneManager.LoadScene(0);
     }
 
-
-
+    
     public void ActivatePausePanel()
     {
         Debug.Log("Activating the global canvas");
@@ -381,7 +415,6 @@ public class GameManager : MonoBehaviour {
 
     public IEnumerator FadeInAudio(AudioSource source)
     {
-        
         if (source != null)
         {
             while (source.volume < 1)
@@ -392,14 +425,23 @@ public class GameManager : MonoBehaviour {
         }
         yield break;
     }
+    
+    public bool FadeInProgress() { return fadeInProgress; }
+
+
+    public bool IsPaused()
+    {
+        return paused;
+    }
 
     public void Pause()
     {
+        Time.timeScale = 0;
         paused = true;
     }
     public void Resume()
     {
+        Time.timeScale = 1;
         paused = false;
     }
-
 }

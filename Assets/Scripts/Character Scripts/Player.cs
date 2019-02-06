@@ -75,7 +75,7 @@ public abstract class Character : MonoBehaviour, ICharacter
     //Chemical the character carrying
     public Chemical chemical;
 
-    //Functions
+    #region Block Movement Functions
     public virtual void BlockInputs()
     {
         //Debug.Log("meh");
@@ -97,6 +97,18 @@ public abstract class Character : MonoBehaviour, ICharacter
         blockRoutine =  StartCoroutine(CharacterUtility.BlockInputs(this, horizontal, vertical, true, duration));
     }
 
+    public virtual void StopMovement(bool stopAnimations = true, bool horizontal = true, bool vertical = true)
+    {
+        horizontalInputBlock = horizontal;
+        verticalInputBlock = vertical;
+    }
+    public virtual void ResumeMovement()
+    {
+        Debug.Log("movement resumed");
+        verticalInputBlock = false;
+        horizontalInputBlock = false;
+    }
+    #endregion
     //protected Collider2D[] CastGroundOverlapCircle()
     //{
     //    return Physics2D.OverlapCircleAll(groundCheck.transform.position, groundCheckCircleRadius, whatToDetect);
@@ -118,6 +130,8 @@ public abstract class Character : MonoBehaviour, ICharacter
 
     protected virtual void MoveCharacter()
     {
+        int horizontalBlockValue = 0;
+        int verticalBlockValue = 0;
         externalForce = Vector3.zero;
         velocity = Vector3.zero;
         externalHorizontalMovementDamp = externalVerticalMovementDamp = 1.0f;
@@ -125,9 +139,15 @@ public abstract class Character : MonoBehaviour, ICharacter
         {
             //Debug.Log("linear speed: " + currentLinearSpeed);
             if (!horizontalInputBlock)
+            {
+                horizontalBlockValue = 1;
                 velocity.x = currentLinearSpeed;
+            }
             if (!verticalInputBlock)
+            {
+                verticalBlockValue = 1;
                 velocity.y = currentJumpSpeed;
+            }
 
             Vector3 externalSpeed = ((externalForce * GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime) / mass);
 
@@ -135,22 +155,15 @@ public abstract class Character : MonoBehaviour, ICharacter
                 externalSpeed.y = 0.7f * Mathf.Sign(externalSpeed.y);
 
             //0.001f moves the character slightly downwards so that it's always touching platform
-            velocity = gameObject.transform.right * velocity.x * externalHorizontalMovementDamp +
-                                                jumpDirection * (velocity.y - 0.001f) * externalVerticalMovementDamp +
+            velocity = gameObject.transform.right * velocity.x * externalHorizontalMovementDamp * horizontalBlockValue +
+                                                jumpDirection * (velocity.y - 0.001f) * externalVerticalMovementDamp * verticalBlockValue +
                                                 externalSpeed;
-
-            //if(!horizontalInputBlock && !verticalInputBlock)
+            
             gameObject.transform.up = playerUpOrientation;
 
             gameObject.transform.position += velocity;
-
-            //playerSprite.transform.localScale = new Vector3(
-            //        Mathf.Sign(userInputs.xInput) * playerSprite.transform.localScale.x,
-            //        playerSprite.transform.localScale.y, playerSprite.transform.localScale.z
-            //    );
-
+            
         }
-        
     }
 
     public void SetSoundEffect(AudioClip clipToPlay = null, bool loop = false, bool playOneShot = false, float delay = 0.0f)
@@ -210,6 +223,8 @@ public abstract class Character : MonoBehaviour, ICharacter
                 Debug.Log("Something went wrong. Player doesn't have a grid cell");
             }
         }
+
+        //Debug.DrawLine(Vector3.zero, gridCell.worldPosition);
         //Debug.Log("Character: " + gameObject.name);
         //Debug.Log("Grid cell indices: " + gridCell.index.x + "    " + gridCell.index.y);
         //Debug.Log("Grid cell indices: " + gridCell.index.x + "    " + gridCell.index.y);
@@ -217,6 +232,11 @@ public abstract class Character : MonoBehaviour, ICharacter
         //Debug.Log("Grid node count: " + gridCell.node.Count);
 
         //List<GridCell> cells = WorldGrid.Instance.gridArray[gridIndex.x, gridIndex.y];
+    }
+
+    public GridCell GetGridCell()
+    {
+        return gridCell;
     }
 
     #region health variables and functions
@@ -253,7 +273,7 @@ public abstract class Character : MonoBehaviour, ICharacter
     
 }
 
-struct PlayerStatus
+public class PlayerStatus
 {
     public PlayerStatus(Canvas statusCanvas)
     {
@@ -275,7 +295,7 @@ struct PlayerStatus
         //pH meter variables
         //TODO: change this to search by name
      
-        pHMeterImage = playerStatusCanvas.transform.Find("PhMeterIndicator").GetChild(0).GetChild(0).GetComponent<RawImage>();
+        pHMeterImage = playerStatusCanvas.transform.Find("pHMeterIndicator").GetChild(0).GetChild(0).GetComponent<RawImage>();
 
         Debug.Log(pHMeterImage + "PH meter image");
         pHpointer = pHMeterImage.transform.GetChild(0).GetComponent<RawImage>();
@@ -286,7 +306,16 @@ struct PlayerStatus
 
         widthOfpHMeter = pHMeterImage.rectTransform.rect.width;
 
-        phShowButton = playerStatusCanvas.transform.Find("PhMeterIndicator").GetChild(1).GetComponent<Button>();
+        phShowButton = playerStatusCanvas.transform.Find("pHMeterIndicator").GetChild(1).GetComponent<Button>();
+
+        pHIndicatorImage = phShowButton.GetComponent<Image>();
+
+        pHIndicatorName = playerStatusCanvas.transform.Find("pHMeterIndicator").Find("pHName").transform.GetChild(0).GetComponent<Text>();
+        pHUseCounterText = playerStatusCanvas.transform.Find("pHMeterIndicator").Find("pHUseCounter").transform.GetChild(0).GetComponent<Text>();
+        pHUseCounter = 0;
+
+        pHIndicator = null;
+        PHIndicatorChangedEvent = null;
     }
 
     public Canvas playerStatusCanvas;
@@ -303,9 +332,18 @@ struct PlayerStatus
     public RawImage pHMeterImage;
     public RawImage pHpointer;
     public float widthOfpHMeter;
+    public Image pHIndicatorImage;
+    public Text pHIndicatorName;
+    public Text pHUseCounterText;
+    public int pHUseCounter;
 
     //ph button Show/Hide
     public Button phShowButton;
+
+    
+    public PH pHIndicator;
+    public delegate void PHIndicatorChanged();
+    public event PHIndicatorChanged PHIndicatorChangedEvent;
 
 
     public void Heal(float healAmount)
@@ -314,6 +352,7 @@ struct PlayerStatus
         currentHealth += healAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
     }
+
     public void TakeDamage(float DamageAmount)
     {
         currentHealth -= DamageAmount;
@@ -340,6 +379,45 @@ struct PlayerStatus
         phShowButton.GetComponentInChildren<Text>().text = "PhMeter" + value;
     }
 
+
+    public void SetpHIndicator(PH newIndicator)
+    {
+        //Add the event and raise an event to notify subscribers that pH indicator has changed
+        pHIndicator = newIndicator;
+        //Set the image in the button
+        SetpHIndicatorImage(newIndicator.PHIndicatorImage);
+
+        //TODO: Must be changed to reflect the pH use counter to the number of items of same type in the inventory
+        //Increment the pH use counter
+        pHUseCounter = newIndicator.GetUseCount();
+        pHIndicatorName.text = newIndicator.indicator.ToString();
+        pHUseCounterText.text = pHUseCounter.ToString();
+
+        if (PHIndicatorChangedEvent != null)
+            PHIndicatorChangedEvent();
+    }
+    void SetpHIndicatorImage(Sprite pHImage)
+    {
+        if(pHIndicatorImage != null)
+        {
+            pHIndicatorImage.sprite = pHImage;
+        }
+        else
+        {
+            Debug.LogError("pH meter");
+        }
+    }
+
+    public void DecrementpHUse()
+    {
+        pHUseCounter--;
+        pHUseCounterText.text = pHUseCounter.ToString();
+        if (pHUseCounter == 0)
+        {
+            pHIndicatorName.text = "None";
+        }
+    }
+    
 }
 
 [System.Serializable]
@@ -349,6 +427,7 @@ public class Player : Character
 
     //Player Status Canvas
     PlayerStatus playerStatus;
+    //public PlayerStatus PlayerStats { get { return playerStatus; } set { playerStatus = value; } }
 
     Animator phMeterAnimator;
 
@@ -373,7 +452,7 @@ public class Player : Character
         }
     }
 
- 
+    
     private void Start()
     {
         enemiesChasing = new List<Character>();
@@ -392,7 +471,7 @@ public class Player : Character
         //Initializing the player status variables
         playerStatus = new PlayerStatus(transform.GetComponentInChildren<Canvas>());
 
-        phMeterAnimator = transform.GetComponentInChildren<Canvas>().transform.Find("PhMeterIndicator").GetChild(0).GetComponent<Animator>();
+        phMeterAnimator = transform.GetComponentInChildren<Canvas>().transform.Find("pHMeterIndicator").GetChild(0).GetComponent<Animator>();
         playerAudio = GetComponent<PlayerAudio>();
         audioSource = GetComponent<AudioSource>();
 
@@ -408,6 +487,14 @@ public class Player : Character
     
     private void Update()
     {
+        //TODO: Remove this test later
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log("Pressed P....Opening Journal");
+            Journal.Instance.ToggleJournal();
+        }
+
+
         //This has the information of all the object the player is currently in contact with
         info = CastGroundOverlapCircle();
 
@@ -669,6 +756,11 @@ public class Player : Character
         enemiesChasing.Remove(e);
     }
 
+    public void DecrementpHUse()
+    {
+        playerStatus.DecrementpHUse();
+    }
+
     private void OnDrawGizmos()
     {
         if (currentNodeOfPlayer != null)
@@ -676,6 +768,11 @@ public class Player : Character
             Gizmos.color = Color.magenta;
             Gizmos.DrawWireSphere(currentNodeOfPlayer.position, 0.5f);
         }
+    }
+
+    public PlayerStatus GetPlayerStatus()
+    {
+        return playerStatus;
     }
 
 }
