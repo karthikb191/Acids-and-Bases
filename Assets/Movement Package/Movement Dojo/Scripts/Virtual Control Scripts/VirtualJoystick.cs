@@ -264,7 +264,7 @@ public class VirtualJoystick : MonoBehaviour {
             b.button.transform.position = new Vector3(Screen.width / 2, Screen.height / 3);
 
             //Add to the list of active buttions
-            Debug.Log("active buttons list: " + activeDynamicButtons.Count);
+         //   Debug.Log("active buttons list: " + activeDynamicButtons.Count);
 
             if(!activeDynamicButtons.Contains(b))
                 activeDynamicButtons.Add(b);

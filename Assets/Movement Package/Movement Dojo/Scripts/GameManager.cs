@@ -425,7 +425,7 @@ public class GameManager : MonoBehaviour {
         }
         yield break;
     }
-
+    
     public bool FadeInProgress() { return fadeInProgress; }
 
 

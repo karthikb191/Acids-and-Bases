@@ -10,17 +10,17 @@ public class HelpTrigger : MonoBehaviour {
 
     public bool isShown;
 
+    public bool isInstruction;
+
     public LevelHelpBase levelHelper;
+
+    public GameObject arrowPointer;
 
 	// Use this for initialization
 	void Start () {
         levelHelper = GetComponentInParent<LevelHelpBase>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

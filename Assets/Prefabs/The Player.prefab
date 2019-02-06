@@ -1015,7 +1015,7 @@ Transform:
   m_GameObject: {fileID: 1589464644243222}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_Children:
   - {fileID: 4044858201374560}
   m_Father: {fileID: 4447364340418876}
@@ -1067,7 +1067,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1983780379517314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.434, y: 1.614, z: 0}
+  m_LocalPosition: {x: -8.2, y: -10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4447364340418876}
@@ -1157,7 +1157,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 35.4
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -1406,7 +1406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1484,7 +1484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.0039215684, g: 0.26430953, b: 1, a: 1}
-  m_Length: 0.22555354
+  m_Length: 0.2255534
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4567404823802528}
   m_AttachedIK: {fileID: 0}
@@ -1500,7 +1500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.10859266, g: 1, b: 0.0047169924, a: 1}
-  m_Length: 0.22459254
+  m_Length: 0.22459239
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4845142466682950}
   m_AttachedIK: {fileID: 0}
@@ -1656,8 +1656,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 1
   gravity: -9.8
-  maxSpeed: 450
-  maxJumpSpeed: 450
+  maxSpeed: 550
+  maxJumpSpeed: 520
   whatToDetect:
     serializedVersion: 2
     m_Bits: 768
@@ -1674,6 +1674,7 @@ MonoBehaviour:
   groundCheck: {fileID: 0}
   groundCheckCircleRadius: 0.29
   ceilingCheckCircleRadius: 0.2
+  jumpMultiplier: 1.2
   playerUpOrientation: {x: 0, y: 1, z: 0}
   playerSprite: {fileID: 0}
   playerAudio: {fileID: 0}
@@ -1726,7 +1727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.0039215684, g: 0.26430953, b: 1, a: 1}
-  m_Length: 0.2770141
+  m_Length: 0.27701426
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4779410853550540}
   m_AttachedIK: {fileID: 0}
@@ -1754,7 +1755,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.9622642, g: 0.11347453, b: 0.85811466, a: 1}
-  m_Length: 0.100000076
+  m_Length: 0.10000006
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4190824901844684}
   m_AttachedIK: {fileID: 0}
@@ -1873,7 +1874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2051,7 +2052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.10859266, g: 1, b: 0.0047169924, a: 1}
-  m_Length: 0.22555344
+  m_Length: 0.2255536
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4292610787048286}
   m_AttachedIK: {fileID: 0}
@@ -2109,7 +2110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.9622642, g: 0.11347453, b: 0.85811466, a: 1}
-  m_Length: 0.42429024
+  m_Length: 0.42429048
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4314271372535470}
   m_AttachedIK: {fileID: 0}

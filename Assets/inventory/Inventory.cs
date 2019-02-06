@@ -17,7 +17,7 @@ public class Slot
 
     public bool isSelected;
 
-    public int maxStorage = 5;
+    public int maxStorage = 10;
 
     public List<ItemBase> itemlist = new List<ItemBase>();
 
@@ -66,8 +66,9 @@ public class Slot
     {
         itemCount--;
 
-        Debug.Log("Remove Item called");
+     //   Debug.Log("Remove Item called");
         itemlist.Remove(l_itemBase);
+        Debug.Log("item list count: " + itemlist.Count);
 
         if (itemlist.Count < 1)
         {
@@ -90,6 +91,7 @@ public class Slot
 
     public void FlushOut()
     {
+        Debug.Log("Flush out called");
         itemCount = 0;
         displaySprite.sprite = null;
         displaySprite.enabled = false;
@@ -110,7 +112,7 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     RectTransform panel;   */ //Panel within which the slots are stored
 
-     Character character;    //The character the inventory belongs to
+   //  Character character;    //The character the inventory belongs to
 
     public List<Slot> slots = new List<Slot>();
 
@@ -128,7 +130,7 @@ public class Inventory : MonoBehaviour {
     {
         //  CreateSlot();
 
-        character = GetComponentInParent<Character>();
+     //   character = GetComponentInParent<Character>();
         slots = new List<Slot>(maxSlotCount);
     }
 
@@ -171,12 +173,7 @@ public class Inventory : MonoBehaviour {
         //Throw the item and check the slots 
         if (activeItem.itemProperties.isThrowable)
         {
-           // activeItem.gameObject.transform.parent = null;
-
-          //Debug.Log(activeItem.gameObject.transform.position);
-
-            //activeItem.maxRangeOfThrow = 6;
-            
+         
             activeItem.Throw(Target,speed);
             UpdateSlotData(activeItem);
             activeSlotCount = ActiveSlotCount();
@@ -194,19 +191,16 @@ public class Inventory : MonoBehaviour {
 
     public void UpdateSlotData(ItemBase l_ItemBase)
     {
-       // Debug.Log("Update slot called");
+        Debug.Log("Update slot called");
         for (int i = 0; i <= activeSlotCount; i++)
         {
-
-            if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
+            if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties && slots[i].itemlist.Count > 0)
             {
-             //   Debug.Log("Remove item called");
+                Debug.Log("Remove item called");
                 slots[i].RemoveItem(l_ItemBase);
                 activeSlotCount = ActiveSlotCount();
                 break;
             }
-
-
         }
     }
 
@@ -218,9 +212,8 @@ public class Inventory : MonoBehaviour {
             
             if(slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_activeItem.itemProperties )
             {
-                Debug.Log(slots[i].itemStored);
-                Debug.Log(slots[i].itemlist.Count);
-
+              /*  Debug.Log(slots[i].itemStored);
+                Debug.Log(slots[i].itemlist.Count);*/
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count-1];
                 activeItem.gameObject.SetActive(true);
                 activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
@@ -252,8 +245,7 @@ public class Inventory : MonoBehaviour {
         //if the item count is less than 0, rearrange the slots
         UpdateSlotData(activeItem);
         activeItem.transform.parent = null;
-        activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());
-        
+        activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());        
         activeItem = null;
 
     }
@@ -261,9 +253,7 @@ public class Inventory : MonoBehaviour {
    // public void DropBatch(System.Type type)
     public void DropBatch(ItemBase l_itemBase)
     {
-        //Drop the items of the specified type, if found
-
-       
+        //Drop the items of the specified type, if found     
         for (int i = 0; i < slots.Count; i++)
         {
             if(slots[i].itemStored.itemProperties == l_itemBase.itemProperties)
@@ -298,28 +288,15 @@ public class Inventory : MonoBehaviour {
             {
                 Slot tempSlot = new Slot();
                
-                 slots.Add(tempSlot);
-
+                slots.Add(tempSlot);
                 slots[i].imageSlotPrefab = Instantiate(imageSlotPrefab);
-
-
                 slots[i].panel = slots[i].imageSlotPrefab.gameObject.GetComponent<RectTransform>();
-
-
-                slots[i].countText = slots[i].imageSlotPrefab.gameObject.GetComponent<Text>();
-            
+                slots[i].countText = slots[i].imageSlotPrefab.gameObject.GetComponent<Text>();           
                 slots[i].displaySprite = slots[i].imageSlotPrefab.transform.Find("Slot Image").gameObject.GetComponentInChildren<Image>();
-
                 slots[i].imageSlotPrefab.SetActive(false);
-
                 slots[i].displaySprite.sprite = sampleTestSprite;
-
                 slots[i].countText = slots[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
-
-                  Debug.Log(slots[i].countText.text + "_____" + i);
-
-               
-
+                //Debug.Log(slots[i].countText.text + "_____" + i);
             }
 
         }
@@ -362,21 +339,15 @@ public class Inventory : MonoBehaviour {
                         slots[i].itemStored = l_ItemBase;
                         activeSlotCount = ActiveSlotCount();
                         break;
-
                     }
                 }
 
             }
-
             else
             {
                // Debug.Log("Max Slots reached");
-            }
-
-
-        
+            }       
         }
-
         else
         {
             Debug.Log(l_ItemBase.name + "Is not an Inventory item");
@@ -415,9 +386,8 @@ public class Inventory : MonoBehaviour {
     public void HideSlots()
     {
         for (int i = 0; i < slots.Count; i++)
-        {
-            
-                slots[i].imageSlotPrefab.SetActive(false);
+        {           
+             slots[i].imageSlotPrefab.SetActive(false);
             
         }
     }

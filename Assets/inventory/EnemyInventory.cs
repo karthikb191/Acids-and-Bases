@@ -51,7 +51,7 @@ public class EnemyInventory : Inventory {
                         activeItem = slots[i].itemlist[j];
                         activeItem.isFromEnemy = true;
                         activeItem.gameObject.SetActive(true);
-                        Debug.Log(activeItem.name + "Axctive item set in enemy inventory");
+                        Debug.Log(activeItem.name + "Active item set in enemy inventory");
                         break;
                     }
                 }
