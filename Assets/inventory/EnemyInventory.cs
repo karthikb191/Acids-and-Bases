@@ -18,7 +18,8 @@ public class EnemyInventory : Inventory {
 
     // Use this for initialization
     void Start () {
-        
+
+        character = GetComponentInParent<Character>();
         CreateSlot();
         for(int i = 0; i<slots.Count;i++)
         {

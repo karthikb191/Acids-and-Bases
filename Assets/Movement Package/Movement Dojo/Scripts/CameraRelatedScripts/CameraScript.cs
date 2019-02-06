@@ -254,7 +254,7 @@ public class CameraScript : MonoBehaviour {
             offset.x = Random.value * 2 * currentAmount - currentAmount;
             offset.y = Random.value * 2 * currentAmount - currentAmount;
 
-            currentAmount -= damping * Time.deltaTime;
+            currentAmount -= damping * GameManager.Instance.DeltaTime;
 
             offset = previousOffset * (1 - smoothness) + offset * (smoothness);
             previousOffset = offset;

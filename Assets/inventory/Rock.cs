@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Rock : ItemBase
 {
-    SpriteRenderer spriteRenderer;
+   // SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = itemProperties.imageSprite;
+      //  spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+       // spriteRenderer.sprite = itemProperties.imageSprite;
     }
     public override void Use()
     {

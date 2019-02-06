@@ -41,10 +41,10 @@ public class CameraProjectionChanger : MonoBehaviour {
             yield return new WaitForFixedUpdate();
 
             if(Camera.main.orthographicSize > orthographicSize + 0.05f)
-                tempOrthographicSize -= Time.deltaTime;
+                tempOrthographicSize -= GameManager.Instance.DeltaTime;
 
             else if(Camera.main.orthographicSize < orthographicSize - 0.05f)
-                tempOrthographicSize += Time.deltaTime;
+                tempOrthographicSize += GameManager.Instance.DeltaTime;
         }
         Camera.main.orthographicSize = orthographicSize;
         cameraMoving = false;

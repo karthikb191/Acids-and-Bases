@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class ItemBase : MonoBehaviour {
 
+
+    
+
     public bool thrown = false;
 
 
@@ -25,7 +28,7 @@ public class ItemBase : MonoBehaviour {
 
     public float speed = 20.0f;
 
-    Vector3 targetScale = Vector3.one;
+   public Vector3 targetScale = Vector3.one;
 
     public bool isFromEnemy = false;
 
@@ -90,16 +93,22 @@ public class ItemBase : MonoBehaviour {
 
             if (collision.GetComponent<Player>() != null)
             {
-                //Enable the button
-                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
-                if (!d.active)
-                {
-                    VirtualJoystick.EnableDynamicButton(d);
-                    d.button.onClick.AddListener(() =>
+                if (gameObject.GetComponent<SpriteRenderer>().enabled)
+                {//Enable the button
+                    DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
+                    if (!d.active)
                     {
-                        AddItem();
-                        VirtualJoystick.DisableDynamicButton(d);                          
-                    });
+                        VirtualJoystick.EnableDynamicButton(d);
+                        d.button.onClick.AddListener(() =>
+                        {
+                            AddItem();
+                          
+                         // collision.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().InitialDislaySlotCreation();
+                          collision.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DisplaySlotInitialization(this);
+                     //   collision.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
+                        VirtualJoystick.DisableDynamicButton(d);
+                        });
+                    }
                 }
             }
         }
@@ -128,18 +137,20 @@ public class ItemBase : MonoBehaviour {
             gameObject.transform.rotation = c.transform.rotation;
 
         //Animating scale
-        float scaleDiff = Vector3.Distance(gameObject.transform.localScale, targetScale);
-        if (scaleDiff > 0.05f)
-            gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, targetScale, 0.2f);
-        else
+        float scaleDiff = Vector3.Distance(gameObject.transform.localScale, c.Hand.transform.localScale);
+
+        Debug.Log("MASJNAIDBIHABD + scale diff::   " + scaleDiff);
+        if (scaleDiff > 0)
+            gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, c.Hand.transform.localScale, 1f);
+        /*else
            // gameObject.transform.localScale = Vector3.one/2;
-            gameObject.transform.localScale = targetScale;
+            gameObject.transform.localScale = targetScale;*/
 
         if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
         {
             gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
             gameObject.transform.position = targetPosition;
-            yield break;
+           // yield break;
         }
 
         else
@@ -237,12 +248,12 @@ public class ItemBase : MonoBehaviour {
         while (elapse_time < flightDuration)
         {
            if(isFromEnemy)
-            transform.Translate(Vx * Time.deltaTime, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
+            transform.Translate(Vx * GameManager.Instance.DeltaTime , (Vy - (speed * elapse_time)) * GameManager.Instance.DeltaTime,0);
 
            else
-            transform.Translate(Vx * Time.deltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
+            transform.Translate(Vx * GameManager.Instance.DeltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * GameManager.Instance.DeltaTime,0);
 
-            elapse_time += Time.deltaTime;
+            elapse_time += GameManager.Instance.DeltaTime;
 
            // Debug.Log("elapse_time" + elapse_time);          
 
@@ -297,24 +308,24 @@ public class ItemBase : MonoBehaviour {
        // setFocus = false;
     }
 
-    public float maxRangeOfThrow = 20;
+  public   float maxRangeOfThrow = 20;
     public float maxAngle = 45;
 
     [Range(0, 45)]
-    public float angleOfThrow;
+    float angleOfThrow;
 
     Vector3 directionOfThrow;
 
     Vector3 angleQuatrenion;
+   
+     float timeElapsed = 0;
 
-    public float timeElapsed = 0;
-
-    public  float timeToReach = 0;
-    public  Vector3 targetToHit;
+      float timeToReach = 0;
+      Vector3 targetToHit;
 
     Vector3 lastDirection;
 
-    public float throwVelocity = 30;
+    float throwVelocity = 30;
 
     private void ThrowCalculations(Vector3 target, float throwVelo)
     {
@@ -355,7 +366,7 @@ public class ItemBase : MonoBehaviour {
     void CheckCollision()
     {
 
-        timeElapsed += Time.deltaTime;
+        timeElapsed += GameManager.Instance.DeltaTime;
         RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), colliderRadius, new Vector2(0, 1));
 
         for (int i = 0; i < collidedWith.Length; i++)
