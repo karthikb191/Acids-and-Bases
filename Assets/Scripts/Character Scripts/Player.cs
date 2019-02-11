@@ -408,6 +408,11 @@ public class PlayerStatus
         }
     }
 
+    public PH GetpHIndicator()
+    {
+        return pHIndicator;
+    }
+
     public void DecrementpHUse()
     {
         pHUseCounter--;

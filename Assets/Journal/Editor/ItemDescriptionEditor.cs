@@ -11,9 +11,9 @@ public class ItemDescriptionEditor : Editor{
     {
         ItemsDescription description = target as ItemsDescription;
 
-        scroll = EditorGUILayout.BeginScrollView(scroll);
-        description.itemDescription = EditorGUILayout.TextArea("", GUILayout.Height(300));
-        EditorGUILayout.EndScrollView();
+        //scroll = EditorGUILayout.BeginScrollView(scroll);
+        description.itemDescription = EditorGUILayout.TextArea(description.itemDescription, GUILayout.Height(150));
+        //EditorGUILayout.EndScrollView();
 
         description.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type: ", description.itemType);
         //description.itemType = type;

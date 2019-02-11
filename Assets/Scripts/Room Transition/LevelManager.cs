@@ -42,7 +42,7 @@ public class LevelManager : MonoBehaviour {
         TestClearLevel();
     }
 
-
+    //TODO: Remove this save text from level manager
     void TestClearLevel()
     {
         Scene s = SceneManager.GetActiveScene();
@@ -67,12 +67,14 @@ public class LevelManager : MonoBehaviour {
                     stars = 1
                 });
             }
-            CheckPointManager.RegisterCheckPoint();
+            SaveManager.Save();
+            //CheckPointManager.RegisterCheckPoint();
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            CheckPointManager.LoadCheckPoint();
+            //CheckPointManager.LoadCheckPoint();
+            SaveManager.Load();
         }
     }
 

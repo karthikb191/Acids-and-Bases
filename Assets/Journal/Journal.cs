@@ -1,22 +1,47 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// Must be attached to a separate journal canvas
 /// </summary>
 
+[System.Serializable]
+public class SerializableRect
+{
+    public SerializableRect(float x, float y, float width, float height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+    public float x;
+    public float y;
+    public float width;
+    public float height;
+}
+
+[System.Serializable]
+public class JournalSaveData
+{
+    public List<System.Object> itemsInJournal = new List<object>();
+    public List<string> itemIconsPath = new List<string>();
+    public List<SerializableRect> spriteRect = new List<SerializableRect>();
+    public List<string> itemsDescriptions = new List<string>();
+}
+
 public class Journal : MonoBehaviour {
 
     public static Journal Instance { get; set; }
-
     /// <summary>
     /// List of all the items in the journal.
     /// If a new item is picked up, it will be added to this list
     /// </summary>
     //List<ItemList> itemsInJournal;
     List<System.Object> itemsInJournal;
-    List<string> pathToImageAsset;
-    List<string> itemDescriptions;
+    List<Sprite> itemsIcons;
+    List<string> itemsDescriptions;
 
     List<string> itemsDisplayed;
 
@@ -37,15 +62,52 @@ public class Journal : MonoBehaviour {
     /// </summary>
     GameObject contentPanel;    //Content panel must be a child of items panel
 
+    /// <summary>
+    /// Description panel consists the entire description information
+    /// </summary>
+    GameObject descriptionPanel;
+    Image descriptionIcon;
+    Text descriptionTitle;
+    Text descriptionSummary;
+
     //Object Pooling for tabs
     List<GameObject> activeContentItems;
+    List<int> indexLinksToAllItemsInJournal;
     List<GameObject> disabledContentItems;
 
     float heightOfContent;
     float heightOfContentPanel;
 
     GameObject activeContentItem = null;
-    
+    int activeContentItemJournalIndex = -1;
+
+    public List<System.Object> GetAllItemsInJournal()
+    {
+        return itemsInJournal;
+    }
+    public List<Sprite> GetAllItemIconsInJournal()
+    {
+        return itemsIcons;
+    }
+    public List<string> GetAllItemDescriptionsInJournal()
+    {
+        return itemsDescriptions;
+    }
+
+    public void SetAllItemsInJournal(List<System.Object> value)
+    {
+        itemsInJournal = value;
+    }
+    public void SetAllItemIconsInJournal(List<Sprite> value)
+    {
+        itemsIcons = value;
+    }
+    public void SetAllItemDescriptionsInJournal(List<string> value)
+    {
+        itemsDescriptions = value;
+    }
+
+
     private void Awake()
     {
         //This expands to: Instance = Instance != null ? Instance : this;
@@ -58,14 +120,15 @@ public class Journal : MonoBehaviour {
     private void Start()
     {
         itemsInJournal = new List<System.Object>();
-        pathToImageAsset = new List<string>();
-        itemDescriptions = new List<string>();
+        itemsIcons = new List<Sprite>();
+        itemsDescriptions = new List<string>();
 
         itemsDisplayed = new List<string>();
 
         journalTabs = new List<JournalTab>();
 
         activeContentItems = new List<GameObject>();
+        indexLinksToAllItemsInJournal = new List<int>();
         disabledContentItems = new List<GameObject>();
 
         journalTabs.AddRange(GetComponentsInChildren<JournalTab>());
@@ -75,19 +138,24 @@ public class Journal : MonoBehaviour {
         itemsPanel = transform.Find("Items Panel").gameObject;
         contentPanel = itemsPanel.transform.Find("Content Panel").gameObject;
 
+        descriptionPanel = transform.Find("Description Panel").gameObject;
+        descriptionIcon = descriptionPanel.transform.Find("Icon").GetComponent<Image>();
+        descriptionTitle = descriptionPanel.transform.Find("Title").GetComponent<Text>();
+        descriptionSummary = descriptionPanel.transform.Find("Summary").GetComponent<Text>();
+
         ItemBase.ItemPickedUpEvent += ItemPickedUp;
 
-        gameObject.SetActive(false);
 
         heightOfContent = contentPrefab.GetComponent<RectTransform>().sizeDelta.y;
 
         RefreshContentInActiveTab();
+
+        gameObject.SetActive(false);
     }
 
     private void Update()
     {
         CheckContentSelection();
-        
     }
 
     void CheckContentSelection()
@@ -112,27 +180,31 @@ public class Journal : MonoBehaviour {
                 {
                     float partition = (float)1 / activeContentItems.Count;
                     int indexnumber = Mathf.FloorToInt(-localPoint.y / partition);
-                    Debug.Log("partition: " + partition);
-                    Debug.Log("local point:  " + localPoint);
-                    Debug.Log("Index number is: " + indexnumber);
+                    //Debug.Log("partition: " + partition);
+                    //Debug.Log("local point:  " + localPoint);
+                    //Debug.Log("Index number is: " + indexnumber);
                     //select the content item of specified index
                     if (activeContentItems[indexnumber] != activeContentItem)
                     {
                         if (activeContentItem != null)
-                            activeContentItem.GetComponent<UnityEngine.UI.Image>().color = Color.grey;
+                            activeContentItem.GetComponent<Image>().color = Color.grey;
 
                         activeContentItem = activeContentItems[indexnumber];
-                        activeContentItem.GetComponent<UnityEngine.UI.Image>().color = Color.green;
+                        activeContentItemJournalIndex = indexLinksToAllItemsInJournal[indexnumber];
+                        activeContentItem.GetComponent<Image>().color = Color.green;
+                        UpdateDescription();
                     }
                 }
-                //List<System.Enum> balh = new List<System.Enum> {
-                //    IndicatorsList.Bromythol_Blue,
-                //    AcidsList.HCl,
-                //    BasesList.NaOh
-                //};
-                //Debug.Log("Type of blah: " + balh[0].GetType());
             }
         }
+    }
+
+    void UpdateDescription()
+    {
+        Debug.Log("Updating description" + itemsIcons.Count);
+        //descriptionIcon.sprite = Resources.Load<Sprite>(pathToImageAsset[activeContentItemJournalIndex]);
+        descriptionIcon.sprite = itemsIcons[activeContentItemJournalIndex];
+        descriptionSummary.text = itemsDescriptions[activeContentItemJournalIndex];
     }
 
     public void ToggleJournal()
@@ -158,18 +230,18 @@ public class Journal : MonoBehaviour {
         {
             Debug.Log("Item is not present in the journal.....Attempting to add it");
             AddItem(des);
+            AddItemDetails(des);
         }
         else
         {
             Debug.Log("Item is already present in the journal....No need to add again");
         }
+    }
 
-        //At the same time, get the path to the image asset and description content
-
-        //Get the search tags also
-
-        //Item base should have all the above information
-        
+    void AddItemDetails(ItemsDescription des)
+    {
+        itemsIcons.Add(des.GetComponent<SpriteRenderer>().sprite);
+        itemsDescriptions.Add(des.itemDescription);
     }
 
     bool IsItemPresentInTheJournal(ItemsDescription des)
@@ -296,8 +368,14 @@ public class Journal : MonoBehaviour {
     
     public void ChangeTab(JournalTab tab)
     {
-        activeTab.GetComponent<UnityEngine.UI.Image>().color = Color.gray;
-        tab.GetComponent<UnityEngine.UI.Image>().color = Color.green;
+        if(activeContentItem != null)
+        {
+            activeContentItem.GetComponent<Image>().color = Color.gray;
+            activeContentItem = null;
+        }
+
+        activeTab.GetComponent<Image>().color = Color.gray;
+        tab.GetComponent<Image>().color = Color.green;
 
         //set all the active content items to false
         Debug.Log("Active items list: " + activeContentItems.Count);
@@ -309,6 +387,7 @@ public class Journal : MonoBehaviour {
             //Debug.Log("Removing..................");
         }
         activeContentItems.Clear();
+        indexLinksToAllItemsInJournal.Clear();  //Links to the items in journal lists cleared
         activeTab = tab;
         itemsDisplayed.Clear();
         RefreshContentInActiveTab();
@@ -354,12 +433,14 @@ public class Journal : MonoBehaviour {
                     GameObject g = Instantiate(contentPrefab, contentPanel.transform);
                     g.transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = itemsInJournal[i].ToString();
                     activeContentItems.Add(g);
+                    indexLinksToAllItemsInJournal.Add(i);   //Link to journal item added
                 }
                 else
                 {
                     disabledContentItems[0].SetActive(true);
                     disabledContentItems[0].transform.GetChild(0).GetComponent<UnityEngine.UI.Text>().text = itemsInJournal[i].ToString();
                     activeContentItems.Add(disabledContentItems[0]);
+                    indexLinksToAllItemsInJournal.Add(i);   //Link to journal item added
                     disabledContentItems.RemoveAt(0);
                 }
             }
@@ -398,6 +479,7 @@ public class Journal : MonoBehaviour {
             activeContentItems[i].SetActive(false);
             disabledContentItems.Add(activeContentItems[i]);
             activeContentItems.RemoveAt(i);
+            indexLinksToAllItemsInJournal.RemoveAt(i);
         }
     }
 

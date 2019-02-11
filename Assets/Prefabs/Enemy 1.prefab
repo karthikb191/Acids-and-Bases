@@ -1434,6 +1434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PhTransitionMechanic: 0
+  initialCharacterColor: {r: 0, g: 0, b: 0, a: 0}
   phValue: 7
 --- !u!114 &114823229593812878
 MonoBehaviour:

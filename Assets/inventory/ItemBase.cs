@@ -100,8 +100,6 @@ public class ItemBase : MonoBehaviour {
                     d.button.onClick.AddListener(() =>
                     {
                         AddItem();
-                        if(ItemPickedUpEvent != null)
-                            ItemPickedUpEvent(this);
 
                         VirtualJoystick.DisableDynamicButton(d);                          
                     });
@@ -281,29 +279,35 @@ public class ItemBase : MonoBehaviour {
 
     private void AddItem()
     {
+        if (ItemPickedUpEvent != null)
+            ItemPickedUpEvent(this);
+
+        //Changed......
+        if (GetComponent<PH>())
+        {
+            playerObject.GetComponentInChildren<Inventory>().AddItem(this);
+            //StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+            gameObject.SetActive(false);
+            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            gameObject.transform.localScale = targetScale;
+
+            //Get the player component. If player is null, log error.
+            if (playerObject.GetComponent<Player>())
+            {
+                if(!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
+                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+            }
+            else
+            {
+                Debug.LogError("No player detected. Check your code");
+            }
+
+            return;
+        }
+
         if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
-            //Changed......
-            if (GetComponent<PH>())
-            {
-                playerObject.GetComponentInChildren<Inventory>().AddItem(this);
-                //StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-                gameObject.SetActive(false);
-                transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-                gameObject.transform.localScale = targetScale;
-
-                //Get the player component. If player is null, log error.
-                if (playerObject.GetComponent<Player>())
-                {
-                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
-                }
-                else
-                {
-                    Debug.LogError("No player detected. Check your code");
-                }
-
-                return;
-            }
+            
 
             playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
             playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);           
