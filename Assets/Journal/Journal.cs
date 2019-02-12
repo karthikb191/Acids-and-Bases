@@ -150,6 +150,8 @@ public class Journal : MonoBehaviour {
     void ItemPickedUp(ItemBase item)
     {
         ItemsDescription des = item.GetComponent<ItemsDescription>();
+        if (des == null)
+            return;
         //Check if the item is already present in the journal
         bool present = IsItemPresentInTheJournal(des);
 
@@ -175,6 +177,7 @@ public class Journal : MonoBehaviour {
     bool IsItemPresentInTheJournal(ItemsDescription des)
     {
         //Get the current items in the journal
+
         switch (des.itemType)
         {
             case ItemType.Normal:
