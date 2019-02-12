@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class ItemBase : MonoBehaviour {
 
-
-    
-
     public bool thrown = false;
 
 
@@ -28,7 +25,7 @@ public class ItemBase : MonoBehaviour {
 
     public float speed = 20.0f;
 
-   public Vector3 targetScale = Vector3.one;
+    Vector3 targetScale = Vector3.one;
 
     public bool isFromEnemy = false;
 
@@ -95,29 +92,17 @@ public class ItemBase : MonoBehaviour {
 
             if (collision.GetComponent<Player>() != null)
             {
-                if (gameObject.GetComponent<SpriteRenderer>().enabled)
-                {//Enable the button
-                    DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
-                    if (!d.active)
+                //Enable the button
+                DynamicButton d = VirtualJoystick.CreateDynamicButton("tag_item");
+                if (!d.active)
+                {
+                    VirtualJoystick.EnableDynamicButton(d);
+                    d.button.onClick.AddListener(() =>
                     {
+                        AddItem();
 
-                        VirtualJoystick.EnableDynamicButton(d);
-                        d.button.onClick.AddListener(() =>
-                        {
-                            AddItem();
-                            if (ItemPickedUpEvent != null)
-                                ItemPickedUpEvent(this);
-                            // collision.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().InitialDislaySlotCreation();
-                            collision.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DisplaySlotInitialization(this);
-                     //   collision.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
-                        VirtualJoystick.DisableDynamicButton(d);
-                        });
-                    }
-
-                       
-
-              
-
+                        VirtualJoystick.DisableDynamicButton(d);                          
+                    });
                 }
             }
         }
@@ -146,20 +131,18 @@ public class ItemBase : MonoBehaviour {
             gameObject.transform.rotation = c.transform.rotation;
 
         //Animating scale
-        float scaleDiff = Vector3.Distance(gameObject.transform.localScale, c.Hand.transform.localScale);
-
-        Debug.Log("MASJNAIDBIHABD + scale diff::   " + scaleDiff);
-        if (scaleDiff > 0)
-            gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, c.Hand.transform.localScale, 1f);
-        /*else
+        float scaleDiff = Vector3.Distance(gameObject.transform.localScale, targetScale);
+        if (scaleDiff > 0.05f)
+            gameObject.transform.localScale = Vector3.Lerp(gameObject.transform.localScale, targetScale, 0.2f);
+        else
            // gameObject.transform.localScale = Vector3.one/2;
-            gameObject.transform.localScale = targetScale;*/
+            gameObject.transform.localScale = targetScale;
 
         if (Vector3.Distance(gameObject.transform.position, targetPosition) > 0.05f)
         {
             gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
             gameObject.transform.position = targetPosition;
-           // yield break;
+            yield break;
         }
 
         else
@@ -257,12 +240,12 @@ public class ItemBase : MonoBehaviour {
         while (elapse_time < flightDuration)
         {
            if(isFromEnemy)
-            transform.Translate(Vx * GameManager.Instance.DeltaTime , (Vy - (speed * elapse_time)) * GameManager.Instance.DeltaTime,0);
+            transform.Translate(Vx * Time.deltaTime, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
 
            else
-            transform.Translate(Vx * GameManager.Instance.DeltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * GameManager.Instance.DeltaTime,0);
+            transform.Translate(Vx * Time.deltaTime * directionOfTranslation, (Vy - (speed * elapse_time)) * Time.deltaTime,0);
 
-            elapse_time += GameManager.Instance.DeltaTime;
+            elapse_time += Time.deltaTime;
 
            // Debug.Log("elapse_time" + elapse_time);          
 
@@ -296,29 +279,35 @@ public class ItemBase : MonoBehaviour {
 
     private void AddItem()
     {
+        if (ItemPickedUpEvent != null)
+            ItemPickedUpEvent(this);
+
+        //Changed......
+        if (GetComponent<PH>())
+        {
+            playerObject.GetComponentInChildren<Inventory>().AddItem(this);
+            //StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+            gameObject.SetActive(false);
+            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            gameObject.transform.localScale = targetScale;
+
+            //Get the player component. If player is null, log error.
+            if (playerObject.GetComponent<Player>())
+            {
+                if(!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
+                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+            }
+            else
+            {
+                Debug.LogError("No player detected. Check your code");
+            }
+
+            return;
+        }
+
         if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
-            //Changed......
-            if (GetComponent<PH>())
-            {
-                playerObject.GetComponentInChildren<Inventory>().AddItem(this);
-                //StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-                gameObject.SetActive(false);
-                transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-                gameObject.transform.localScale = targetScale;
-
-                //Get the player component. If player is null, log error.
-                if (playerObject.GetComponent<Player>())
-                {
-                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
-                }
-                else
-                {
-                    Debug.LogError("No player detected. Check your code");
-                }
-
-                return;
-            }
+            
 
             playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
             playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);           
@@ -339,24 +328,24 @@ public class ItemBase : MonoBehaviour {
        // setFocus = false;
     }
 
-  public   float maxRangeOfThrow = 20;
+    public float maxRangeOfThrow = 20;
     public float maxAngle = 45;
 
     [Range(0, 45)]
-    float angleOfThrow;
+    public float angleOfThrow;
 
     Vector3 directionOfThrow;
 
     Vector3 angleQuatrenion;
-   
-     float timeElapsed = 0;
 
-      float timeToReach = 0;
-      Vector3 targetToHit;
+    public float timeElapsed = 0;
+
+    public  float timeToReach = 0;
+    public  Vector3 targetToHit;
 
     Vector3 lastDirection;
 
-    float throwVelocity = 30;
+    public float throwVelocity = 30;
 
     private void ThrowCalculations(Vector3 target, float throwVelo)
     {
@@ -397,7 +386,7 @@ public class ItemBase : MonoBehaviour {
     void CheckCollision()
     {
 
-        timeElapsed += GameManager.Instance.DeltaTime;
+        timeElapsed += Time.deltaTime;
         RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), colliderRadius, new Vector2(0, 1));
 
         for (int i = 0; i < collidedWith.Length; i++)

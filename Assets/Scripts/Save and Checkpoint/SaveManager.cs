@@ -1,10 +1,14 @@
 ﻿using System.IO;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using System.Linq;
 
 public class MemoryManager
 {
@@ -67,14 +71,21 @@ public class MemoryManager
 
         XDocument document = new XDocument();
 
-        SaveDocument(ref document, fileName);
+        //SaveDocument(ref document, fileName);
 
         return document;
     }
 
     static void SaveDocument(ref XDocument document, string fileName)
     {
-        document.Save(Path.Combine(localStoragePath, fileName));
+        try
+        {
+            document.Save(Path.Combine(localStoragePath, fileName));
+        }
+        catch
+        {
+            Debug.Log("Not Saved");
+        }
     }
 
     static void SaveDocument(string stream, ref XDocument document, string fileName)
@@ -132,10 +143,37 @@ public class MemoryManager
 
 }
 
+/// <summary>
+/// This class contains information about all the information that must be saved to the xml file
+/// </summary>
 public class SaveObject
 {
     public List<Level> levelsInfo = new List<Level>();
+
+    //Journal Contents
+    //public List<Sprite> itemsImages = new List<Sprite>();
+    public string journalInformationPath;
     
+    public void SaveJournal(JournalSaveData instance, string folderPath, string fileName)
+    {
+        WriteToFile(instance, folderPath, fileName);
+
+        journalInformationPath = Path.Combine(folderPath, fileName);
+    }
+
+    //Create new file for binary Formatting
+    void WriteToFile(System.Object o, string folderPath, string fileName)
+    {
+        if (o == null)
+            return;
+        BinaryFormatter bf = new BinaryFormatter();
+
+        FileStream f = File.Open(Path.Combine(folderPath, fileName), FileMode.OpenOrCreate);
+        
+        bf.Serialize(f, o);
+
+        f.Close();
+    }
 }
 
 public class SaveManager : MonoBehaviour {
@@ -172,6 +210,32 @@ public class SaveManager : MonoBehaviour {
         SaveObject s = new SaveObject();
         s.levelsInfo = GameManager.Instance.levelsCleared;
 
+        //Save the journal
+        JournalSaveData js = new JournalSaveData();
+        js.itemsInJournal = Journal.Instance.GetAllItemsInJournal();
+
+        //TODO: Add all acids, bases and neutral items as separate images in the resources folder.
+        //Change how the images are being referenced
+        //for storing the sprites, store all the textures.
+        for (int i = 0; i < Journal.Instance.GetAllItemIconsInJournal().Count; i++)
+        {
+            js.itemIconsPath.Add(AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
+            
+            SerializableRect r = new SerializableRect(Journal.Instance.GetAllItemIconsInJournal()[i].rect.x,
+                                                        Journal.Instance.GetAllItemIconsInJournal()[i].rect.y,
+                                                        Journal.Instance.GetAllItemIconsInJournal()[i].rect.width,
+                                                        Journal.Instance.GetAllItemIconsInJournal()[i].rect.height);
+
+            
+            Debug.Log("Path: " + AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
+            Debug.Log("x: " + r.x + "y: " + r.y + "width: " + r.width + "Height " + r.height);
+            js.spriteRect.Add(r);
+        }
+
+        js.itemsDescriptions = Journal.Instance.GetAllItemDescriptionsInJournal();
+
+        s.SaveJournal(js, localStoragePath, "Journal");
+
         MemoryManager.Save<SaveObject>(s, xmlDocument, localStoragePath, saveFileName);
         
     }
@@ -187,7 +251,52 @@ public class SaveManager : MonoBehaviour {
             GameManager.Instance.levelsCleared = s.levelsInfo;
             Debug.Log("levels count: " + s.levelsInfo.Count);
         }
-        
+
+        LoadJournal(s.journalInformationPath);
+        //get the journal Information back
     }
 
+    static void LoadJournal(string filePath)
+    {
+        JournalSaveData js;
+        try
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream f = new FileStream(filePath, FileMode.Open);
+            js = (JournalSaveData)bf.Deserialize(f);
+        }
+        catch
+        {
+            Debug.Log("cannot deserialize the data.....damn.");
+            return;
+        }
+
+        //Populate the actual journal now.
+        Journal.Instance.SetAllItemsInJournal(js.itemsInJournal);
+        List<Sprite> icons = new List<Sprite>();
+
+        //Create new sprites from the stored textures
+        for (int i = 0; i < js.itemIconsPath.Count; i++)
+        {
+            //Sprite.Create(js.itemTextures[i], Rect.zero, Vector2.zero);
+            //int index = js.itemIconsPath[i].Replace("Assets/Resources/", "");
+            string pathWithoutExtension = js.itemIconsPath[i].Replace("Assets/Resources/", "").Split('.')[0];
+            Texture2D s = (Texture2D)Resources.Load<Texture2D>(pathWithoutExtension);
+            //s = Resources.Load<Texture2D>(pathWithoutExtension);
+            //Debug.Log("Texture name: " + s.name);
+            //s.Apply();
+            Debug.Log("sprite: " + pathWithoutExtension);
+            Debug.Log("js::::::" + js.spriteRect[i].x);
+            icons.Add(Sprite.Create(s, 
+                                new Rect(js.spriteRect[i].x, js.spriteRect[i].y, js.spriteRect[i].width, js.spriteRect[i].height), 
+                                    new Vector2(0f, 0f)));
+
+            //s.Apply();
+        }
+
+
+        Journal.Instance.SetAllItemIconsInJournal(icons);
+        Journal.Instance.SetAllItemDescriptionsInJournal(js.itemsDescriptions);
+        Debug.Log("Load successful");
+    }
 }
