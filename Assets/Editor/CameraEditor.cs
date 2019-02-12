@@ -39,7 +39,7 @@ public class CameraEditor : Editor{
             }
         }
 
-        cameraScript.boundariesContainer = EditorGUILayout.ObjectField("Boundary Container", cameraScript.boundariesContainer, typeof(UnityEngine.GameObject)) as UnityEngine.GameObject;
+        cameraScript.boundariesContainer = EditorGUILayout.ObjectField("Boundary Container", cameraScript.boundariesContainer, typeof(UnityEngine.GameObject), false) as UnityEngine.GameObject;
 
 
     }

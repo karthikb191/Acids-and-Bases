@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f47013dfa1a30b48b14f51676b1090d, type: 3}
+  m_Name: Items
+  m_EditorClassIdentifier: 
+  acidList:
+  - enumObject: HCl
+    itemPrefab: {fileID: 1084300489906894, guid: 1f0ec1adc162ae34e9c27c846a9fd992,
+      type: 2}
+  - enumObject: H2SO4
+    itemPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
+      type: 2}
+  baseList:
+  - enumObject: NaOh
+    itemPrefab: {fileID: 0}
+  saltList:
+  - enumObject: NaCl
+    itemPrefab: {fileID: 1317508376356126, guid: 0ef2142d72fea8843962442771880c5b,
+      type: 2}
+  indicatorList:
+  - enumObject: pH_Paper
+    itemPrefab: {fileID: 0}
+  - enumObject: Turmeric
+    itemPrefab: {fileID: 0}
+  - enumObject: Vermilion
+    itemPrefab: {fileID: 1027104322242278, guid: 264cf12c87e3fba4b928cc39430fe0e4,
+      type: 2}
+  - enumObject: Bromythol_Blue
+    itemPrefab: {fileID: 1632376749418770, guid: 72eac787d82795c418016c0b5c5d8135,
+      type: 2}
+  normalItemList:
+  - enumObject: Hybiscus
+    itemPrefab: {fileID: 0}
