@@ -37,10 +37,11 @@ public enum AcidsList
 }
 public enum BasesList
 {
-    NaOh = ItemList.NaOh
+    NaOH = ItemList.NaOh
 }
 public enum SaltsList
 {
+    Null,
     NaCl = ItemList.NaCl
 }
 public enum NormalItemList

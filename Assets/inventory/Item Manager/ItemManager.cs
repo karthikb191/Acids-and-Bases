@@ -30,6 +30,8 @@ public class ItemManager : MonoBehaviour
         Debug.Log("Getting bromythol blue: " + itemDictionary[IndicatorsList.Bromythol_Blue].ToString());
 
         Debug.Log("salt:  " + itemDictionary[SaltsList.NaCl]);
+
+        //Debug.Log("Testing simple reaction: " + Reactions.React(IndicatorsList.Bromythol_Blue, NormalItemList.Hybiscus).ToString());
     }
 
     void AddToDictionary(ItemTemplate[] list, System.Type type)

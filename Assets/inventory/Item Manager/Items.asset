@@ -19,11 +19,14 @@ MonoBehaviour:
     itemPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
       type: 2}
   baseList:
-  - enumObject: NaOh
+  - enumObject: NaOH
     itemPrefab: {fileID: 0}
   saltList:
+  - enumObject: Null
+    itemPrefab: {fileID: 1791576765500196, guid: f71f60cee0ee8174db557f6654db4f56,
+      type: 2}
   - enumObject: NaCl
-    itemPrefab: {fileID: 1317508376356126, guid: 0ef2142d72fea8843962442771880c5b,
+    itemPrefab: {fileID: 1791576765500196, guid: f71f60cee0ee8174db557f6654db4f56,
       type: 2}
   indicatorList:
   - enumObject: pH_Paper

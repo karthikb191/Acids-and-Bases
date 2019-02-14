@@ -401,9 +401,13 @@ public class PlayerMechanics : CharacterMechanics
             Debug.Log("Generating salt......Under progress");
             Debug.Log("Player chemical: " + player.chemical);
             Debug.Log("Enemy chemical: " + c.chemical);
-            Salt resultantSalt = Reactions.reactionDictionary[player.chemical][c.chemical];
 
-            if (resultantSalt != Salt.Null)
+            SaltsList resultantSalt = SaltsList.NaCl;
+            //System.Enum.TryParse(Reactions.reactionDictionary[player.chemical][c.chemical].ToString(), out resultantSalt);
+            System.Enum.TryParse(Reactions.React(player.chemical, c.chemical).ToString(), out resultantSalt);
+            //resultantSalt = System.Enum.Parse(typeof(Salt), Reactions.reactionDictionary[player.chemical][c.chemical].ToString());
+
+            if (resultantSalt != SaltsList.Null)
             {
                 Debug.Log("salt generated: " + resultantSalt);
             }
