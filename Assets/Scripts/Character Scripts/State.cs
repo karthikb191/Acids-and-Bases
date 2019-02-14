@@ -499,7 +499,7 @@ public class ClimbingState : States
 
         if (Mathf.Abs(ladder.transform.position.x - c.transform.position.x) > 0.02f)
         {
-            c.currentLinearSpeed = (ladder.transform.position.x - c.transform.position.x) * 5 * Time.deltaTime;
+            c.currentLinearSpeed = (ladder.transform.position.x - c.transform.position.x) * 5 * GameManager.Instance.DeltaTime;
         }
 
         c.currentJumpSpeed = input.xInput * GameManager.Instance.DeltaTime * climbSpeed;

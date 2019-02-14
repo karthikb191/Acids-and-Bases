@@ -4,15 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
-
-
-
-
-
-
-
-
 public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     Player player;
@@ -101,6 +92,8 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void ThrowItem()
     {
+       // Debug.Log(player.GetComponentInChildren<PlayerInventory>().activeItem.name + "  :    Active item");
+
         if(player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
 
@@ -141,6 +134,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void ResetPosition()
     {
+        
         transform.position = initialPosition;
         setTarget = false;
     }

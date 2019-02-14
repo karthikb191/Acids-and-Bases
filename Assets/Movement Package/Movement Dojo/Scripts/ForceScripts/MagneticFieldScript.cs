@@ -101,7 +101,7 @@ public class MagneticFieldScript : MonoBehaviour {
 
         float randomMax = Random.Range(1.0f, 1.1f);
         float randomMin = Random.Range(0.9f, 0.95f);
-        multiplier = HelperFunctions.CounterAnimation(multiplier, randomMin, randomMax, Time.deltaTime, sign, out sign);
+        multiplier = HelperFunctions.CounterAnimation(multiplier, randomMin, randomMax, GameManager.Instance.DeltaTime, sign, out sign);
         for (int i = 0; i < objectsInContact.Count; i++)
         {
             if (Vector3.Dot(gameObject.transform.up, (objectsInContact[i].gameObject.transform.position - gameObject.transform.position).normalized) > 0)

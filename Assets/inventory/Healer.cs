@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Healer : ItemBase {
 
-    SpriteRenderer spriteRenderer;
+   // SpriteRenderer spriteRenderer;
 
 
     private void Awake()
     {
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+     //   spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
 
-        spriteRenderer.sprite = itemProperties.imageSprite;
+       // spriteRenderer.sprite = itemProperties.imageSprite;
     }
 
 

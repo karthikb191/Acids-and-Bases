@@ -2069,11 +2069,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f881f9bbb6bbc694492404a65f008536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  character: {fileID: 0}
   imageSlotPrefab: {fileID: 1632376749418770, guid: 72eac787d82795c418016c0b5c5d8135,
     type: 2}
   activeItem: {fileID: 0}
   sampleTestSprite: {fileID: 0}
   maxSlotCount: 6
+  activeSlotCount: 0
+  throwAnimeTime: 0
+  displaySlotCount: 0
 --- !u!114 &114643621081287866
 MonoBehaviour:
   m_ObjectHideFlags: 1

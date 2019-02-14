@@ -75,7 +75,7 @@ public class HelpSystem : MonoBehaviour {
     {
         if (timer < displayTime)
         {
-            timer += Time.deltaTime;
+            timer += GameManager.Instance.DeltaTime;
         }
         else
         {

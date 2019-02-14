@@ -54,7 +54,7 @@ public class Level1_Room1 : LevelScripts {
         }
         else
         {
-            Debug.Log("focus object is not null" + focusObject.name);
+            //Debug.Log("focus object is not null" + focusObject.name);
         }
 
     }

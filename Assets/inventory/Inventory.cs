@@ -17,7 +17,11 @@ public class Slot
 
     public bool isSelected;
 
+    public int fromSlot;
+
     public int maxStorage = 10;
+
+    public int slotNumber;
 
     public List<ItemBase> itemlist = new List<ItemBase>();
 
@@ -65,10 +69,10 @@ public class Slot
     public virtual void RemoveItem(ItemBase l_itemBase)
     {
         itemCount--;
-
-     //   Debug.Log("Remove Item called");
+        Debug.Log("item list count Before : " + itemlist.Count);
+        //   Debug.Log("Remove Item called");
         itemlist.Remove(l_itemBase);
-        Debug.Log("item list count: " + itemlist.Count);
+        Debug.Log("item list count after : " + itemlist.Count);
 
         if (itemlist.Count < 1)
         {
@@ -112,12 +116,11 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     RectTransform panel;   */ //Panel within which the slots are stored
 
-   //  Character character;    //The character the inventory belongs to
+    public Character character;    //The character the inventory belongs to
 
     public List<Slot> slots = new List<Slot>();
 
     public GameObject imageSlotPrefab;
-    
 
     public ItemBase activeItem;
 
@@ -129,8 +132,9 @@ public class Inventory : MonoBehaviour {
     private void Start()
     {
         //  CreateSlot();
-
-     //   character = GetComponentInParent<Character>();
+        Debug.Log(character.name + "<<<<<--Character name in Start");
+       
+        Debug.Log(character.name + "<<<<<--Character name in Start");
         slots = new List<Slot>(maxSlotCount);
     }
 
@@ -153,34 +157,40 @@ public class Inventory : MonoBehaviour {
            // Debug.Log(gameObject.transform.GetComponentInParent<Character>());
            activeItem.Use(gameObject.transform.GetComponentInParent<Character>());
         }
+
         UpdateSlotData(activeItem);
+       
         activeSlotCount = ActiveSlotCount();
         if (ActiveItemCheck(activeItem))
         {
             Debug.Log("Active Item is present");
-
-
         }
         else
         {
             activeItem = null;
-        }
-        
+        }      
     }
 
     public virtual void ThrowItem(Vector3 Target, float speed)
     {
         //Throw the item and check the slots 
-        if (activeItem.itemProperties.isThrowable)
+
+
+        if (activeItem.itemProperties.isThrowable && activeItem != null)
         {
-         
+
             activeItem.Throw(Target,speed);
             UpdateSlotData(activeItem);
+       
             activeSlotCount = ActiveSlotCount();
             Debug.Log("Active slot Count: " + activeSlotCount);
+
+            Debug.Log("Active item name:   " + activeItem.name);
+
             if (ActiveItemCheck(activeItem))
             {
                 Debug.Log("Active Item is present");
+
             }
             else
             {
@@ -192,13 +202,29 @@ public class Inventory : MonoBehaviour {
     public void UpdateSlotData(ItemBase l_ItemBase)
     {
         Debug.Log("Update slot called");
-        for (int i = 0; i <= activeSlotCount; i++)
+        for (int i = 0; i < activeSlotCount; i++)
         {
-            if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties && slots[i].itemlist.Count > 0)
+            if (slots[i].itemStored != null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties && slots[i].itemlist.Count > 0)
             {
                 Debug.Log("Remove item called");
+                Debug.Log("Itemstored : " + slots[i].itemStored.name);
+
                 slots[i].RemoveItem(l_ItemBase);
+
                 activeSlotCount = ActiveSlotCount();
+
+               /* Debug.Log("Remove item player call");
+                Debug.Log(character.gameObject.name + "<<<<<<<------Character name");
+                Debug.Log(character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>() + "<<<<<<< Player inventory>>>>>>");*/
+
+                 if (character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>()!= null)
+                 {
+                     Debug.Log(character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>() + "<<<<<<< Player inventory>>>>>>");
+
+                     character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
+
+                 }
+                Debug.Log("Remove item player call end");
                 break;
             }
         }
@@ -207,13 +233,12 @@ public class Inventory : MonoBehaviour {
 
     public bool ActiveItemCheck(ItemBase l_activeItem)
     {
-        for (int i = 0; i <= activeSlotCount; i++)
-        {
-            
-            if(slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_activeItem.itemProperties )
+        for (int i = 0; i < slots.Count; i++)
+        {           
+            if(l_activeItem != null && slots[i].itemStored != null && slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties )
             {
-              /*  Debug.Log(slots[i].itemStored);
-                Debug.Log(slots[i].itemlist.Count);*/
+              Debug.Log(slots[i].itemStored);
+                Debug.Log("Active item check call :  " + slots[i].itemlist.Count); 
                 activeItem = slots[i].itemlist[slots[i].itemlist.Count-1];
                 activeItem.gameObject.SetActive(true);
                 activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
@@ -221,6 +246,8 @@ public class Inventory : MonoBehaviour {
                 return true;
             }
         }
+        Debug.Log("Active item is null");
+
         return false;
     }
 
@@ -244,8 +271,10 @@ public class Inventory : MonoBehaviour {
         //Drop the active item and check the item count in the slots again
         //if the item count is less than 0, rearrange the slots
         UpdateSlotData(activeItem);
-        activeItem.transform.parent = null;
-        activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());        
+
+       
+        activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());   
+             activeItem.transform.parent = null;
         activeItem = null;
 
     }
@@ -296,6 +325,7 @@ public class Inventory : MonoBehaviour {
                 slots[i].imageSlotPrefab.SetActive(false);
                 slots[i].displaySprite.sprite = sampleTestSprite;
                 slots[i].countText = slots[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
+                slots[i].slotNumber = i;
                 //Debug.Log(slots[i].countText.text + "_____" + i);
             }
 
@@ -310,11 +340,11 @@ public class Inventory : MonoBehaviour {
         if (l_ItemBase.itemProperties.isAnInventoryItem)
         {
           
-                for (int i = 0; i <= activeSlotCount; i++)
+                for (int i = 0; i < activeSlotCount; i++)
                 {
                     if(slots[i].itemStored!=null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
                     {
-
+                    Debug.Log("Added to already present slot");
                         slots[i].AddItem(l_ItemBase);
                         
                     assigned = true;
@@ -326,27 +356,29 @@ public class Inventory : MonoBehaviour {
            // Debug.Log("Active Slot Count :  " + activeSlotCount);
 
            if( activeSlotCount < maxSlotCount && !assigned)
-            {
+           {
                 for (int i = activeSlotCount; i < slots.Count; i++)
                 {
                     if (!slots[i].imageSlotPrefab.activeSelf && slots[i].itemStored == null)
                     {
                         
-                        Debug.Log("Adding item to slot");
+                        Debug.Log("Adding item to slot For first time");
                         slots[i].AddItem(l_ItemBase);
-                      // slots[i].imageSlotPrefab.SetActive(true);
+                       slots[i].imageSlotPrefab.SetActive(true);
                         slots[i].displaySprite.sprite = l_ItemBase.itemProperties.imageSprite;
-                        slots[i].itemStored = l_ItemBase;
+                        slots[i].itemStored = Instantiate(l_ItemBase);
                         activeSlotCount = ActiveSlotCount();
                         break;
                     }
                 }
 
-            }
+           }
             else
             {
                // Debug.Log("Max Slots reached");
-            }       
+            } 
+           
+           
         }
         else
         {
@@ -354,7 +386,7 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-    int activeSlotCount;
+  public  int activeSlotCount;
 
     public virtual int ActiveSlotCount()
     {
@@ -392,4 +424,50 @@ public class Inventory : MonoBehaviour {
         }
     }
 
+    public void CreateSlotN(List<Slot> slotList,int maxCount)
+    {
+        //Create a new slot and assign the item.
+        //If item is null, just create an empty slot to populate the inventory
+
+        if (slotList.Count == 0)
+        {
+           
+
+            for (int i = 0; i < maxCount; i++)
+            {
+                Slot tempSlot = new Slot();
+
+                slotList.Add(tempSlot);
+                slotList[i].imageSlotPrefab = Instantiate(imageSlotPrefab);
+                slotList[i].panel = slots[i].imageSlotPrefab.gameObject.GetComponent<RectTransform>();
+                slotList[i].countText = slotList[i].imageSlotPrefab.gameObject.GetComponent<Text>();
+                slotList[i].displaySprite = slotList[i].imageSlotPrefab.transform.Find("Slot Image").gameObject.GetComponentInChildren<Image>();
+                slotList[i].imageSlotPrefab.SetActive(false);
+                slotList[i].displaySprite.sprite = sampleTestSprite;
+                slotList[i].countText = slotList[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
+                //Debug.Log(slots[i].countText.text + "_____" + i);
+            }
+
+        }
+    }
+
+   
+   ///////////////---------------------------------throw anime timer---------------------------///////////////////////////
+   
+    public float throwAnimeTime;
+    public void ThrowAnimeWaitTime(Vector3 target,float speed)
+    {
+
+        StartCoroutine(ThrowAnimeWaitTime(throwAnimeTime));
+        ThrowItem(target, speed);
+
+    }
+
+    IEnumerator ThrowAnimeWaitTime(float animeTime)
+    {
+        yield return new WaitForSeconds(animeTime);
+    }
+
+
+    ///////////////////////////////-------------------------------------------------------/////////////////////////////////////
 }

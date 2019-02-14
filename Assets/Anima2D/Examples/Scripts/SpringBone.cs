@@ -90,7 +90,7 @@ namespace UnityChan
 				trs.localRotation = Quaternion.identity * localRotation;
 			}
 
-			float sqrDt = Time.deltaTime * Time.deltaTime;
+			float sqrDt = GameManager.Instance.DeltaTime * GameManager.Instance.DeltaTime;
 
 			//stiffness
 			Vector3 force = trs.rotation * (Vector3.right * stiffnessForce) / sqrDt;

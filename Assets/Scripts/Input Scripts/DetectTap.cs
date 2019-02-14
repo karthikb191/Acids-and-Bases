@@ -128,7 +128,7 @@ public class ThrowTapInput {
 
     private void TapTimer()
     {
-        timer += Time.deltaTime;
+        timer += GameManager.Instance.DeltaTime;
     }
 
     public void TargetSet()

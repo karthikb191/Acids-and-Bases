@@ -113,7 +113,7 @@ public class AirPadScript : MonoBehaviour {
         //If the ray hits the player or another object, then apply a force to the player
         float randomMax = Random.Range(1.0f, 1.2f);
         float randomMin = Random.Range(0.1f, 0.6f);
-        multiplier = HelperFunctions.CounterAnimation(multiplier, randomMin, randomMax, Time.deltaTime, sign, out sign);
+        multiplier = HelperFunctions.CounterAnimation(multiplier, randomMin, randomMax, GameManager.Instance.DeltaTime, sign, out sign);
 
         for (int i = 0; i < objectsInContact.Count; i++)
         {
