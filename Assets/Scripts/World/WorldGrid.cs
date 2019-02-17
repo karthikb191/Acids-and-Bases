@@ -76,7 +76,7 @@ class WorldGrid : MonoBehaviour {
     {
         if (!Application.isPlaying)
             instance = this;
-        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     public static GridIndex GetGridIndex(Vector3 pos)

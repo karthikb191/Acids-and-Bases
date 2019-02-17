@@ -110,15 +110,15 @@ public class AI : MonoBehaviour {
             //Debug.Log("Halt movement: " + haltMovement);
 
             //TODO: Remove comments later while still enabling testing
-            //if (Input.GetMouseButtonDown(0) && !CharacterManager.Instance.characterClicked)
-            //{
-            //    //TODO: change this
-            //    targetNodePath.Clear();
-            //    nodesPassed.Clear();
-            //    targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-            //    //CalculateNodePath(currentNode, player.transform.position);
-            //    CalculateNodePath(targetLocation);
-            //}
+            if (Input.GetMouseButtonDown(0) && !CharacterManager.Instance.characterClicked)
+            {
+                //TODO: change this
+                targetNodePath.Clear();
+                nodesPassed.Clear();
+                targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+                //CalculateNodePath(currentNode, player.transform.position);
+                CalculateNodePath(targetLocation);
+            }
             if (haltMovement)
                 return;
 
@@ -492,21 +492,23 @@ public class AI : MonoBehaviour {
                             {
                                 //if (targetNodePath[targetNodePath.Count - 2].platform.tag == "tag_ladder" &&
                                 //Mathf.Abs(directionToNextNode.y) > Random.Range(1.5f, 2.0f))
-                                targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                                //targetNodePath.RemoveAt(targetNodePath.Count - 1);
                                 Debug.Log("Climb Removed 1");
-                                currentNode = targetNode;
-                                targetNode = targetNodePath[targetNodePath.Count - 1];
+                                //currentNode = targetNode;
+                                //targetNode = targetNodePath[targetNodePath.Count - 1];
+                                TargetNodeChanged();
                                 return;
                             }
                         }
 
                         else if (Mathf.Abs(directionToNextNode.x) > Random.Range(1.5f, 2.0f))
                         {
-                            targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                            //targetNodePath.RemoveAt(targetNodePath.Count - 1);
                             Debug.Log("Removed 1");
-                            currentNode = targetNode;
-                            targetNode = targetNodePath[targetNodePath.Count - 1];
-                            directionToTarget = targetNode.position - gameObject.transform.position;
+                            //currentNode = targetNode;
+                            //targetNode = targetNodePath[targetNodePath.Count - 1];
+                            TargetNodeChanged();
+                            //directionToTarget = targetNode.position - gameObject.transform.position;
                         }
                     }
                 }
@@ -523,8 +525,9 @@ public class AI : MonoBehaviour {
                 if (Mathf.Abs(directionToTarget.x) < nodeReachTolerance && Mathf.Abs(directionToTarget.y) < nodeReachTolerance)
                 {
                     Debug.Log("removed default");
-                    targetNodePath.RemoveAt(targetNodePath.Count - 1);
-                    currentNode = targetNode;
+                    //targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                    //currentNode = targetNode;
+                    TargetNodeChanged();
                 }
 
 
@@ -606,7 +609,8 @@ public class AI : MonoBehaviour {
                     {
                         targetNodePath.RemoveAt(targetNodePath.Count - 1);
                         Debug.Log("Removed 2");
-                        directionToTarget = targetNode.position - gameObject.transform.position;
+                        TargetNodeChanged();
+                        //directionToTarget = targetNode.position - gameObject.transform.position;
                         //targetNodePath.Clear();
                     }
                 }
@@ -616,7 +620,8 @@ public class AI : MonoBehaviour {
                                                                         targetNodePath[targetNodePath.Count - 2].position);
                     if (sqDistanceBetweenNodes < 2.5f)
                     {
-                        targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                        //targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                        TargetNodeChanged();
                         Debug.Log("Removed 3");
                     }
                 }
@@ -626,9 +631,10 @@ public class AI : MonoBehaviour {
                     //int directionFacing = (int)enemy.playerSprite.transform.localScale.x;
                     if (directionToTarget.x < 0.5f && Vector3.Dot(directionToTarget.normalized, enemy.transform.right * directionFacing) < 0.3f)
                     {
-                        targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                        //targetNodePath.RemoveAt(targetNodePath.Count - 1);
                         Debug.Log("Removed 4");
-                        directionToTarget = targetNode.position - gameObject.transform.position;
+                        TargetNodeChanged();
+                        //directionToTarget = targetNode.position - gameObject.transform.position;
                         //targetNodePath.Clear();
                     }
                 }
@@ -652,7 +658,7 @@ public class AI : MonoBehaviour {
 
             //Check if the object is too close to the target node
             //TODO: consider adding a random angle range
-            if (Mathf.Abs(Vector3.Dot(directionToTarget.normalized, gameObject.transform.right * directionFacing)) < 0.3f)
+            if (Mathf.Abs(Vector3.Dot(directionToTarget.normalized, gameObject.transform.right * directionFacing)) < 0.15f)
             {
                 //Check the x distance
                 Vector3 directionToNextNode = Vector3.zero;
@@ -664,6 +670,7 @@ public class AI : MonoBehaviour {
                     if (targetNode.platform.tag == "tag_ladder" || currentNode.platform.tag == "tag_ladder")
                         return;
 
+                //TODO: Check this block of code
                 if (Mathf.Abs(directionToTarget.x) < nodeReachTolerance && (directionToTarget.y > 0.2f || directionToTarget.y < 0.5f) &&
                     !enemy.State.Equals(typeof(JumpingState)) && !enemy.State.Equals(typeof(FallingState)))
                     //(movementScript.playerState != PlayerStates.jumping && movementScript.playerState != PlayerStates.falling))
@@ -710,6 +717,22 @@ public class AI : MonoBehaviour {
 
                 }
             }
+        }
+    }
+
+    void TargetNodeChanged()
+    {
+        Debug.Log("target node cahnged");
+        currentNode = targetNode;
+        if (targetNodePath.Count != 0)
+        {
+            targetNodePath.RemoveAt(targetNodePath.Count - 1);
+            targetNode = targetNodePath[targetNodePath.Count - 1];
+        }
+        if (targetNode != null)
+        {
+            directionToTarget = targetNode.position - gameObject.transform.position;
+            directionToTargetNormalized = directionToTarget.normalized;
         }
     }
 
@@ -904,6 +927,10 @@ public class AI : MonoBehaviour {
                                         skip = true;
                                 }
                             }
+
+                            //If the target node's platform is same as the current node, then there's no need to jump
+                            if (targetNode.platform == currentNode.platform)
+                                skip = true;
                         }
                         else
                         {
@@ -1099,7 +1126,6 @@ public class AI : MonoBehaviour {
     }
 
     List<Node> nodesPassed;
-    
     
     bool waiting = false;
 
