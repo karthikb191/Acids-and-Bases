@@ -31,6 +31,7 @@ public class ItemManager : MonoBehaviour
 
         Debug.Log("salt:  " + itemDictionary[SaltsList.NaCl]);
 
+        
         //Debug.Log("Testing simple reaction: " + Reactions.React(IndicatorsList.Bromythol_Blue, NormalItemList.Hybiscus).ToString());
     }
 

@@ -33,7 +33,8 @@ public enum IndicatorsList
 public enum AcidsList
 {
     HCl = ItemList.HCl,
-    H2SO4
+    H2SO4,
+    C6H8O7
 }
 public enum BasesList
 {
@@ -46,7 +47,8 @@ public enum SaltsList
 }
 public enum NormalItemList
 {
-    Hybiscus = ItemList.Hybiscus
+    Hybiscus = ItemList.Hybiscus,
+    Lemon
 }
 
 

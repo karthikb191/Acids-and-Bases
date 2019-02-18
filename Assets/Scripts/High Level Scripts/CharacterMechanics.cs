@@ -22,6 +22,16 @@ public class CharacterMechanics : MonoBehaviour {
 
     MaterialPropertyBlock propertyBlock;
 
+
+    protected float maxVolume = 2000;
+    [Range(0, 2000)]
+    public float volume = 1000;
+    protected float currentlyVisibleVolume = 0.0f;
+
+    [SerializeField]
+    public LiquidInformation liquidInformation;
+
+
     Dictionary<float, Color> phColorDictionary = new Dictionary<float, Color>()
     {
         {0, new Color(1, 0 , 0)}, {1, new Color(0.9568f, 0.3921f, 0.1960f)},
@@ -249,5 +259,86 @@ public class CharacterMechanics : MonoBehaviour {
 
 
 
+    #endregion
+
+
+    public void SetVolume()
+    {
+        float speed = 0.1f;
+        if (Mathf.Abs(currentlyVisibleVolume - volume) > 1.0f)
+        {
+            Debug.Log("Changing volume");
+            //Simple lerp for animating visibility
+            currentlyVisibleVolume = speed * currentlyVisibleVolume + (1 - speed) * volume;
+
+            //Get x offset value of the shader here
+            //float xOffset = player.Body.GetComponent<SkinnedMeshRenderer>().material.GetTextureOffset("_BodyTex").x;
+
+            //Calculating the offset which must be applied to the material
+            float volumeRatio = currentlyVisibleVolume / maxVolume;
+            float yOffset = (liquidInformation.minimumPosition + liquidInformation.maximumPosition) * volumeRatio;
+            yOffset = (liquidInformation.maximumPosition - liquidInformation.minimumPosition) - yOffset;
+            Debug.Log("y offset: " + yOffset);
+            //Set the offset property of the body texture 
+            GetComponent<Character>().Body.GetComponent<SkinnedMeshRenderer>().sharedMaterial.SetFloat("_YOffset", yOffset);
+
+        }
+        else if (currentlyVisibleVolume != volume)
+            currentlyVisibleVolume = volume;
+    }
+
+
+    #region character Reaction Mechanic
+    public System.Enum StartReaction(PlayerInventory.SelectionObjectData obj)
+    {
+        ChangepH(obj.volume, obj.pH);
+        return GenerateSalt(obj.item);
+    }
+
+    //Overload for taking item throw into consideration
+    public System.Enum StartReaction(System.Enum item)
+    {
+        ItemsDescription des = ItemManager.instance.itemDictionary[item].GetComponent<ItemsDescription>();
+        //TODO: Check the hard coded volume value.
+        ChangepH(10, des.pHValue);
+        return GenerateSalt(des.GetItemType());
+    }
+
+    void ChangepH(int itemVolume, int itempHValue)
+    {
+        float resultantpH = 0;
+
+        //TODO: Set the volume here.....after calculation
+        volume += itemVolume;
+
+        //ItemsDescription des = ItemManager.instance.itemDictionary[item].GetComponent<ItemsDescription>();
+        //
+        ////TODO: Add the volume calculation here
+        //if (item != null)
+        //{
+        //}
+        resultantpH = (phValue + itempHValue) / 2;
+        SetpH(resultantpH);
+    }
+
+    System.Enum GenerateSalt(System.Enum item)
+    {
+        Debug.Log("Undergoing Reaction");
+        
+        System.Enum resultant;
+        //System.Enum.TryParse(Reactions.reactionDictionary[player.chemical][c.chemical].ToString(), out resultantSalt);
+        resultant = Reactions.React(GetComponent<Character>().chemical, item);
+        //resultantSalt = System.Enum.Parse(typeof(Salt), Reactions.reactionDictionary[player.chemical][c.chemical].ToString());
+
+        if (resultant != null)
+        {
+            Debug.Log("salt generated: " + resultant);
+        }
+        else
+        {
+            Debug.Log("Salt is null....Something went wrong");
+        }
+        return resultant;
+    }
     #endregion
 }

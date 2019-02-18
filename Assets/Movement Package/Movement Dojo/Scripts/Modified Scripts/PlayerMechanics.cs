@@ -39,16 +39,10 @@ public class PlayerMechanics : CharacterMechanics
 
     float fallShoutCounter;
 
-    float maxVolume = 2000;
-    [Range(0, 2000)]
-    public float volume = 1000;
-    float currentlyVisibleVolume = 0.0f;
 
     //Information for specific mechanics
     [SerializeField]
     public GrabAnimationInfo grabAnimationInfo;
-    [SerializeField]
-    public LiquidInformation liquidInformation;
 
     //Mechanics Objects
     AbsorbMechanic absMec = null;
@@ -96,31 +90,6 @@ public class PlayerMechanics : CharacterMechanics
 
             SetVolume();
         }
-    }
-
-    void SetVolume()
-    {
-        float speed = 0.1f;
-        if (Mathf.Abs(currentlyVisibleVolume - volume) > 1.0f)
-        {
-            Debug.Log("Changing volume");
-            //Simple lerp for animating visibility
-            currentlyVisibleVolume = speed * currentlyVisibleVolume + (1 - speed) * volume;
-
-            //Get x offset value of the shader here
-            //float xOffset = player.Body.GetComponent<SkinnedMeshRenderer>().material.GetTextureOffset("_BodyTex").x;
-
-            //Calculating the offset which must be applied to the material
-            float volumeRatio = currentlyVisibleVolume / maxVolume;
-            float yOffset = (liquidInformation.minimumPosition + liquidInformation.maximumPosition) * volumeRatio;
-            yOffset = (liquidInformation.maximumPosition - liquidInformation.minimumPosition) - yOffset;
-            Debug.Log("y offset: " + yOffset);
-            //Set the offset property of the body texture 
-            player.Body.GetComponent<SkinnedMeshRenderer>().sharedMaterial.SetFloat("_YOffset", yOffset);
-            
-        }
-        else if (currentlyVisibleVolume != volume)
-            currentlyVisibleVolume = volume;
     }
 
 

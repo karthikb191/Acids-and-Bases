@@ -751,5 +751,94 @@ public class PlayerInventory : Inventory
       
 
     }
+
+
+    #region Player Inventory Functions
+    //The data for this object must be created when the object is being selected
+    public class SelectionObjectData
+    {
+        public System.Enum item;
+        public int pH = 0;      //Only for acids and bases
+        public int volume = 0;  //Only for acids and bases
+
+        public int slotIndex;
+    }
+
+    //Combine acids and bases....Volume calculation is present
+    public void Combine(SelectionObjectData object1, SelectionObjectData object2)
+    {
+        //Two objects react to get a resultant object
+        System.Enum result = Reactions.React(object1.item, object2.item);
+
+        //Get the item description from the item manager
+        ItemBase item = ItemManager.instance.itemDictionary[result].GetComponent<ItemBase>();
+        ItemsDescription description = item.GetComponent<ItemsDescription>();
+        
+
+        //Perform the volume and pH calculations here. 
+        int pH = 9; //TODO: this must be calculated using the formula
+
+        if(pH != description.pHValue)
+        {
+            //TODO: Assign a new slot in the inventory and add it
+            //TODO: Add new item Description data along with it while adding
+        }
+
+        //TODO: Check if the item is present in the inventory
+        //If present, compare it with it's slot's item description
+        //If not, add it to a new slot along with the item description information to the slot.
+    }
+
+    public void Extract(SelectionObjectData item)
+    {
+        ItemBase i = Extraction.Extract(item.item).GetComponent<ItemBase>();
+        ItemsDescription des = i.GetComponent<ItemsDescription>();
+
+        //The extraction will take default information from the prefab object.
+        //must check if the item type is already present.
+        //IF the item type is already present, it's pH value in the description data must be checked.
+        //If the pH is same, the extra volume must be added to the existing item slot
+    }
+    
+    //Same reaction mechanic, but no volume calculations
+    public void MakepHIndicators(SelectionObjectData object1, SelectionObjectData object2)
+    {
+        //Two objects react to get a resultant object
+        System.Enum result = Reactions.React(object1.item, object2.item);
+
+        //pH papers doesn't have volume. So, volume calculations is not needed
+
+        //pH calculations is also needed.
+
+        //TODO: Check if the item is present in the inventory
+        //If present, compare it with it's slot's item description
+        //If not, add it to a new slot along with the item description information to the slot.
+    }
+
+    public void AddLiquidToPlayer(SelectionObjectData item)
+    {
+        //Add the selected object to the player
+
+        //Add the item only if it is acid or base.
+        if(item.item.GetType() == typeof(AcidsList) || item.item.GetType() == typeof(BasesList))
+        {
+            //If player already has a liquid in him, react
+            System.Enum result = player.React(item);
+            //If the result is not null, place it in the inventory
+
+            //If the player doesn't have liquid in him, then change the liquid type, volume and pH of player appropriately
+        }
+    }
+
+    public void GetLiquidFromPlayer(int amount)
+    {
+        System.Enum item = player.chemical;
+
+        //This chemical must be added to the inventory.
+        //Check it it's already present. If it is, then check if the pH matches in the slot's item description
+        //If it isn't add it
+    }
+
+    #endregion
 }
 

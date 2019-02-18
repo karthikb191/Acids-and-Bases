@@ -37,6 +37,15 @@ public class ItemDescriptionEditor : Editor{
                 break;
 
         }
+
+        description.hasPH = EditorGUILayout.BeginToggleGroup("Has pH", description.hasPH);
+        if (description.hasPH)
+            description.pHValue = EditorGUILayout.IntSlider(description.pHValue, 0, 14);
+        EditorGUILayout.EndToggleGroup();
+
+        description.extractionPossible = EditorGUILayout.BeginToggleGroup("Extraction Quantity", description.extractionPossible);
+        if (description.extractionPossible)
+            description.extractQuantity = EditorGUILayout.IntSlider(description.extractQuantity, 1, 50);
     }
 	
 }

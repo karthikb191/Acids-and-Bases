@@ -278,7 +278,10 @@ public class PathGenerator : MonoBehaviour {
                 Node n = nodes[i].rightConnections[j];
                 Vector3 d1 = nodes[i].rightConnections[j].position - nodes[i].position;
                 float dist1 = Vector3.Magnitude(d1);
-                
+
+                if (n.platform == nodes[i].platform)
+                    continue;
+
                 //Debug.Log("node.....");
                 for (int k = j+1; k < nodes[i].rightConnections.Count; k++)
                 {
@@ -287,6 +290,8 @@ public class PathGenerator : MonoBehaviour {
                     {
                         continue;
                     }
+
+
 
                     Vector3 d2 = nodes[i].rightConnections[k].position - nodes[i].position;
                     float dist2 = Vector3.Magnitude(d2);
@@ -363,6 +368,9 @@ public class PathGenerator : MonoBehaviour {
                 Node n = nodes[i].leftConnections[j];
                 Vector3 d1 = nodes[i].leftConnections[j].position - nodes[i].position;
                 float dist1 = Vector3.Magnitude(d1);
+
+                if (n.platform == nodes[i].platform)
+                    continue;
 
                 for (int k = j + 1; k < nodes[i].leftConnections.Count; k++)
                 {

@@ -77,8 +77,21 @@ class Reactions
     //        {Chemical.NaOH, naOHDictionary}
     //    };
 
+}
 
+class Extraction
+{
+    static Dictionary<Enum, Enum> extractionDictionary 
+        = new Dictionary<Enum, Enum>()
+    {
+            {NormalItemList.Lemon, AcidsList.C6H8O7 }
+    };
 
+    public static UnityEngine.GameObject Extract(Enum item)
+    {
+        Enum i = extractionDictionary[item];
 
-
+        //Get the prefab of the extracted item
+        return ItemManager.instance.itemDictionary[i];
+    }
 }
