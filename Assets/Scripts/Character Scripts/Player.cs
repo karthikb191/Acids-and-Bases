@@ -492,6 +492,8 @@ public class Player : Character
     
     private void Update()
     {
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
         //TODO: Remove this test later
         if (Input.GetKeyDown(KeyCode.O))
         {
