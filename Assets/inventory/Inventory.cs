@@ -3,10 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class ItemClassificationValues
+{
+    System.Enum itemType;
+    float pHValue;
+
+    public bool Equals(ItemClassificationValues val)
+    {
+        if (itemType == val.itemType && pHValue == val.pHValue)
+            return true;
+
+        return false;
+    }
+}
+
 public class Slot
 {
     public Image displaySprite;
-    public ItemBase itemStored; 
+    public ItemBase itemStored;
+
+    //The description of stored item. When a new item is added, this must be checked and the item must be added to the new slot
+    //if required
+    public ItemClassificationValues classificationValues = null;    
+
     public int itemCount;
 
     public RectTransform panel;

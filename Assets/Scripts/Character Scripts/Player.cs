@@ -73,7 +73,7 @@ public abstract class Character : MonoBehaviour, ICharacter
     public Button phMeterShow;
 
     //Chemical the character carrying
-    public Chemical chemical;
+    public System.Enum chemical;
 
     #region Block Movement Functions
     public virtual void BlockInputs()
@@ -780,6 +780,11 @@ public class Player : Character
     public PlayerStatus GetPlayerStatus()
     {
         return playerStatus;
+    }
+
+    public System.Enum React(PlayerInventory.SelectionObjectData obj)
+    {
+        return GetComponent<PlayerMechanics>().StartReaction(obj.item);
     }
 
 }

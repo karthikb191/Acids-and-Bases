@@ -92,7 +92,7 @@ public class PathGenerator : MonoBehaviour {
                                     platforms[j].rightNode.leftConnections.Add(platforms[i].leftNode);
                                     platforms[j].rightNode.child.Add(platforms[i].leftNode);
                                 }
-                                
+
                                 platforms[j].leftNode.child.Add(platforms[i].leftNode);
 
                                 platforms[i].leftNode.leftConnections.Add(platforms[j].leftNode);
@@ -101,16 +101,20 @@ public class PathGenerator : MonoBehaviour {
                             }
                             else
                             {
-                                //if 'i' is below 'j'
-                                if (platforms[i].rightNode.position.x > platforms[j].rightNode.position.x + xTolerance)
+                                float yDist2 = platforms[i].rightNode.position.y - platforms[j].rightNode.position.y;
+                                if(Mathf.Abs(yDist2) < ySpacing)
                                 {
-                                    platforms[i].rightNode.child.Add(platforms[j].rightNode);
+                                    //if 'i' is below 'j'
+                                    if (platforms[i].rightNode.position.x > platforms[j].rightNode.position.x + xTolerance)
+                                    {
+                                        platforms[i].rightNode.child.Add(platforms[j].rightNode);
 
-                                    platforms[i].rightNode.leftConnections.Add(platforms[j].rightNode);
-                                    platforms[j].rightNode.rightConnections.Add(platforms[i].rightNode);
+                                        platforms[i].rightNode.leftConnections.Add(platforms[j].rightNode);
+                                        platforms[j].rightNode.rightConnections.Add(platforms[i].rightNode);
+                                    }
                                 }
                             }
-                        } 
+                        }
                     }
 
                     if (platforms[i].rightNode.position.x < platforms[j].rightNode.position.x - xTolerance &&
@@ -131,7 +135,7 @@ public class PathGenerator : MonoBehaviour {
                                     platforms[j].leftNode.rightConnections.Add(platforms[i].rightNode);
                                     platforms[j].leftNode.child.Add(platforms[i].rightNode);
                                 }
-                                
+
                                 platforms[j].rightNode.child.Add(platforms[i].rightNode);
                                 platforms[i].rightNode.rightConnections.Add(platforms[j].rightNode);
                                 platforms[j].rightNode.leftConnections.Add(platforms[i].rightNode);
@@ -139,9 +143,9 @@ public class PathGenerator : MonoBehaviour {
                                 Debug.Log("Reaching");
 
                             }
-                            
+
                         }
-                    
+
                     }
 
                     if (platforms[i].leftNode.position.x > platforms[j].rightNode.position.x)
@@ -162,8 +166,8 @@ public class PathGenerator : MonoBehaviour {
                             }
                         }
                     }
-                    
-                    if(platforms[j].leftNode.position.x > platforms[i].leftNode.position.x + xTolerance &&
+
+                    if (platforms[j].leftNode.position.x > platforms[i].leftNode.position.x + xTolerance &&
                        platforms[j].leftNode.position.x < platforms[i].rightNode.position.x - xTolerance)
                     {
                         float yDist = platforms[j].leftNode.position.y - platforms[i].leftNode.position.y;
@@ -182,9 +186,9 @@ public class PathGenerator : MonoBehaviour {
                                     platforms[i].rightNode.leftConnections.Add(platforms[j].leftNode);
                                     platforms[i].rightNode.child.Add(platforms[j].leftNode);
                                 }
-                                
+
                                 platforms[i].leftNode.child.Add(platforms[j].leftNode);
-                                    
+
                                 platforms[j].leftNode.leftConnections.Add(platforms[i].leftNode);
                                 platforms[i].leftNode.rightConnections.Add(platforms[j].leftNode);
 
@@ -214,7 +218,7 @@ public class PathGenerator : MonoBehaviour {
                                 }
                                 
                                 platforms[i].rightNode.child.Add(platforms[j].rightNode);
-
+                                
                                 platforms[j].rightNode.rightConnections.Add(platforms[i].rightNode);
                                 platforms[i].rightNode.leftConnections.Add(platforms[j].rightNode);
 
@@ -274,7 +278,10 @@ public class PathGenerator : MonoBehaviour {
                 Node n = nodes[i].rightConnections[j];
                 Vector3 d1 = nodes[i].rightConnections[j].position - nodes[i].position;
                 float dist1 = Vector3.Magnitude(d1);
-                
+
+                if (n.platform == nodes[i].platform)
+                    continue;
+
                 //Debug.Log("node.....");
                 for (int k = j+1; k < nodes[i].rightConnections.Count; k++)
                 {
@@ -283,6 +290,8 @@ public class PathGenerator : MonoBehaviour {
                     {
                         continue;
                     }
+
+
 
                     Vector3 d2 = nodes[i].rightConnections[k].position - nodes[i].position;
                     float dist2 = Vector3.Magnitude(d2);
@@ -359,6 +368,9 @@ public class PathGenerator : MonoBehaviour {
                 Node n = nodes[i].leftConnections[j];
                 Vector3 d1 = nodes[i].leftConnections[j].position - nodes[i].position;
                 float dist1 = Vector3.Magnitude(d1);
+
+                if (n.platform == nodes[i].platform)
+                    continue;
 
                 for (int k = j + 1; k < nodes[i].leftConnections.Count; k++)
                 {

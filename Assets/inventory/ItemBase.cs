@@ -12,7 +12,7 @@ public class ItemBase : MonoBehaviour {
     public ParticleSystem destroyParticles;
 
     ParticleSystem travelParticlesTemp;
-     ParticleSystem destroyParticlesTemp;
+    ParticleSystem destroyParticlesTemp;
 
 
    // bool used = false;

@@ -55,7 +55,11 @@ public class Platform : MonoBehaviour {
             rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y + verticalAdjustment, 0);
         }
 
-        Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.localScale);
+        //Matrix4x4 parentTransform = Matrix4x4.TRS(transform.parent.position, transform.parent.rotation, transform.parent.localScale);
+        Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.lossyScale);
+        //platformMatrix = platformMatrix * parentTransform;
+
+
         leftNode.position = platformMatrix.MultiplyPoint3x4(leftNode.position);
         rightNode.position = platformMatrix.MultiplyPoint3x4(rightNode.position);
 
@@ -148,7 +152,12 @@ public class Platform : MonoBehaviour {
             rightNode.position = new Vector3(extents.x / rightNodesSpacingVariable, extents.y + verticalAdjustment, 0);
         }
 
-        Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.localScale);
+        Matrix4x4 platformMatrix = Matrix4x4.TRS(gameObject.transform.position, gameObject.transform.rotation, gameObject.transform.lossyScale);
+
+        //Matrix4x4 parentTransform = Matrix4x4.TRS(transform.parent.position, transform.parent.rotation, transform.parent.localScale);
+        
+        //platformMatrix = platformMatrix * parentTransform;
+
         leftNode.position = platformMatrix.MultiplyPoint3x4(leftNode.position);
         rightNode.position = platformMatrix.MultiplyPoint3x4(rightNode.position);
 

@@ -39,16 +39,10 @@ public class PlayerMechanics : CharacterMechanics
 
     float fallShoutCounter;
 
-    float maxVolume = 2000;
-    [Range(0, 2000)]
-    public float volume = 1000;
-    float currentlyVisibleVolume = 0.0f;
 
     //Information for specific mechanics
     [SerializeField]
     public GrabAnimationInfo grabAnimationInfo;
-    [SerializeField]
-    public LiquidInformation liquidInformation;
 
     //Mechanics Objects
     AbsorbMechanic absMec = null;
@@ -96,31 +90,6 @@ public class PlayerMechanics : CharacterMechanics
 
             SetVolume();
         }
-    }
-
-    void SetVolume()
-    {
-        float speed = 0.1f;
-        if (Mathf.Abs(currentlyVisibleVolume - volume) > 1.0f)
-        {
-            Debug.Log("Changing volume");
-            //Simple lerp for animating visibility
-            currentlyVisibleVolume = speed * currentlyVisibleVolume + (1 - speed) * volume;
-
-            //Get x offset value of the shader here
-            //float xOffset = player.Body.GetComponent<SkinnedMeshRenderer>().material.GetTextureOffset("_BodyTex").x;
-
-            //Calculating the offset which must be applied to the material
-            float volumeRatio = currentlyVisibleVolume / maxVolume;
-            float yOffset = (liquidInformation.minimumPosition + liquidInformation.maximumPosition) * volumeRatio;
-            yOffset = (liquidInformation.maximumPosition - liquidInformation.minimumPosition) - yOffset;
-            Debug.Log("y offset: " + yOffset);
-            //Set the offset property of the body texture 
-            player.Body.GetComponent<SkinnedMeshRenderer>().sharedMaterial.SetFloat("_YOffset", yOffset);
-            
-        }
-        else if (currentlyVisibleVolume != volume)
-            currentlyVisibleVolume = volume;
     }
 
 
@@ -401,9 +370,13 @@ public class PlayerMechanics : CharacterMechanics
             Debug.Log("Generating salt......Under progress");
             Debug.Log("Player chemical: " + player.chemical);
             Debug.Log("Enemy chemical: " + c.chemical);
-            Salt resultantSalt = Reactions.reactionDictionary[player.chemical][c.chemical];
 
-            if (resultantSalt != Salt.Null)
+            SaltsList resultantSalt = SaltsList.NaCl;
+            //System.Enum.TryParse(Reactions.reactionDictionary[player.chemical][c.chemical].ToString(), out resultantSalt);
+            System.Enum.TryParse(Reactions.React(player.chemical, c.chemical).ToString(), out resultantSalt);
+            //resultantSalt = System.Enum.Parse(typeof(Salt), Reactions.reactionDictionary[player.chemical][c.chemical].ToString());
+
+            if (resultantSalt != SaltsList.Null)
             {
                 Debug.Log("salt generated: " + resultantSalt);
             }
