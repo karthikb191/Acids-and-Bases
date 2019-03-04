@@ -60,10 +60,11 @@ class RoamingBehavoir : EnemyBehaviorAI
         if(character.gridCell != null)
             if (character.gridCell.character.Count > 0)
             {
-                //Remove yourself from the characters list
+                //Add the list of characters. This info is withing grid cell
                 proximityCharacters.AddRange(character.gridCell.character);
                 //Debug.Log("count : " + proximityCharacters.Count);
                 //Debug.Log("names: " + proximityCharacters[0].name + "   " + character.name);
+                //Remove yourself from the characters list
                 for (int i = 0; i < proximityCharacters.Count; i++)
                     if (proximityCharacters[i].gameObject == character.gameObject)
                     {
@@ -120,21 +121,27 @@ class SpottedBehavior : EnemyBehaviorAI
             chasingCharacter = c;
         }
 
+        if(!aiComponent.IsHalted())
+            aiComponent.ResolveEnemyCollision(charactersWithinProximity);
+
         BehaviorExitConditions();
     }
 
     public override void BehaviorExitConditions()
     {
         //TODO: Add more interesting behavior later
-        if (aiComponent.ignoreOtherEnemies && chasingCharacter != null)
-        {
-            Debug.Log("Chase started");
-            aiComponent.chaseStarted = true;
-            character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
-
-            Debug.Log("Character Added");
-            
-        }
+        //if (aiComponent.ignoreOtherEnemies && chasingCharacter != null)
+        //{
+        //    if (chasingCharacter.GetComponent<Player>())
+        //    {
+        //        Debug.Log("Chase started");
+        //        aiComponent.chaseStarted = true;
+        //        character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+        //
+        //        Debug.Log("Character Added");
+        //    }
+        //    
+        //}
 
         if (chasingCharacter != null)
         {
@@ -147,19 +154,26 @@ class SpottedBehavior : EnemyBehaviorAI
                     character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
 
                     Debug.Log("Character Added");
+                    return;
                     //Add the enemy character to player's chasing characters list
                     //chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
                 }
                 //If acid spots a base, then start the chase
                 else 
                 if (chasingCharacter.GetComponent<Enemy>() && !aiComponent.ignoreOtherEnemies)
+                {
                     if(chasingCharacter.GetComponent<Enemy>().characterType == CharacterType.basic)
                     {
                         Debug.Log("Chase started");
                         aiComponent.chaseStarted = true;
                         character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+                        return;
                     }
-                    
+                }
+                //If the character is not found, then return to roaming stage
+                aiComponent.chaseStarted = false;
+                aiComponent.runaway = false;
+                character.behaviorAI = new RoamingBehavoir(character, aiComponent);
             }
             else if (character.characterType == CharacterType.basic)
             {
@@ -169,7 +183,7 @@ class SpottedBehavior : EnemyBehaviorAI
                     Debug.Log("Run away");
                     aiComponent.runaway = true;
                     character.behaviorAI = new RunAwayBehavior(character, aiComponent, chasingCharacter);
-
+                    return;
                     //Add the enemy character to player's chasing characters list
                     //chasingCharacter.GetComponent<Player>().AddEnemyChasingPlayer(character);
                 }
@@ -180,7 +194,12 @@ class SpottedBehavior : EnemyBehaviorAI
                     {
                         aiComponent.runaway = true;
                         character.behaviorAI = new RunAwayBehavior(character, aiComponent, chasingCharacter);
+                        return;
                     }
+                //If the character is not found, then return to roaming stage
+                aiComponent.chaseStarted = false;
+                aiComponent.runaway = false;
+                character.behaviorAI = new RoamingBehavoir(character, aiComponent);
             }
         }
         else
@@ -209,7 +228,7 @@ class ChasingBehavior : EnemyBehaviorAI
     }
     public override void BehaviorUpdate()
     {
-        Debug.Log("Chasing Behavior");
+        //Debug.Log("Chasing Behavior");
         aiComponent.chaseStarted = true;
         aiComponent.chasingCharacter = chasingCharacter;
 

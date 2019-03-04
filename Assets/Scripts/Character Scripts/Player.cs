@@ -21,6 +21,8 @@ public abstract class Character : MonoBehaviour, ICharacter
     public float currentLinearSpeed = 0;
     public float currentJumpSpeed = 0;
 
+    [Range(0.01f, 1.0f)]
+    public float externalForceDamp = 0.1f;
     public float externalHorizontalMovementDamp;
     public float externalVerticalMovementDamp;
 
@@ -128,11 +130,15 @@ public abstract class Character : MonoBehaviour, ICharacter
 
     public virtual void UseItem() { }
 
+    [HideInInspector]
+    public float groundCollisionCorrection = 0;
+
     protected virtual void MoveCharacter()
     {
         int horizontalBlockValue = 0;
         int verticalBlockValue = 0;
-        externalForce = Vector3.zero;
+
+        //externalForce = Vector3.zero;
         velocity = Vector3.zero;
         externalHorizontalMovementDamp = externalVerticalMovementDamp = 1.0f;
         if (!GameManager.Instance.paused)
@@ -156,15 +162,43 @@ public abstract class Character : MonoBehaviour, ICharacter
 
             //0.001f moves the character slightly downwards so that it's always touching platform
             velocity = gameObject.transform.right * velocity.x * externalHorizontalMovementDamp * horizontalBlockValue +
-                                                jumpDirection * (velocity.y - 0.001f) * externalVerticalMovementDamp * verticalBlockValue +
+                                                jumpDirection * (velocity.y + groundCollisionCorrection) * externalVerticalMovementDamp * verticalBlockValue +
                                                 externalSpeed;
             
             gameObject.transform.up = playerUpOrientation;
 
             gameObject.transform.position += velocity;
-            
+
+            DampExternalForce();
         }
     }
+
+    public virtual void Stun(float duration)
+    {
+        BlockInputs(duration, true, false);
+
+        //Create a new stun state and pass this character
+        new StunState(duration, this);
+    }
+
+    #region External Force Functions
+    void DampExternalForce()
+    {
+        if(externalForce.sqrMagnitude > 30)
+        {
+            externalForce -= externalForce * externalForceDamp;
+        }
+        else
+        {
+            externalForce = Vector3.zero;
+        }
+    }
+    
+    public void AddExternalForce(Vector3 forceAmount)
+    {
+        externalForce = forceAmount;
+    }
+    #endregion
 
     public void SetSoundEffect(AudioClip clipToPlay = null, bool loop = false, bool playOneShot = false, float delay = 0.0f)
     {

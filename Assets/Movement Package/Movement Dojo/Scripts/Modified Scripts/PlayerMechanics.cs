@@ -47,6 +47,9 @@ public class PlayerMechanics : CharacterMechanics
     //Mechanics Objects
     AbsorbMechanic absMec = null;
 
+    [SerializeField]
+    public ScanMechanicVisualInfo phScanVisualInfo;
+
     PHScanMechanic scan = null;
 
     private void Start()
@@ -387,21 +390,30 @@ public class PlayerMechanics : CharacterMechanics
         }
         
     }
-
-
+    
     #region pH Scan Functions
 
     public void StartScan()
     {
         if (scan == null)
-            scan = new PHScanMechanic(player.GetGridCell(), player.transform.position, (int)player.playerSprite.transform.localScale.x);
+            scan = new PHScanMechanic(player.GetGridCell(), player.transform.position, (int)player.playerSprite.transform.localScale.x,
+                                        phScanVisualInfo);
         else
             Debug.Log("Scan is already in progress");
     }
 
+    [System.Serializable]
+    public class ScanMechanicVisualInfo
+    {
+        public GameObject scanVisual;
+        public float visualScaleMultiplier = 1.0f;
+        public float finalFadeMultiplier = 4.0f;
+        public bool ignorepHLimit = true;
+    }
+    
     public class PHScanMechanic
     {
-        public PHScanMechanic(GridCell gridCell, Vector3 startPosition, int direction)
+        public PHScanMechanic(GridCell gridCell, Vector3 startPosition, int direction, ScanMechanicVisualInfo visualInfo)
         {
             this.gridCell = gridCell;
             this.startPosition = startPosition;
@@ -411,7 +423,16 @@ public class PlayerMechanics : CharacterMechanics
 
             verticalNodeSearchCount = Mathf.FloorToInt(verticalReach / WorldGrid.Instance.gridSize);
             horizontalNodeSearchCount = Mathf.FloorToInt(horizontalReach / WorldGrid.Instance.gridSize);
+
+            scanVisualObject = Instantiate(visualInfo.scanVisual, startPosition, Quaternion.identity);
+            ignorepHLimit = visualInfo.ignorepHLimit;
+            scaleMultiplier = visualInfo.visualScaleMultiplier;
+            finalFadeMultiplier = visualInfo.finalFadeMultiplier;
+
+            ps = scanVisualObject.GetComponent<ParticleSystem>();
+            finalWaitPeriod = ps.main.startLifetime.constant;
         }
+
         GridCell gridCell;
         Vector3 startPosition;
         Vector3 previousScanPosition = Vector3.zero;
@@ -427,107 +448,203 @@ public class PlayerMechanics : CharacterMechanics
 
         float speed = 10.0f;
 
+        GameObject scanVisualObject;
+        bool ignorepHLimit;
+        bool initialAnimationFinished = false;
+        bool finalAnimationStarted = false;
+        float scaleMultiplier;
+        ParticleSystem ps;
+        float finalFadeMultiplier;
+        float finalWaitPeriod;
+
         public void Update(ref PHScanMechanic scan, ref Player player)
         {
-            if(!ContinuepHScan(ref scan, ref player))
+            if (finalAnimationStarted)
             {
-                scan = null;
+                //If the final animation is playing, nothing else must be played.
+                //If the control reaches this block, just return so that the rest of the code doesn't execute
+                FinalAnimation(ref scan);
                 return;
             }
 
-            currentScanPosition.x += speed * direction * GameManager.Instance.DeltaTime;
-
-            //Debug.Log("current scan position: " + currentScanPosition);
-            //Debug.DrawLine(Vector3.zero, currentScanPosition);
-            Debug.DrawLine(new Vector3(currentScanPosition.x, currentScanPosition.y - verticalReach, currentScanPosition.z),
-                            new Vector3(currentScanPosition.x, currentScanPosition.y + verticalReach, currentScanPosition.z),
-                            Color.red);
-
-            //Search all the nodes starting from the top range of the player's node
-            if (direction > 0)
+            if (!ContinuepHScan(ref scan, ref player))
             {
-                if (currentScanPosition.x > startPosition.x + horizontalReach)
-                {
-                    scan = null;
-                    return;
-                }
-            }
-            else
-            {
-                if (currentScanPosition.x < startPosition.x - horizontalReach)
-                {
-                    scan = null;
-                    return;
-                }
+                finalAnimationStarted = true;
             }
 
-            GridCell previousCell = null;
-            //Iterate the grid cells from bottom to top in the column searching for the items and enemies 
-            for(int i = -verticalReach; i < verticalReach; i++)
+            if (!initialAnimationFinished)
             {
-                GridCell cellToCheck = null;
-                List<GridCell> gridCells = WorldGrid.Instance.gridArray[gridCell.index.x, gridCell.index.y + i];
-                List<Character> enemiesList = new List<Character>();
+                InitialAnimation();
+            }
 
-                //if the grid cells exist, get the correct grid cell to check for enemies and items
-                Vector3 positionToCheck = new Vector3(currentScanPosition.x, currentScanPosition.y + i, currentScanPosition.z);
-                cellToCheck = WorldGrid.GetTheWorldGridCellWithoutCreatingNewCells(WorldGrid.GetGridIndex(positionToCheck));
-                if (cellToCheck == previousCell)
-                    continue;
-                else
-                    previousCell = cellToCheck;
 
-                if (cellToCheck == null)
-                {
-                    Debug.LogError("Cell to check is null...Breaking out of the function");
-                    continue;
-                }
+            if (initialAnimationFinished)
+            {
+                currentScanPosition.x += speed * direction * GameManager.Instance.DeltaTime;
+                //Position of the scan visual object must be set
+                scanVisualObject.transform.position = currentScanPosition;
 
-                Debug.Log("Cell to check position: " + cellToCheck.worldPosition);
-                enemiesList = cellToCheck.character;
-                Debug.Log("Drawing line");
-                Debug.DrawLine(Vector3.zero, cellToCheck.worldPosition, Color.red);
+                //Debug.Log("current scan position: " + currentScanPosition);
+                //Debug.DrawLine(Vector3.zero, currentScanPosition);
+                Debug.DrawLine(new Vector3(currentScanPosition.x, currentScanPosition.y - verticalReach, currentScanPosition.z),
+                                new Vector3(currentScanPosition.x, currentScanPosition.y + verticalReach, currentScanPosition.z),
+                                Color.red);
+
+                //Search all the nodes starting from the top range of the player's node
                 
 
-                if (enemiesList != null)
+                GridCell previousCell = null;
+                //Iterate the grid cells from bottom to top in the column searching for the items and enemies 
+                for (int i = -verticalReach; i < verticalReach; i++)
                 {
-                    for(int j = 0; j < enemiesList.Count; j++)
+                    GridCell cellToCheck = null;
+                    List<GridCell> gridCells = WorldGrid.Instance.gridArray[gridCell.index.x, gridCell.index.y + i];
+                    List<Character> enemiesList = new List<Character>();
+
+                    //if the grid cells exist, get the correct grid cell to check for enemies and items
+                    Vector3 positionToCheck = new Vector3(currentScanPosition.x, currentScanPosition.y + i, currentScanPosition.z);
+                    cellToCheck = WorldGrid.GetTheWorldGridCellWithoutCreatingNewCells(WorldGrid.GetGridIndex(positionToCheck));
+                    if (cellToCheck == previousCell)
+                        continue;
+                    else
+                        previousCell = cellToCheck;
+
+                    if (cellToCheck == null)
                     {
-                        if(direction > 0)
+                        Debug.LogError("Cell to check is null...Breaking out of the function");
+                        continue;
+                    }
+
+                    Debug.Log("Cell to check position: " + cellToCheck.worldPosition);
+                    enemiesList = cellToCheck.character;
+                    Debug.Log("Drawing line");
+                    Debug.DrawLine(Vector3.zero, cellToCheck.worldPosition, Color.red);
+
+
+                    if (enemiesList != null)
+                    {
+                        for (int j = 0; j < enemiesList.Count; j++)
                         {
-                            if (enemiesList[j].transform.position.x <= currentScanPosition.x)
+                            if (direction > 0)
                             {
-                                Debug.Log("marked the enemy....Revealing pH");
-                                if (enemiesList[j].GetComponent<CharacterMechanics>())
+                                if (enemiesList[j].transform.position.x <= currentScanPosition.x)
                                 {
-                                    RevealpH(enemiesList[j].GetComponent<CharacterMechanics>(), ref player);
+                                    Debug.Log("marked the enemy....Revealing pH");
+                                    if (enemiesList[j].GetComponent<CharacterMechanics>())
+                                    {
+                                        RevealpH(enemiesList[j].GetComponent<CharacterMechanics>(), ref player);
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            if (enemiesList[j].transform.position.x >= currentScanPosition.x)
+                            else
                             {
-                                Debug.Log("marked the enemy....revealing pH");
-                                if (enemiesList[j].GetComponent<CharacterMechanics>())
+                                if (enemiesList[j].transform.position.x >= currentScanPosition.x)
                                 {
-                                    RevealpH(enemiesList[j].GetComponent<CharacterMechanics>(), ref player);
+                                    Debug.Log("marked the enemy....revealing pH");
+                                    if (enemiesList[j].GetComponent<CharacterMechanics>())
+                                    {
+                                        RevealpH(enemiesList[j].GetComponent<CharacterMechanics>(), ref player);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+
+
+        }
+
+        void InitialAnimation()
+        {
+            //Scale animation for y Axis
+            float targetScale = verticalReach * 2 * scaleMultiplier;
+            float speed = 5;
+            Vector3 target = new Vector3(1, targetScale, 1);
+
+            if(targetScale - scanVisualObject.transform.localScale.y < 0.2f)
+            {
+                initialAnimationFinished = true;
+                scanVisualObject.transform.localScale = new Vector3(1, targetScale, 1);
+                return;
+            }
+
+            scanVisualObject.transform.localScale = Vector3.Lerp(scanVisualObject.transform.localScale, target, speed * Time.deltaTime);
+
+            //Animate the size of edge shape of the particle
+            //ParticleSystem.ShapeModule shape = ps.shape;
+            //shape.radius = scanVisualObject.transform.localScale.y;
+        }
+
+        float finalStepTimeElapsed = 0;
+        void FinalAnimation(ref PHScanMechanic scan)
+        {
+            //Target scale is now 0
+            float targetScale = 0;
+            float speed = 5;
+            Vector3 target = new Vector3(1, targetScale, 1);
+
+            if (scanVisualObject.transform.localScale.y - targetScale < 0.2f)
+            {
+                if(finalStepTimeElapsed == 0)
+                {
+                    ParticleSystem.MainModule module = ps.main;
+                    module.simulationSpeed = finalFadeMultiplier;
+                    ParticleSystem.EmissionModule em = ps.emission;
+                    em.enabled = false;
+                    finalWaitPeriod /= module.simulationSpeed;
+                }
+
+                //Wait for a while for particles to disappear
+                finalStepTimeElapsed += GameManager.Instance.DeltaTime;
+
+                if(finalStepTimeElapsed > finalWaitPeriod)
+                {
+                    //Destroy the pH scanner visual object
+                    Destroy(scanVisualObject);
+                    scan = null;
+                    return;
+                }
+            }
+
+            scanVisualObject.transform.localScale = Vector3.Lerp(scanVisualObject.transform.localScale, target, speed * Time.deltaTime);
+
+            //Animate the size of edge shape of the particle
+            //ParticleSystem.ShapeModule shape = ps.shape;
+            //shape.radius = scanVisualObject.transform.localScale.y;
         }
 
         bool ContinuepHScan(ref PHScanMechanic scan, ref Player player)
         {
-            if(player.GetPlayerStatus().pHIndicator == null || player.GetPlayerStatus().pHUseCounter <= 0)
+            //Scan Stop Conditions
+            if (direction > 0)
             {
-                Debug.Log("use counter: " + player.GetPlayerStatus().pHUseCounter + "  indicator: " + player.GetPlayerStatus().pHIndicator);
-                scan = null;
-                return false;
+                if (currentScanPosition.x > startPosition.x + horizontalReach)
+                {
+                    finalAnimationStarted = true;
+                    //scan = null;
+                    //return false;
+                }
             }
+            else
+            {
+                if (currentScanPosition.x < startPosition.x - horizontalReach)
+                {
+                    finalAnimationStarted = true;
+                    //scan = null;
+                    //return false;
+                }
+            }
+
+            if(!ignorepHLimit)
+                if (player.GetPlayerStatus().pHIndicator == null || player.GetPlayerStatus().pHUseCounter <= 0)
+                {
+                    Debug.Log("use counter: " + player.GetPlayerStatus().pHUseCounter + "  indicator: " + player.GetPlayerStatus().pHIndicator);
+                    finalAnimationStarted = true;
+                    //scan = null;
+                    //return false;
+                }
+
             return true;
         }
 
@@ -539,8 +656,8 @@ public class PlayerMechanics : CharacterMechanics
                 mech.RevealpH(true);
                 player.DecrementpHUse();
             }
-
         }
+        
     }
     #endregion
 

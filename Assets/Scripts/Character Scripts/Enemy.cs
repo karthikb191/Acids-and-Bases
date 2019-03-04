@@ -40,7 +40,7 @@ class Enemy : EnemyBase
         enemy = this;
         aiComponent = GetComponent<AI>();
 
-        if(!aiComponent.persistentChase)
+        //if(!aiComponent.persistentChase)
             behaviorAI = new RoamingBehavoir(enemy, aiComponent);
 
         Debug.Log("script is working");
@@ -61,11 +61,7 @@ class Enemy : EnemyBase
         StateList.Add(new IdleState());
         StateList[0].UpdateState(this, userInputs, info);
     }
-
-    private void FixedUpdate()
-    {
-        
-    }
+    
 
     private void Update()
     {
@@ -86,7 +82,7 @@ class Enemy : EnemyBase
         MoveCharacter();
 
         State = StateList[StateList.Count - 1];
-        
+        //Debug.Log("State is: " + State);
     }
 
     private void LateUpdate()
@@ -120,7 +116,7 @@ class Enemy : EnemyBase
             if (info[i].collider.tag == "tag_ladder")
             {
                 promptClimb = true;
-                climbing = true;        //This should later be set by the Enemy behavior script depending on climb prompt
+                //climbing = true;        //This should later be set by the Enemy behavior script depending on climb prompt
             }
         }
         //Debug.Log("character can climb: " + aiComponent.characterCanClimb);
@@ -148,7 +144,7 @@ class Enemy : EnemyBase
     #region Stun Scripts
 
 
-    private void Stun(float duration)
+    public override void Stun(float duration)
   // public void Stun(float duration)
     {
         //Revert the enemy behavior to roaming for now. Later there might be a separate stun behavior

@@ -23,9 +23,12 @@ public class Light : MonoBehaviour {
 	void Update () {
         
         spriteRenderer.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetFloat("_Multiplier", multiplier);
-        //lightMaterial.SetFloat("_Multiplier", multiplier);
-        spriteRenderer.SetPropertyBlock(propertyBlock);
+        if(propertyBlock != null)
+        {
+            propertyBlock.SetFloat("_Multiplier", multiplier);
+            //lightMaterial.SetFloat("_Multiplier", multiplier);
+            spriteRenderer.SetPropertyBlock(propertyBlock);
+        }
         
 	}
 }

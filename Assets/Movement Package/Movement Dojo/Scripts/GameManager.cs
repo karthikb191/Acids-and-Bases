@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour {
 
     private Vector3[] CameraBounds = new Vector3[5];
 
+    public GameObject dialogueCanvasPrefab;
+    public GameObject DialogueCanvas { get; private set; }
+
     public GameObject fadeCanvasPrefab;
     [HideInInspector]
     public GameObject fadeCanvas;
@@ -111,10 +114,23 @@ public class GameManager : MonoBehaviour {
                                                                                             player.transform.position.z));
         }
 
-        
+
         //Debug.Log("sddds: " + SceneManager.GetActiveScene().buildIndex);
         //Debug.Log("sddds: " + virtualJoystick.gameObject.name);
-        
+
+        //Instantiate Dialogue canvas
+        if (dialogueCanvasPrefab != null)
+        {
+            if(DialogueCanvas == null)
+            {
+                DialogueCanvas = Instantiate(dialogueCanvasPrefab);
+                DontDestroyOnLoad(DialogueCanvas);
+                DialogueCanvas.SetActive(false);
+            }
+        }
+        else
+            Debug.Log("Dialogue canvas prefab is null.....Forgot to add it?");
+
 
         //Instantiate the fade canvas
         if(fadeCanvasPrefab != null)

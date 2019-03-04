@@ -47,7 +47,13 @@ public class ItemManager : MonoBehaviour
                     object o = System.Enum.Parse(type, list[i].enumObject);
                     Debug.Log("adding: " + o.ToString() + "   " + list[i].itemPrefab.name);
                     Debug.Log("type: " + o.GetType());
-                    itemDictionary.Add(o, list[i].itemPrefab);
+
+                    //Instantiate the items for reference
+                    GameObject g = Instantiate(list[i].itemPrefab, this.transform);
+                    //Deactivate the gameObject
+                    g.SetActive(false);
+
+                    itemDictionary.Add(o, g);
                 }
             
         }

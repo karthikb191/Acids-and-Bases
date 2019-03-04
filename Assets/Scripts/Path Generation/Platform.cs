@@ -138,6 +138,7 @@ public class Platform : MonoBehaviour {
         //TODO: Optimize the node calculation code
 
         #region Temp
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         Vector3 extents = spriteRenderer.sprite.bounds.extents;
 
@@ -162,8 +163,43 @@ public class Platform : MonoBehaviour {
         rightNode.position = platformMatrix.MultiplyPoint3x4(rightNode.position);
 
         #endregion
-        
     }
+
+    public void UseItem(ItemBase item)
+    {
+        if (item != null)
+        {
+            Debug.Log("Item is: " + item);
+            ItemsDescription description = item.gameObject.GetComponent<ItemsDescription>();
+            Corrosion c = GetComponentInParent<Corrosion>();
+            if (c != null && description != null)
+            {
+                if (description.GetItemType().GetType() == (typeof(AcidsList)))
+                {
+                    //Corrode the item based on it's pH value.....Lesser pH, more corrosion
+                    //100 will be taken as a reference to calculate corrosion damage to all the platforms
+                    Debug.Log("Trying to corrode");
+                    float value = (1 / (float)((description.pHValue) + 1)) * 100;
+                    c.Corrode(value);
+                }
+                else
+                if (description.GetItemType().GetType() == (typeof(BasesList)))
+                {
+                    //Corrode the item based on it's pH value.....Higher pH, more corrosion
+                    //100 will be taken as a reference to calculate corrosion damage to all the platforms
+                    int alteratedpH = 7 - (description.pHValue - 7);
+
+                    float value = (1 / ((alteratedpH) + 1)) * 100;
+                    c.Corrode(value);
+                }
+            }
+            else
+            {
+                Debug.Log("Dude....There is no corrosion");
+            }
+        }
+    }
+
 
     private void OnDrawGizmos()
     {
