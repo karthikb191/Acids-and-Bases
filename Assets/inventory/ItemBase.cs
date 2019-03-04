@@ -31,6 +31,8 @@ public class ItemBase : MonoBehaviour {
 
     public float colliderRadius = 2;
 
+    public float phValue;
+
     public delegate void ItemPickedUp(ItemBase i);
     public static event ItemPickedUp ItemPickedUpEvent;
 
@@ -100,7 +102,7 @@ public class ItemBase : MonoBehaviour {
                     d.button.onClick.AddListener(() =>
                     {
                         AddItem();
-
+                       // Debug.Log(collision.gameObject.GetComponentInChildren<PlayerInventory>());
                         VirtualJoystick.DisableDynamicButton(d);                          
                     });
                 }
@@ -277,7 +279,7 @@ public class ItemBase : MonoBehaviour {
         }
     }
 
-    private void AddItem()
+    public void AddItem()
     {
         if (ItemPickedUpEvent != null)
             ItemPickedUpEvent(this);
@@ -314,6 +316,7 @@ public class ItemBase : MonoBehaviour {
             StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));   
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            
             gameObject.transform.localScale = targetScale;
 
         }
@@ -325,7 +328,11 @@ public class ItemBase : MonoBehaviour {
             transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             gameObject.transform.localScale = targetScale ;
         }
-       // setFocus = false;
+        // setFocus = false;
+
+        if(playerObject.GetComponent<Player>() != null)
+        playerObject.GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
+
     }
 
     public float maxRangeOfThrow = 20;

@@ -50,6 +50,8 @@ public class Slot
 
         if (itemStored != null)
         {
+         //   if (l_itemBase.itemProperties.name == itemStored.itemProperties.name && itemCount < maxStorage)
+                ////Changes//////
             if (l_itemBase.itemProperties.name == itemStored.itemProperties.name && itemCount < maxStorage)
             {
                 itemCount++;
@@ -337,7 +339,8 @@ public class Inventory : MonoBehaviour {
                 Slot tempSlot = new Slot();
                
                 slots.Add(tempSlot);
-                slots[i].imageSlotPrefab = Instantiate(imageSlotPrefab);
+                GameObject temp = Instantiate(imageSlotPrefab);
+                slots[i].imageSlotPrefab = temp;
                 slots[i].panel = slots[i].imageSlotPrefab.gameObject.GetComponent<RectTransform>();
                 slots[i].countText = slots[i].imageSlotPrefab.gameObject.GetComponent<Text>();           
                 slots[i].displaySprite = slots[i].imageSlotPrefab.transform.Find("Slot Image").gameObject.GetComponentInChildren<Image>();
@@ -403,6 +406,8 @@ public class Inventory : MonoBehaviour {
         {
             Debug.Log(l_ItemBase.name + "Is not an Inventory item");
         }
+
+        SetActiveSlotCount();
     }
 
   public  int activeSlotCount;

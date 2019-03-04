@@ -3208,9 +3208,9 @@ GameObject:
   - component: {fileID: 409157610}
   - component: {fileID: 409157611}
   m_Layer: 0
-  m_Name: Door to lift
+  m_Name: 'Door to lift : Needs a key to open it'
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -6972,7 +6972,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 906054656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.3, y: 4.9, z: 0}
+  m_LocalPosition: {x: -12.72, y: 4.9, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 1548515551}
@@ -16849,7 +16849,7 @@ GameObject:
   m_Layer: 0
   m_Name: Door to stairs
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

@@ -42,7 +42,7 @@ public class Journal : MonoBehaviour {
     List<System.Object> itemsInJournal;
     List<Sprite> itemsIcons;
     List<string> itemsDescriptions;
-
+    
     List<string> itemsDisplayed;
 
     bool opened = false;
