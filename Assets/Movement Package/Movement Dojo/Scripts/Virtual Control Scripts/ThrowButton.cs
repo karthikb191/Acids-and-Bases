@@ -12,6 +12,7 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     bool buttonPressed = false;
 
+
     bool setTarget;
 
     Vector3 tempRightClickTar = Vector3.zero;
@@ -23,9 +24,11 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Start()
     {
         player = FindObjectOfType<Player>();
+       
     }
     private void Update()
     {
+        
        if(player == null)
         player = FindObjectOfType<Player>();
 

@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 212498842860357256}
   - component: {fileID: 61174396677707910}
   - component: {fileID: 114293269257880368}
+  - component: {fileID: 114601921205383870}
+  - component: {fileID: 114160974686420142}
   m_Layer: 0
   m_Name: ItemROck
   m_TagString: Untagged
@@ -36,7 +38,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1036012431630630}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.42, y: -21.269999, z: -1.9344271}
+  m_LocalPosition: {x: -6.54, y: -11.8792715, z: -0.49380222}
   m_LocalScale: {x: 1.5, y: 1.5, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -54,19 +56,44 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1.04}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.53333336, y: 0.7}
-    newSize: {x: 0.53333336, y: 0.7}
+    newSize: {x: 6.31, y: 5.21}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 3.22}
+  m_Size: {x: 1.3724892, y: 1.1592622}
   m_EdgeRadius: 0
+--- !u!114 &114160974686420142
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1036012431630630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103e429fd8453cc4c98b60fda0ce1ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDescription: afbxcvbsdadsrgwnynwrwanaf
+  shortName: 
+  fullName: 
+  tags: 
+  itemType: 0
+  indicatorType: 3
+  acidType: 0
+  baseType: 0
+  saltType: 0
+  normalItemType: 7
+  hasPH: 0
+  pHValue: 7
+  extractionPossible: 0
+  extractQuantity: 15
 --- !u!114 &114293269257880368
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -83,9 +110,12 @@ MonoBehaviour:
     type: 2}
   destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
     type: 2}
+  pickedCount: 0
+  maxCount: 0
   playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: 005a17f93caf30c478065ff7c85ac351, type: 2}
   speed: 30
+  targetScale: {x: 1, y: 1, z: 1}
   isFromEnemy: 0
   colliderRadius: 0.75
   maxRangeOfThrow: 20
@@ -95,6 +125,39 @@ MonoBehaviour:
   timeToReach: 0
   targetToHit: {x: 0, y: 0, z: 0}
   throwVelocity: 0
+--- !u!114 &114601921205383870
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1036012431630630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc78cd329c90744409e3810b6ea1c02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thrown: 0
+  travelParticles: {fileID: 198549758489193066, guid: 1c522a1013d318e4c99542c9a74e2a5b,
+    type: 2}
+  destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
+    type: 2}
+  pickedCount: 0
+  maxCount: 5
+  playerObject: {fileID: 0}
+  itemProperties: {fileID: 11400000, guid: c2a2457a63fcd894f84b72bcb69f0946, type: 2}
+  speed: 20
+  targetScale: {x: 1, y: 1, z: 1}
+  isFromEnemy: 0
+  colliderRadius: 2
+  maxRangeOfThrow: 20
+  maxAngle: 45
+  angleOfThrow: 0
+  timeElapsed: 0
+  timeToReach: 0
+  targetToHit: {x: 0, y: 0, z: 0}
+  throwVelocity: 30
+  indicator: 0
+  useCount: 3
 --- !u!212 &212498842860357256
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -135,7 +198,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.53333336, y: 0.7}
+  m_Size: {x: 6.31, y: 5.21}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

@@ -7,9 +7,9 @@ public class TreasureChestDisplay : MonoBehaviour {
 
     public static TreasureChestDisplay instance;
 
-  //  public Treasurechest treasureChest;
+    public Treasurechest treasureChest;
 
-    public GameObject listViewPanel;
+    
 
     public RectTransform itemPanel;
     public RectTransform selectedItemPanel;
@@ -29,16 +29,17 @@ public class TreasureChestDisplay : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-		
+        itemPanel = transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<RectTransform>();
+        selectedItemPanel = transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<RectTransform>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-     //   SelectItems();
+        SelectItems();
 	}
 
 
-  /*  public void SelectItems()
+    public void SelectItems()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -62,11 +63,7 @@ public class TreasureChestDisplay : MonoBehaviour {
 
     void InitializeSlots(int slotCount)
     {
-        /*foreach (ItemBase i in treasureChest.itemsInChest)
-        {
-            Instantiate(slotPrefab, itemPanel.transform);
-            slotPrefab.GetComponentInChildren<Image>().sprite = i.itemProperties.imageSprite;
-        }
+        
         if(slotsList.Count < slotCount)
         {
             for (int i = slotsList.Count; i < slotCount; i++)
@@ -114,5 +111,5 @@ public class TreasureChestDisplay : MonoBehaviour {
     {
         this.gameObject.SetActive(false);
     }
-*/
+
 }

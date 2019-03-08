@@ -13,18 +13,18 @@ public class ItemCountSelection : MonoBehaviour {
 
     Slider slider;
 
-    Button addButton;
 
- /*   private void Start()
+    private void Start()
     {
         if(instance == null)
         {
             instance = this;
         }
         slider = GetComponentInChildren<Slider>();
-        addButton = GetComponentInChildren<Button>();
+
         count = transform.GetChild(1).GetComponentInChildren<Text>();
     }
+    
 
     public void UpdateCount()
     {
@@ -33,14 +33,24 @@ public class ItemCountSelection : MonoBehaviour {
 
     public void AddItems()
     {
-        Debug.Log("Slider value:: <><>" + slider.value);
+
         item.AddItems(slider.value);
+        Dectivate();
     }
 
     public void Activate(float maxValue)
     {
         slider.maxValue = maxValue;
-        gameObject.GetComponent<Canvas>().enabled = true;
+        gameObject.GetComponent<Canvas>().enabled = true;    
     }
-    */
+
+    public void Dectivate()
+    {
+       
+        gameObject.GetComponent<Canvas>().enabled = false;
+        slider.value = 0;
+        item = null;
+        
+    }
+
 }

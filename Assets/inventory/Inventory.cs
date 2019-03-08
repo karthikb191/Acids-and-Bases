@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,6 +45,7 @@ public class Slot
 
     public List<ItemBase> itemlist = new List<ItemBase>();
 
+    public bool isActive = false;
 
     public virtual void AddItem(ItemBase l_itemBase)
     {
@@ -66,7 +68,16 @@ public class Slot
             itemlist.Add(l_itemBase);
             itemCount++;
 
+           
+            isActive = true;
+            itemStored = l_itemBase;
+           // Debug.Log("Item in slot" + itemStored.itemProperties.name);
+             imageSlotPrefab.SetActive(true);
+
+            displaySprite.enabled = true;
+            displaySprite.sprite = itemStored.itemProperties.imageSprite;
             //Added this..... Needs to be arranged properly
+
             if (l_itemBase.GetComponent<PH>())
             {
                 Debug.Log("PH item");
@@ -75,17 +86,11 @@ public class Slot
 
             Debug.Log("Out of PH Block");
 
-            itemStored = l_itemBase;
-            Debug.Log("Item in slot" + itemStored.itemProperties.name);
-            // imageSlotPrefab.SetActive(true);
-
-            displaySprite.enabled = true;
-            displaySprite.sprite = itemStored.itemProperties.imageSprite;
-           
-            
         }
         UpdateUI();
     }
+
+
 
     public virtual void RemoveItem(ItemBase l_itemBase)
     {
@@ -123,7 +128,7 @@ public class Slot
         itemStored = null;
         imageSlotPrefab.gameObject.SetActive(false);
         countText.text = "";
-      
+        isActive = false;
         itemlist.Clear();
     }
 
@@ -138,6 +143,8 @@ public class Inventory : MonoBehaviour {
     RectTransform panel;   */ //Panel within which the slots are stored
 
     public Character character;    //The character the inventory belongs to
+
+
 
     public List<Slot> slots = new List<Slot>();
 
@@ -158,7 +165,6 @@ public class Inventory : MonoBehaviour {
         Debug.Log(character.name + "<<<<<--Character name in Start");
         slots = new List<Slot>(maxSlotCount);
     }
-
 
     public virtual void SetActiveSlotCount()
     {
@@ -232,6 +238,12 @@ public class Inventory : MonoBehaviour {
 
                 slots[i].RemoveItem(l_ItemBase);
 
+                if(slots[i].itemStored == null)
+                {
+                    slots[i].itemStored = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                }
+
+
                 activeSlotCount = ActiveSlotCount();
 
                /* Debug.Log("Remove item player call");
@@ -242,7 +254,7 @@ public class Inventory : MonoBehaviour {
                  {
                      Debug.Log(character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>() + "<<<<<<< Player inventory>>>>>>");
 
-                     character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
+                 //    character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
 
                  }
                 Debug.Log("Remove item player call end");
@@ -255,16 +267,25 @@ public class Inventory : MonoBehaviour {
     public bool ActiveItemCheck(ItemBase l_activeItem)
     {
         for (int i = 0; i < slots.Count; i++)
-        {           
+        {   
+
+            
             if(l_activeItem != null && slots[i].itemStored != null && slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties )
             {
               Debug.Log(slots[i].itemStored);
                 Debug.Log("Active item check call :  " + slots[i].itemlist.Count); 
-                activeItem = slots[i].itemlist[slots[i].itemlist.Count-1];
-                activeItem.gameObject.SetActive(true);
-                activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
-                activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
-                return true;
+                if(slots[i].itemlist.Count > 0)
+                {
+                    slots[i].itemStored = slots[i].itemlist[0];
+                    activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                    activeItem.gameObject.SetActive(true);
+
+                    return true;
+
+                }
+
+                 activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
+                  activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
             }
         }
         Debug.Log("Active item is null");
@@ -348,6 +369,7 @@ public class Inventory : MonoBehaviour {
                 slots[i].displaySprite.sprite = sampleTestSprite;
                 slots[i].countText = slots[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
                 slots[i].slotNumber = i;
+                slots[i].imageSlotPrefab.transform.localScale = Vector3.one;
                 //Debug.Log(slots[i].countText.text + "_____" + i);
             }
 
@@ -366,9 +388,10 @@ public class Inventory : MonoBehaviour {
                 {
                     if(slots[i].itemStored!=null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
                     {
+
+                    
                     Debug.Log("Added to already present slot");
                         slots[i].AddItem(l_ItemBase);
-                        
                     assigned = true;
                         break;
                     }
@@ -385,10 +408,15 @@ public class Inventory : MonoBehaviour {
                     {
                         
                         Debug.Log("Adding item to slot For first time");
+
                         slots[i].AddItem(l_ItemBase);
-                       slots[i].imageSlotPrefab.SetActive(true);
-                        slots[i].displaySprite.sprite = l_ItemBase.itemProperties.imageSprite;
-                        slots[i].itemStored = Instantiate(l_ItemBase);
+                         slots[i].imageSlotPrefab.SetActive(true);
+                        slots[i].displaySprite.sprite = l_ItemBase.GetComponent<SpriteRenderer>().sprite;
+                       // slots[i].itemStored.GetComponent<SpriteRenderer>().enabled = false;
+                        slots[i].isActive = true;
+                        slots[i].itemStored = l_ItemBase;
+
+                        slots[i].imageSlotPrefab.gameObject.transform.localScale = Vector3.one;
                         activeSlotCount = ActiveSlotCount();
                         break;
                     }
@@ -417,7 +445,7 @@ public class Inventory : MonoBehaviour {
         int c = 0;
         for (int i = 0; i < slots.Count; i++)
         {
-            if (slots[i].itemlist.Count > 0)
+            if (slots[i].isActive)
             {
                 c++;
                 continue;
@@ -448,33 +476,7 @@ public class Inventory : MonoBehaviour {
         }
     }
 
-    public void CreateSlotN(List<Slot> slotList,int maxCount)
-    {
-        //Create a new slot and assign the item.
-        //If item is null, just create an empty slot to populate the inventory
-
-        if (slotList.Count == 0)
-        {
-           
-
-            for (int i = 0; i < maxCount; i++)
-            {
-                Slot tempSlot = new Slot();
-
-                slotList.Add(tempSlot);
-                slotList[i].imageSlotPrefab = Instantiate(imageSlotPrefab);
-                slotList[i].panel = slots[i].imageSlotPrefab.gameObject.GetComponent<RectTransform>();
-                slotList[i].countText = slotList[i].imageSlotPrefab.gameObject.GetComponent<Text>();
-                slotList[i].displaySprite = slotList[i].imageSlotPrefab.transform.Find("Slot Image").gameObject.GetComponentInChildren<Image>();
-                slotList[i].imageSlotPrefab.SetActive(false);
-                slotList[i].displaySprite.sprite = sampleTestSprite;
-                slotList[i].countText = slotList[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
-                //Debug.Log(slots[i].countText.text + "_____" + i);
-            }
-
-        }
-    }
-
+   
    
    ///////////////---------------------------------throw anime timer---------------------------///////////////////////////
    

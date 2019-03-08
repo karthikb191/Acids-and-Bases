@@ -34,6 +34,11 @@ public class ItemProperties : ScriptableObject {
 
         public bool isThrowable;
 
+   
 
+    public ItemType itemtype;
+
+    public ItemList itemList;
+    
     
 }

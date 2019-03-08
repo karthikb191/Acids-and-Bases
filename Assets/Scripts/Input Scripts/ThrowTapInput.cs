@@ -13,6 +13,10 @@ public class ThrowTapInput {
         this.raycast = canvas.GetComponent<GraphicRaycaster>();
     }
 
+   
+
+
+
     //PLayer script
     Player player;
     int count = 0;
@@ -23,7 +27,7 @@ public class ThrowTapInput {
     float timer = 0;
     bool startTimer = false;
 
-           
+   
     List<Touch> touchesList = new List<Touch>();
 
     // Update is called once per frame
@@ -54,6 +58,19 @@ public class ThrowTapInput {
             TargetSet();
         }
 
+        ////////For debugging and testing: to be removed later//////////
+        if(Input.GetMouseButtonDown(2))
+        {
+            if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
+
+            {
+                Vector3 temp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                temp.z = 0;
+                player.GetComponentInChildren<PlayerInventory>().ThrowItem(temp, 5);
+
+            }
+        }
+///////////////////////////////////////////////////////////////////////
     }
 
 
@@ -107,22 +124,15 @@ public class ThrowTapInput {
                         timer = 0;
                     }
                 }
-
                 if (!startTimer)
                 {
                     Debug.Log("Timer started");
                     throwInput++;
                     startTimer = true;
                 }
-
-
-
             }
         }
-
-
-
-        touchesList.Clear();
+            touchesList.Clear();
     }
 
 
@@ -140,13 +150,15 @@ public class ThrowTapInput {
             timer = 0;
             startTimer = false;
 
-        if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
+            if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
+            {
+                Vector3 temp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                temp.z = 0;
+                player.GetComponentInChildren<PlayerInventory>().ThrowItem(temp, 5);
 
-        {
-            player.GetComponentInChildren<PlayerInventory>().ThrowItem(Camera.main.ScreenToWorldPoint(Input.mousePosition), 5);
+            }
 
         }
-    }
           
     }
 

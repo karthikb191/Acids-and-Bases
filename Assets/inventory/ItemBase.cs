@@ -11,12 +11,16 @@ public class ItemBase : MonoBehaviour {
     public ParticleSystem travelParticles;
     public ParticleSystem destroyParticles;
 
-    ParticleSystem travelParticlesTemp;
-    ParticleSystem destroyParticlesTemp;
+     ParticleSystem travelParticlesTemp;
+     ParticleSystem destroyParticlesTemp;
 
+   
+    // bool used = false;
 
-   // bool used = false;
-    
+    public int pickedCount = 0;
+
+    public int maxCount = 0;
+
     bool setFocus;
 
     public GameObject playerObject;
@@ -25,23 +29,27 @@ public class ItemBase : MonoBehaviour {
 
     public float speed = 20.0f;
 
-    Vector3 targetScale = Vector3.one;
+  public  Vector3 targetScale = Vector3.one;
 
     public bool isFromEnemy = false;
 
     public float colliderRadius = 2;
-
-    public float phValue;
 
     public delegate void ItemPickedUp(ItemBase i);
     public static event ItemPickedUp ItemPickedUpEvent;
 
     private void Start()
     {
+        playerObject = FindObjectOfType<Player>().gameObject;
         travelParticlesTemp = Instantiate(travelParticles,transform);
         travelParticlesTemp.transform.position = this.transform.position;
         destroyParticlesTemp = Instantiate(destroyParticles, transform);
         destroyParticlesTemp.transform.position = this.transform.position;
+
+        if(maxCount == 0)
+        {
+            maxCount = 1;
+        }
     }
 
 
@@ -54,7 +62,8 @@ public class ItemBase : MonoBehaviour {
             
         }
 
-     //   TravelParticleEffect();
+
+
     }
 
     public virtual void Use()
@@ -65,7 +74,7 @@ public class ItemBase : MonoBehaviour {
 
     public virtual void Throw(Vector3 target, float speed)
     {
-        // gameObject.GetComponent<BoxCollider2D>().enabled = false;
+    
         if (gameObject.activeSelf)
         { 
             if (isFromEnemy)
@@ -76,7 +85,7 @@ public class ItemBase : MonoBehaviour {
             }
             else
             {
-                playerObject = transform.GetComponentInParent<Player>().gameObject;
+               // playerObject = transform.GetComponentInParent<Player>().gameObject;
                 Debug.Log("Thrown from: ____>>>>" + playerObject.name);
                 ThrowCalculations(target, speed);
                 StartCoroutine(ThrowProjectile(target, angleOfThrow));
@@ -101,9 +110,24 @@ public class ItemBase : MonoBehaviour {
                     VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
                     {
-                        AddItem();
-                       // Debug.Log(collision.gameObject.GetComponentInChildren<PlayerInventory>());
-                        VirtualJoystick.DisableDynamicButton(d);                          
+                        /*  if((maxCount - pickedCount) > 0)
+                          {
+                              GameObject temp = Instantiate(this.gameObject) as GameObject;
+
+                              AddItem(temp.GetComponent<ItemBase>());
+                              pickedCount++;
+                          }
+
+                          else
+                          {
+                              AddItem(this);
+                              VirtualJoystick.DisableDynamicButton(d);
+                          }
+                          */
+                        
+                        VirtualJoystick.DisableDynamicButton(d);
+                        ItemCountSelection.instance.Activate(maxCount);
+                        ItemCountSelection.instance.item = this;
                     });
                 }
             }
@@ -144,6 +168,7 @@ public class ItemBase : MonoBehaviour {
         {
             gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, targetPosition, 0.2f);
             gameObject.transform.position = targetPosition;
+            gameObject.SetActive(false);
             yield break;
         }
 
@@ -156,7 +181,8 @@ public class ItemBase : MonoBehaviour {
 
         if (gameObject.transform.position == targetPosition)
         {
-           
+            gameObject.SetActive(false);
+
             yield break;
         }
         else
@@ -279,60 +305,112 @@ public class ItemBase : MonoBehaviour {
         }
     }
 
-    public void AddItem()
+
+    public void AddItems(float count)
     {
-        if (ItemPickedUpEvent != null)
-            ItemPickedUpEvent(this);
-
-        //Changed......
-        if (GetComponent<PH>())
+        for(int i = 0; i<count;i++)
         {
-            playerObject.GetComponentInChildren<Inventory>().AddItem(this);
-            //StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-            gameObject.SetActive(false);
-            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.localScale = targetScale;
-
-            //Get the player component. If player is null, log error.
-            if (playerObject.GetComponent<Player>())
+            if((maxCount - pickedCount) > 1)
             {
-                if(!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
-                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+
+                GameObject temp = Instantiate(this.gameObject) as GameObject;
+
+                temp.GetComponent<ItemBase>().playerObject = playerObject;
+                temp.GetComponent<ItemBase>().pickedCount = 0;
+                temp.GetComponent<ItemBase>().maxCount = 1;               
+                AddItem(temp.GetComponent<ItemBase>());
+                
+                
+                pickedCount++;
+
+                Debug.Log("instantiated item" + temp.gameObject.name);
+                Debug.Log("Picked Count" + pickedCount);
+
             }
+
             else
             {
-                Debug.LogError("No player detected. Check your code");
+                Debug.Log("LastItem");
+                AddItem(this);
             }
-
-            return;
+            
         }
+
+        maxCount = Mathf.Abs(maxCount - pickedCount);
+
+        Debug.Log("Max COunt" + maxCount);
+    }
+
+
+
+
+
+    public void AddItem( ItemBase item)
+    {
+        if (ItemPickedUpEvent != null)
+            ItemPickedUpEvent(item);
 
         if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
-            
 
-            playerObject.GetComponentInChildren<PlayerInventory>().activeItem = this;
-            playerObject.GetComponentInChildren<PlayerInventory>().AddItem(this);           
-            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));   
-            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            
-            gameObject.transform.localScale = targetScale;
 
+            playerObject.GetComponentInChildren<PlayerInventory>().activeItem = item;
+            playerObject.GetComponentInChildren<PlayerInventory>().AddItem(item);
+         //   item.StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+            item.transform.position = playerObject.GetComponent<Character>().Hand.transform.position;
+
+            item.gameObject.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            item.gameObject.transform.localScale = targetScale;
+            item.gameObject.SetActive(true);
+            Debug.Log("Active item set");
+            
         }
         else
         {
-            playerObject.GetComponentInChildren<Inventory>().AddItem(this);
-            StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
-            gameObject.SetActive(false);
-            transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
-            gameObject.transform.localScale = targetScale ;
+            playerObject.GetComponentInChildren<Inventory>().AddItem(item);
+            //item.StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+            item.transform.position = playerObject.GetComponent<Character>().Hand.transform.position;
+            item.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+            item.gameObject.transform.localScale = targetScale;
+            item.gameObject.SetActive(false);
+            
         }
+
+        //Get the player component. If player is null, log error.
+        if (playerObject.GetComponent<Player>())
+        {
+            if (!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
+                playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+        }
+        else
+        {
+            Debug.LogError("No player detected. Check your code");
+        }
+        //Changed......
+        /* if (item.GetComponent<PH>())
+         {
+             playerObject.GetComponentInChildren<Inventory>().AddItem(item);
+             item.StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
+             item.gameObject.SetActive(false);
+             item.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
+             item.gameObject.transform.localScale = targetScale;
+
+             //Get the player component. If player is null, log error.
+             if (playerObject.GetComponent<Player>())
+             {
+                 if(!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
+                     playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+             }
+             else
+             {
+                 Debug.LogError("No player detected. Check your code");
+             }
+
+             return;
+         }
+         */
+
         // setFocus = false;
-
-        if(playerObject.GetComponent<Player>() != null)
-        playerObject.GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
-
     }
 
     public float maxRangeOfThrow = 20;

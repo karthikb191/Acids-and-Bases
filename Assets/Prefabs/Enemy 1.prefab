@@ -1117,7 +1117,6 @@ MonoBehaviour:
     specialButtonPressed: 0
     specialButtonReleased: 1
   phMeterShow: {fileID: 0}
-  chemical: 1
   maxHealth: 100
   promptClimb: 0
   climbing: 0
@@ -1439,6 +1438,10 @@ MonoBehaviour:
   PhTransitionMechanic: 0
   initialCharacterColor: {r: 0, g: 0, b: 0, a: 0}
   phValue: 7
+  volume: 1000
+  liquidInformation:
+    minimumPosition: 0
+    maximumPosition: 0
 --- !u!114 &114823229593812878
 MonoBehaviour:
   m_ObjectHideFlags: 1

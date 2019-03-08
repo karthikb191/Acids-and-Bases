@@ -8,7 +8,7 @@ AnimatorController:
   m_Name: Inventory canvas
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: ShowInventory
+  - m_Name: InventoryHolderShow
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -79,7 +79,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: ShowInventory
+    m_ConditionEvent: InventoryHolderShow
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102210911140625316}
@@ -124,7 +124,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: ShowInventory
+    m_ConditionEvent: InventoryHolderShow
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102662184429519416}
@@ -148,7 +148,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: ShowInventory
+    m_ConditionEvent: InventoryHolderShow
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102342011492595836}
@@ -285,7 +285,7 @@ AnimatorState:
   m_Motion: {fileID: 7400000, guid: 9dff0308a6e196646a845de3547f0977, type: 2}
   m_Tag: 
   m_SpeedParameter: 
-  m_MirrorParameter: ShowInventory
+  m_MirrorParameter: InventoryHolderShow
   m_CycleOffsetParameter: 
   m_TimeParameter: 
 --- !u!1107 &1107045665119972348
