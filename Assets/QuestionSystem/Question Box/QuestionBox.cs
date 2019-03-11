@@ -26,7 +26,7 @@ public class QuestionBox : MonoBehaviour {
     public bool unlocked;
 
     //Prefab of the type of item expecting
-    public GameObject itemExpecting;
+    public List<ItemsDescription> itemsExpecting = new List<ItemsDescription>();
 
     Vector3 initialLocalPosition;
     Vector3 initialLocalRotation;
@@ -40,8 +40,6 @@ public class QuestionBox : MonoBehaviour {
     {
         if (!dialogueSystem.IsDialoguePlaying())
         {
-
-
             Player p = collider.GetComponent<Player>();
             if (p != null)
             {
@@ -89,7 +87,6 @@ public class QuestionBox : MonoBehaviour {
 
     private void Update()
     {
-       
         //TODO: Remove this test check later
         if(prevAnswerState != unlocked && !routineUnderProgress)
         {
@@ -107,7 +104,7 @@ public class QuestionBox : MonoBehaviour {
     {
         Debug.Log("Correct Answer.....Checking for items");
         //TODO: Check the player's inventory and get the item
-        if (itemExpecting)
+        if (itemsExpecting.Count > 0)
         {
             Player p = null;
             for (int i = 0; i < dialogueSystem.allActors.Length; i++)
@@ -122,7 +119,9 @@ public class QuestionBox : MonoBehaviour {
                 return;
             }
 
-            //TODO: Check the inventory for the item. If the item is found, then unlock the gate, or else display hint mentioning
+            //Enable the item selection canvas and wait for check
+            InitiateItemSelection(p);
+            return;
             //the item does not exist in the inventory
         }
 
@@ -134,6 +133,36 @@ public class QuestionBox : MonoBehaviour {
                 GetComponent<BoxCollider2D>().enabled = false;
         }
     }
+    
+    List<ItemsDescription> selectedItems = new List<ItemsDescription>();
+
+    void InitiateItemSelection(Player p)
+    {
+        ItemSelection.Instance.ToggleActivation(p.GetComponentInChildren<PlayerInventory>(), this);
+        dialogueSystem.haltDialogue = true;
+    }
+
+    public void SetSelectedItems(List<ItemsDescription> items)
+    {
+        selectedItems = items;
+        Debug.Log("selected items: " + selectedItems.Count);
+        CheckForRequiredItems();
+    }
+
+    void CheckForRequiredItems()
+    {
+        //TODO: add the check logic here. If the conditions are met, the door unlocks
+        dialogueSystem.haltDialogue = false;
+
+        if (!routineUnderProgress)
+        {
+            if (blockingPlatform != null)
+                StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
+            else
+                GetComponent<BoxCollider2D>().enabled = false;
+        }
+    }
+
     
     IEnumerator SimplePlatformInterpolation(Vector3 targetPosition, Vector3 targetRotation, bool enableCollider = false)
     {

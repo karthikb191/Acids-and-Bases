@@ -515,7 +515,7 @@ public class Player : Character
         audioSource = GetComponent<AudioSource>();
 
         StateList = new List<States>();
-        StateList.Add(new IdleState());
+        StateList.Add(State);
 
         //Input objects
         tapInput = new ThrowTapInput(this, GameManager.Instance.virtualJoystick.GetComponent<Canvas>());
@@ -532,7 +532,13 @@ public class Player : Character
         if (Input.GetKeyDown(KeyCode.O))
         {
             Debug.Log("Pressed P....Opening Journal");
-            Journal.Instance.ToggleJournal();
+            if(Journal.Instance != null)
+                Journal.Instance.ToggleJournal();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            ItemSelection.Instance.ToggleActivation(GetComponentInChildren<PlayerInventory>());
         }
 
 

@@ -602,13 +602,22 @@ public class StunState : SpecialState
 
         //TODO: Add the animation here
 
-        StateExitConditions();
+        StateExitConditions(info);
     }
-    void StateExitConditions()
+    void StateExitConditions(RaycastHit2D[] info)
     {
         if(timeElapsed > duration)
         {
             c.StateList.RemoveAt(c.StateList.Count - 1);
+        }
+
+        else if (info.Length == 0 && c.StateList[c.StateList.Count - 1].GetType() != typeof(FallingState))
+        {
+            Debug.Log("fallllllllllll" + c.StateList[c.StateList.Count - 1].GetType());
+            States nextState = new FallingState(1);
+            nextState.index = c.StateList.Count + 1;
+            c.StateList.Add(nextState);
+            return;
         }
     }
 }

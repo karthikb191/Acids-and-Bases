@@ -48,6 +48,7 @@ public class DialogueSystem : MonoBehaviour {
         BreakDialogue(allDialoguesInCurrentSequence[currDialogueIndex].dialogue);
         dialoguePlaying = true;
     }
+
     public void DialogueFinished()
     {
         GameManager.Instance.DialogueCanvas.SetActive(false);
@@ -80,6 +81,8 @@ public class DialogueSystem : MonoBehaviour {
         allDialoguesInCurrentSequence.Add(d);
     }
 
+    public bool haltDialogue = false;
+
     void Update()
     {
         if (currDialogueIndex >= allDialoguesInCurrentSequence.Count)
@@ -87,7 +90,7 @@ public class DialogueSystem : MonoBehaviour {
             DialogueFinished();
         }
 
-        if (!isOver)
+        if (!isOver && !haltDialogue)
         {
             if (Input.GetMouseButtonUp(0))
             {
@@ -121,7 +124,6 @@ public class DialogueSystem : MonoBehaviour {
                 }
             }
         }
-        
     }
 
     void ChangeDialogueSequenceTo(int index)

@@ -93,6 +93,7 @@ public class PlayerInventory : Inventory
 
     void HideInventory()
     {
+
         Debug.Log("HideInventory");
         InventoryButtonAnimator.SetBool("SlideLeft", false);
         inventoryShown = false;
@@ -113,7 +114,7 @@ public class PlayerInventory : Inventory
     }
 
 
-    public void ExtendedPanelShow()
+    public void DisplayExtendedPanelShow()
     {
        
 
@@ -145,8 +146,8 @@ public class PlayerInventory : Inventory
 
     // [SerializeField]
     Canvas inventoryUI;
-    RectTransform extendedPanel;    //Panel within which the slots are stored   
-    RectTransform displayPanel;  //mini inventory Display panel
+   public  RectTransform extendedPanel;    //Panel within which the slots are stored   
+    public RectTransform displayPanel;  //mini inventory Display panel
     List< Slot>  displaySlotList ;
 
     public int displaySlotCount;
@@ -174,13 +175,14 @@ public class PlayerInventory : Inventory
             slots[i].imageSlotPrefab.transform.SetParent(extendedPanel.transform);
         }
 
-        ShowDisplayPanelItems();
-        ShowExtendedPanelItems();
+     //   ShowDisplayPanelItems();
+       // ShowExtendedPanelItems();
     }
 
     void AddItems(ItemBase l_ItemBase)
     {
-        AddItem(l_ItemBase);      
+        AddItem(l_ItemBase);
+        DeactivateSlotInExtendedDisplay();
     }
 
     // Use this for initialization
@@ -218,7 +220,7 @@ public class PlayerInventory : Inventory
         {
             //call swap fucntion
         }
-        
+       
     }
 
     void SelectFromSlots()
@@ -327,10 +329,11 @@ public class PlayerInventory : Inventory
   
     public void DeactivateSlotInExtendedDisplay()
     {
-        Debug.Log("Deactivate slot called");
+            Debug.Log("Deactivate slot called");
+       // Debug.Log("Active slot count<><><><><><><><>" + activeSlotCount);
+       // Debug.Log("display slot count<><><><><><><><>" + displaySlotList.Count);
 
-        
-            for (int j = 0; j < activeSlotCount; j++)
+            for (int j = 0; j < slots.Count; j++)
             {
                 for (int i = 0; i < displaySlotList.Count; i++)
                 {
@@ -344,40 +347,59 @@ public class PlayerInventory : Inventory
                             displaySlotList[i].UpdateUI();
                             Debug.Log(".......................");
                         }
-                        else
+                        else if(displaySlotList[i].itemStored == null)
+                    {
+                        displaySlotList[i].itemStored = Instantiate(slots[j].itemStored) as ItemBase;
+                        displaySlotList[i].fromSlot = slots[j].slotNumber;
+                        displaySlotList[i].itemlist = slots[j].itemlist;
+                        displaySlotList[i].UpdateUI();
+                        displaySlotList[i].imageSlotPrefab.SetActive(false);
+                                                    Debug.Log("DIsplay slot list is null");
+                                                    Debug.Log("<><><><>Item stored<><><><>" + displaySlotList[i].itemStored);
+                                                    Debug.Log("<><><><>From slot<><><><>" + displaySlotList[i].fromSlot);
+                                                    Debug.Log("<><><><>Item list count<><><><>" + displaySlotList[i].itemlist.Count);
+                                                   // Debug.Log("<><><><>Item stored<><><><>");
+
+                       
+
+
+                    }
+                    else
                         {
                             slots[j].imageSlotPrefab.SetActive(true);
                         }
                     }
 
-                    if (displaySlotList[i].itemStored != null && slots[j].itemStored.itemProperties!=null && displaySlotList[i].itemlist.Count > 0 && slots[j].itemStored.itemProperties == displaySlotList[i].itemStored.itemProperties)
+                Debug.Log("<><><><><>Checking item properties " + displaySlotList[i].itemStored.itemProperties);
+                Debug.Log("<><><><><>Checking item properties" + slots[j].itemStored.itemProperties);
+                Debug.Log("<><><><><>Checking image prefab display" + displaySlotList[i].imageSlotPrefab);
+                Debug.Log("<><><><><>Checking image prefab slot" + slots[j].imageSlotPrefab);
+
+               /*     if (displaySlotList[i].itemStored != null && slots[j].itemStored.itemProperties!=null && displaySlotList[i].itemlist.Count > 0 && slots[j].itemStored.itemProperties == displaySlotList[i].itemStored.itemProperties)
                     {
-                        //displaySlotList[i].imageSlotPrefab.SetActive(true);
+                        displaySlotList[i].imageSlotPrefab.SetActive(true);
                         slots[j].imageSlotPrefab.SetActive(false);
                         //return;
-                    }
+                    }    */
                 }
-
             }
-        
-        
-
-        for (int i = 0; i < displaySlotList.Count; i++)
-        {
-            if(displaySlotList[i].itemStored != null)
+            for (int i = 0; i < displaySlotList.Count; i++)
             {
-                if (slots[displaySlotList[i].fromSlot].itemlist.Count < 1)
+                if(displaySlotList[i].itemStored != null)
                 {
-                    displaySlotList[i].imageSlotPrefab.SetActive(false);
-                    displaySlotList[i].itemlist.Clear();
-                    displaySlotList[i].countText.text = "";
-                    displaySlotList[i].fromSlot = 0;
-                    displaySlotList[i].itemStored = null;
-                    displaySlotList[i].imageSlotPrefab.GetComponent<Image>().sprite = null;
-                }
+                    if (slots[displaySlotList[i].fromSlot].itemlist.Count < 1)
+                    {
+                        displaySlotList[i].imageSlotPrefab.SetActive(false);
+                        displaySlotList[i].itemlist.Clear();
+                        displaySlotList[i].countText.text = "";
+                        displaySlotList[i].fromSlot = 0;
+                        displaySlotList[i].itemStored = null;
+                        displaySlotList[i].imageSlotPrefab.GetComponent<Image>().sprite = null;
+                    }
+                }          
             }
-           
-        }
+
+      //  ShowDisplayPanelItems();
     }
 
     public void CreateDisplaySlots()
@@ -386,24 +408,19 @@ public class PlayerInventory : Inventory
         for (int i = 0; i < displaySlotCount; i++)
         {
             Slot tempSlot = new Slot();
-
             displaySlotList.Add(tempSlot);
-            displaySlotList[i].imageSlotPrefab = Instantiate(imageSlotPrefab,displayPanel.transform);
+            GameObject temp = Instantiate(imageSlotPrefab, displayPanel.transform);
+            displaySlotList[i].imageSlotPrefab = temp;
             displaySlotList[i].panel = displaySlotList[i].imageSlotPrefab.gameObject.GetComponent<RectTransform>();
             displaySlotList[i].countText = displaySlotList[i].imageSlotPrefab.gameObject.GetComponent<Text>();
             displaySlotList[i].displaySprite = displaySlotList[i].imageSlotPrefab.transform.Find("Slot Image").gameObject.GetComponentInChildren<Image>();
-            displaySlotList[i].imageSlotPrefab.SetActive(false);
-          
-            displaySlotList[i].countText = slots[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();
-    
+            displaySlotList[i].imageSlotPrefab.SetActive(false);          
+            displaySlotList[i].countText = slots[i].imageSlotPrefab.transform.Find("Count text").gameObject.GetComponent<Text>();    
         }
-
-
         for (int i = 0; i < displaySlotList.Count; i++)
         {
             displaySlotList[i].imageSlotPrefab.transform.SetParent(displayPanel.transform);
         }
-
     }
 
     public void DisplaySlotInitialization(ItemBase item)
@@ -421,22 +438,15 @@ public class PlayerInventory : Inventory
                 displaySlotList[i].displaySprite.sprite = displaySlotList[i].itemStored.itemProperties.imageSprite;
                 Debug.Log(" new Item added to display slot initialization");
                 Debug.Log(" inside the display slot" + displaySlotList[i].itemStored.name);
-
-
                 break;
-
             }
             else if(displaySlotList[i].itemStored!=null && displaySlotList[i].itemStored.itemProperties == item.itemProperties)
-
             {
                 Debug.Log("Item present in display slot initialization");
                 break;
-            }
-            
-            
+            }                      
         }
-        DeactivateSlotInExtendedDisplay();
-
+            DeactivateSlotInExtendedDisplay();
     }
 
     public void ShowDisplayPanelItems()
@@ -452,11 +462,9 @@ public class PlayerInventory : Inventory
                 else
                 {
                     displaySlotList[i].imageSlotPrefab.SetActive(false);
-
                 }
             }
         }
-
     }
 
     public void ShowExtendedPanelItems()
@@ -472,7 +480,6 @@ public class PlayerInventory : Inventory
                 else
                 {
                     slots[i].imageSlotPrefab.SetActive(false);
-
                 }
             }
         }
@@ -488,7 +495,6 @@ public class PlayerInventory : Inventory
                 {
                     if (RectTransformUtility.RectangleContainsScreenPoint(displaySlotList[i].panel, Input.mousePosition))
                     {
-
                         if (selectedSlot1 == null)
                         {
                             selectedSlot1 =  displaySlotList[i];
@@ -497,20 +503,15 @@ public class PlayerInventory : Inventory
                             Debug.Log("index: " + i);
                             Debug.Log("Slot 1 :>><><><><>" + selectedSlot1.itemStored.name);
                             break;
-
                         }
                         else if (selectedSlot2 == null)
                         {
                             index2 = i;
                             index2From = "DisplayPanel";
-
                             Debug.Log("index: " + i);
                             selectedSlot2 =  displaySlotList[i];
                             Debug.Log("Slot 2 :>><><><><>" + selectedSlot2.itemStored.name);
-
                             break;
-
-
                         }
                     }
                 }
@@ -522,7 +523,6 @@ public class PlayerInventory : Inventory
                 {
                     if (RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
                     {
-
                         if (selectedSlot1 == null)
                         {
                             index1 = i;
@@ -536,7 +536,6 @@ public class PlayerInventory : Inventory
                             index2 = i;
                             index2From = "ExtendedPanel";
                             break;
-
                         }
                     }
                 }
@@ -728,10 +727,6 @@ public class PlayerInventory : Inventory
                 return true;
             }
         }
-
-
-        
-       
 
         Debug.Log("count: " + slot1.countText.text + " " + slot2.countText.text);
         Debug.Log("Item stored: " + slot1.itemStored + " " + slot2.itemStored);

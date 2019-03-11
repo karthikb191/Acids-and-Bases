@@ -8,7 +8,6 @@ using UnityEditor;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Linq;
-using System.Linq;
 
 public class MemoryManager
 {
@@ -184,6 +183,9 @@ public class SaveManager : MonoBehaviour {
     static string saveFileName = "SaveData.xml";
 
     static XDocument xmlDocument;
+
+    public delegate void SaveDelegate();
+    public static event SaveDelegate SaveEvent;
 
     private void Awake()
     {

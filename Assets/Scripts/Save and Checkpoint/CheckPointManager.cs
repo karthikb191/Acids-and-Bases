@@ -71,17 +71,18 @@ public class CheckPointManager : MonoBehaviour {
             }
             //orderOfStorage.Clear();
         }
-
     }
 
     void ClearCheckPointData(UnityEngine.SceneManagement.Scene scene)
     {
         DeleteCheckPointData();
     }
+
     private void OnDestroy()
     {
         DeleteCheckPointData();
     }
+
     void DeleteCheckPointData()
     {
         if (xmlDocument != null)
