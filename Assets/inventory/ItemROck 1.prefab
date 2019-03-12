@@ -109,9 +109,12 @@ MonoBehaviour:
     type: 2}
   destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
     type: 2}
+  pickedCount: 0
+  maxCount: 0
   playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: 005a17f93caf30c478065ff7c85ac351, type: 2}
   speed: 30
+  targetScale: {x: 1, y: 1, z: 1}
   isFromEnemy: 0
   colliderRadius: 0.75
   maxRangeOfThrow: 20

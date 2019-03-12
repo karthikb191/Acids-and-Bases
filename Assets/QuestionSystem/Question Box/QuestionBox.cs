@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Xml.Serialization;
 
 [System.Serializable]
 public class ExpectedItem
@@ -11,11 +12,21 @@ public class ExpectedItem
     public GameObject item;
 }
 
+[System.Serializable]
+public class QuestionBoxSaveData : SaveData
+{
+    public string[] itemsExpecting;
+    public bool unlocked;
+    public int index;
+    public int dialogueSequenceIndex;
+}
+
 [RequireComponent(typeof(BoxCollider2D))]
 public class QuestionBox : MonoBehaviour {
 
     GameObject visual;
 
+    public int index = 0;
     /// <summary>
     /// Must be set in the inspector incase a platform animation is required
     /// </summary>
@@ -69,6 +80,9 @@ public class QuestionBox : MonoBehaviour {
         }
     }
 
+    [HideInInspector]
+    public QuestionBoxSaveData saveData;
+
     private void Start()
     {
         dialogueSystem = GetComponent<DialogueSystem>();
@@ -81,7 +95,129 @@ public class QuestionBox : MonoBehaviour {
         }
 
         dialogueSystem.CorrectAnswerEvent += CorrectAnswer;
+
+        SaveManager.SaveEvent += Save;
+
+        CheckPointManager.RegisterCheckPointEvent += Save;
+        CheckPointManager.LoadCheckpointEvent += Load;
     }
+
+    void Save(System.Type type)
+    {
+        saveData = new QuestionBoxSaveData();
+        saveData.unlocked = unlocked;
+        saveData.index = index;
+        saveData.dialogueSequenceIndex = dialogueSystem.currSequenceIndex;
+
+        saveData.itemsExpecting = new string[itemsExpecting.Count];
+        for(int i = 0; i < itemsExpecting.Count; i++)
+        {
+            saveData.itemsExpecting[i] = itemsExpecting[i].GetItemType().ToString();
+        }
+
+        Debug.Log("Added to the save object list successfully");
+
+        if(type.Equals(typeof(SaveManager)))
+            SaveManager.saveObject.AddObject(saveData);
+
+        else if(type.Equals(typeof(CheckPointManager)))
+            CheckPointManager.checkPointData.AddObject(saveData);
+    }
+
+    void Load(System.Type type)
+    {
+        //Get the appropriate value from the save data
+        //TODO: This part might need a little tweaking
+        List<QuestionBoxSaveData> saveDatas = new List<QuestionBoxSaveData>();
+
+        if (type.Equals(typeof(SaveManager)))
+        {
+            Debug.Log("Loading");
+            for(int i = 0; i < SaveManager.saveObject.types.Count; i++)
+            {
+                if(SaveManager.saveObject.types[i].type == typeof(QuestionBoxSaveData).ToString())
+                {
+                    for (int j = 0; j < SaveManager.saveObject.types[i].values.Count; j++)
+                    {
+                        saveDatas.Add((QuestionBoxSaveData)SaveManager.saveObject.types[i].values[j]);
+                    }
+                    break;
+                }
+            }
+
+            for(int i = 0; i < saveDatas.Count; i++)
+            {
+                if(saveDatas[i].index == index)
+                {
+                    LoadData(saveDatas[i]);
+                    saveDatas.RemoveAt(i);
+                }
+            }
+        }
+        else
+        {
+            if (type.Equals(typeof(CheckPointManager)))
+            {
+                Debug.Log("Loading the checkpoint");
+                for (int i = 0; i < CheckPointManager.checkPointData.types.Count; i++)
+                {
+                    if (CheckPointManager.checkPointData.types[i].type == typeof(QuestionBoxSaveData).ToString())
+                    {
+                        for(int j = 0; j < CheckPointManager.checkPointData.types[i].values.Count; j++)
+                        {
+                            saveDatas.Add((QuestionBoxSaveData)CheckPointManager.checkPointData.types[i].values[j]);
+                        }
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < saveDatas.Count; i++)
+                {
+                    if (saveDatas[i].index == index)
+                    {
+                        LoadData(saveDatas[i]);
+                        saveDatas.RemoveAt(i);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    void LoadData(QuestionBoxSaveData data)
+    {
+
+        for (int i = 0; i < data.itemsExpecting.Length; i++)
+        {
+            System.Object o;
+            o = System.Enum.Parse(typeof(AcidsList), data.itemsExpecting[i]);
+            if(o == null)
+            {
+                o = System.Enum.Parse(typeof(BasesList), data.itemsExpecting[i]);
+            }
+            else if (o == null)
+            {
+                o = System.Enum.Parse(typeof(IndicatorsList), data.itemsExpecting[i]);
+            }
+            else if (o == null)
+            {
+                o = System.Enum.Parse(typeof(SaltsList), data.itemsExpecting[i]);
+            }
+            else if (o == null)
+            {
+                o = System.Enum.Parse(typeof(NormalItemList), data.itemsExpecting[i]);
+            }
+
+            Debug.Log("e is: " + o.ToString());
+            itemsExpecting[i] = ItemManager.instance.itemDictionary[o].GetComponent<ItemsDescription>();
+        }
+
+        unlocked = data.unlocked;
+        dialogueSystem.ChangeDialogueSequenceTo (data.dialogueSequenceIndex);
+    }
+
 
     bool prevAnswerState = false;
 
@@ -104,7 +240,7 @@ public class QuestionBox : MonoBehaviour {
     {
         Debug.Log("Correct Answer.....Checking for items");
         //TODO: Check the player's inventory and get the item
-        if (itemsExpecting.Count > 0)
+        if (itemsExpecting.Count > 0 && !unlocked)
         {
             Player p = null;
             for (int i = 0; i < dialogueSystem.allActors.Length; i++)
@@ -128,7 +264,7 @@ public class QuestionBox : MonoBehaviour {
         if (!routineUnderProgress)
         {
             if(blockingPlatform != null)
-                StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
+                    StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
             else
                 GetComponent<BoxCollider2D>().enabled = false;
         }
@@ -207,13 +343,22 @@ public class QuestionBox : MonoBehaviour {
             yield return new WaitForFixedUpdate();
 
         }
-
         routineUnderProgress = false;
 
+        unlocked = !enableCollider;
         //Disable the collider on the game object that is not letting the player pass
         GetComponent<BoxCollider2D>().enabled = enableCollider;
 
         yield break;
     }
 
+
+    private void OnDestroy()
+    {
+        SaveManager.SaveEvent -= Save;
+
+        CheckPointManager.RegisterCheckPointEvent -= Save;
+
+        CheckPointManager.LoadCheckpointEvent -= Load;
+    }
 }

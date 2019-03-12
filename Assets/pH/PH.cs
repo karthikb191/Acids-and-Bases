@@ -7,6 +7,7 @@ public class PH : ItemBase {
 
     public Sprite PHIndicatorImage { get; set; }
 
+    [HideInInspector]
     public IndicatorsList indicator;
 
     [SerializeField]
@@ -15,7 +16,9 @@ public class PH : ItemBase {
     // Use this for initialization
     void Start () {
         PHIndicatorImage = GetComponent<SpriteRenderer>().sprite;
+        indicator = (IndicatorsList)System.Enum.Parse(typeof(IndicatorsList), GetComponent<ItemsDescription>().GetItemType().ToString());
 	}
+
 	public int GetUseCount()
     {
         return useCount;

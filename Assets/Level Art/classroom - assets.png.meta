@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: 3de20a5831336ef4f975dfcc7a93abe2
+guid: dae92a996dc49bb4fa5b74e1453c8e89
 TextureImporter:
   fileIDToRecycleName:
-    21300000: windows_0
-    21300002: windows_1
-    21300004: windows_2
-    21300006: windows_3
-    21300008: windows_4
-    21300010: windows_5
-    21300012: windows_6
-    21300014: windows_7
-    21300016: windows_8
-    21300018: windows_9
-    21300020: windows_10
-    21300022: windows_11
+    21300000: classroom - assets_0
+    21300002: classroom - assets_1
+    21300004: classroom - assets_2
+    21300006: classroom - assets_3
+    21300008: classroom - assets_4
+    21300010: classroom - assets_5
+    21300012: classroom - assets_6
+    21300014: classroom - assets_7
+    21300016: classroom - assets_8
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -57,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 50
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -140,13 +137,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: windows_0
+      name: classroom - assets_0
       rect:
         serializedVersion: 2
-        x: 91
-        y: 613
-        width: 185
-        height: 294
+        x: 0
+        y: 1485
+        width: 419
+        height: 682
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,19 +151,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4efb1aab5f110c94787ff81f24aab85f
+      spriteID: 456459471cef0dc429282fdbc0e65de2
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_1
+      name: classroom - assets_1
       rect:
         serializedVersion: 2
-        x: 298
-        y: 597
-        width: 231
-        height: 347
+        x: 838
+        y: 1585
+        width: 1218
+        height: 625
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,19 +171,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf1003066d88fd54cac69ffdfdcd6fdf
+      spriteID: d9eff5349f5534b4a8036205a9ccc9ac
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_2
+      name: classroom - assets_2
       rect:
         serializedVersion: 2
-        x: 560
-        y: 597
-        width: 200
-        height: 435
+        x: 2360
+        y: 1251
+        width: 370
+        height: 959
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,19 +191,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dab891690df95444f88bca0e9f3a1b41
+      spriteID: 39ffb07d58b9bad439a84a793576d42b
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_3
+      name: classroom - assets_3
       rect:
         serializedVersion: 2
-        x: 797
-        y: 593
-        width: 472
-        height: 354
+        x: 3051
+        y: 1485
+        width: 349
+        height: 725
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -214,19 +211,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 66c1a5caa43a7bb4dbcb031764cf5a47
+      spriteID: d696551d6b9c86f4da33b7afa799a9e5
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_4
+      name: classroom - assets_4
       rect:
         serializedVersion: 2
-        x: 1304
-        y: 593
-        width: 477
-        height: 512
+        x: 0
+        y: 135
+        width: 486
+        height: 1210
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,19 +231,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fbf2f0cfed5cbb47b3aecf0034ec895
+      spriteID: 9705f3a8552be7f478bac7e067b5ade1
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_5
+      name: classroom - assets_5
       rect:
         serializedVersion: 2
-        x: 1930
-        y: 528
-        width: 537
-        height: 857
+        x: 559
+        y: 421
+        width: 911
+        height: 471
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -254,19 +251,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9912582b1ab7239409ad01a6e6359bea
+      spriteID: b66038973cfb1804b8c6d8e7889046bf
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_6
+      name: classroom - assets_6
       rect:
         serializedVersion: 2
-        x: 90
-        y: 52
-        width: 186
-        height: 294
+        x: 1663
+        y: 721
+        width: 821
+        height: 293
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -274,19 +271,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b51af8af015ceb4c9e7d1a207010a71
+      spriteID: eb6dae65d2c21ae4e9283b59a50f4011
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_7
+      name: classroom - assets_7
       rect:
         serializedVersion: 2
-        x: 359
-        y: 32
-        width: 232
-        height: 347
+        x: 2436
+        y: 0
+        width: 964
+        height: 1190
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,19 +291,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1601fb338cb3c51438ebe6cfe599540f
+      spriteID: fd3714d7ceb62314b9b9e932c0cf568a
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_8
+      name: classroom - assets_8
       rect:
         serializedVersion: 2
-        x: 647
-        y: 32
-        width: 233
-        height: 348
+        x: 969
+        y: 0
+        width: 217
+        height: 288
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -314,67 +311,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e860f1af0b535a47af872e26bc186ca
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_9
-      rect:
-        serializedVersion: 2
-        x: 910
-        y: 30
-        width: 197
-        height: 436
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 33866078948f01647950fe18b2f9335e
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_10
-      rect:
-        serializedVersion: 2
-        x: 1245
-        y: 21
-        width: 477
-        height: 514
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d686580d888c83540827ffe449a3c23a
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_11
-      rect:
-        serializedVersion: 2
-        x: 1802
-        y: 23
-        width: 474
-        height: 359
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 97ec7d923f89c974db948d4b503fd555
+      spriteID: a92f93e231af6d848a71167c8fbc257e
       vertices: []
       indices: 
       edges: []
@@ -382,7 +319,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 2c2103586dd6aa84b9a1bfc54fe98918
+    spriteID: 6782c014b4c112b4ebe887227c693ea3
     vertices: []
     indices: 
     edges: []

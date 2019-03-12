@@ -9,6 +9,8 @@ public class TreasureChestDisplay : MonoBehaviour {
 
     public Treasurechest treasureChest;
 
+    
+
     public RectTransform itemPanel;
     public RectTransform selectedItemPanel;
 
@@ -27,12 +29,13 @@ public class TreasureChestDisplay : MonoBehaviour {
     }
     // Use this for initialization
     void Start () {
-		
+        itemPanel = transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<RectTransform>();
+        selectedItemPanel = transform.GetChild(2).GetChild(0).GetChild(0).GetComponent<RectTransform>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+        SelectItems();
 	}
 
 
@@ -58,33 +61,40 @@ public class TreasureChestDisplay : MonoBehaviour {
     }
 
 
-    public void InitializeSlots()
+    void InitializeSlots(int slotCount)
     {
-        /*foreach (ItemBase i in treasureChest.itemsInChest)
+        
+        if(slotsList.Count < slotCount)
         {
-            Instantiate(slotPrefab, itemPanel.transform);
-            slotPrefab.GetComponentInChildren<Image>().sprite = i.itemProperties.imageSprite;
-        }*/
-
-        for (int i = 0; i < maxSlotCount; i++)
-        {
-            Instantiate(slotPrefab, itemPanel.transform);
-            slotPrefab.GetComponent<SpriteRenderer>().enabled = false;
-            slotPrefab.GetComponentInChildren<Image>().enabled = false;
-            slotPrefab.GetComponentInChildren<Text>().enabled = false;
+            for (int i = slotsList.Count; i < slotCount; i++)
+            {
+                GameObject temp = Instantiate(slotPrefab, itemPanel.transform);
+                temp.GetComponent<SpriteRenderer>().enabled = false;
+                temp.GetComponentInChildren<Image>().enabled = false;
+                temp.GetComponentInChildren<Text>().enabled = false;
+                slotsList.Add(temp);
+            }
         }
+        
     }
-    public void ActivateDisplay()
-    {
 
+    public void ActivateDisplay(int slotsCount)
+    {
+        gameObject.SetActive(true);
+        InitializeSlots(slotsCount);
     }
+
     public void AddSelected()
     {
         for (int i = 0; i < index.Count; i++)
         {
             treasureChest.itemBase[index[i]].playerObject = treasureChest.playerObj;
-            treasureChest.itemBase[index[i]].AddItem();
+            treasureChest.itemBase[index[i]].AddItem(treasureChest.itemBase[index[i]]);
+
+            slotsList[index[i]].gameObject.SetActive(false);
         }
+        treasureChest.ItemsPresentUpdate(index);
+        index.Clear();
     }
 
     public void AddAll()
@@ -92,14 +102,14 @@ public class TreasureChestDisplay : MonoBehaviour {
         for (int i = 0; i < treasureChest.itemsInChest.Count; i++)
         {
             treasureChest.itemBase[i].playerObject = treasureChest.playerObj;
-            treasureChest.itemBase[i].AddItem();
+            treasureChest.itemBase[i].AddItem(treasureChest.itemBase[index[i]]);
         }
-        HideChest();
-
+        HideChest();        
     }
 
     public void HideChest()
     {
         this.gameObject.SetActive(false);
     }
+
 }

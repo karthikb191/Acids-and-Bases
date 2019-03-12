@@ -1,19 +1,13 @@
 fileFormatVersion: 2
-guid: 3de20a5831336ef4f975dfcc7a93abe2
+guid: 51dab9e28397e164da12fdc8547ed9fd
 TextureImporter:
   fileIDToRecycleName:
-    21300000: windows_0
-    21300002: windows_1
-    21300004: windows_2
-    21300006: windows_3
-    21300008: windows_4
-    21300010: windows_5
-    21300012: windows_6
-    21300014: windows_7
-    21300016: windows_8
-    21300018: windows_9
-    21300020: windows_10
-    21300022: windows_11
+    21300000: corridor-01_0
+    21300002: corridor-01_1
+    21300004: corridor-01_2
+    21300006: corridor-01_3
+    21300008: corridor-01_4
+    21300010: corridor-01_5
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -57,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 50
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -140,13 +134,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: windows_0
+      name: corridor-01_0
       rect:
         serializedVersion: 2
-        x: 91
-        y: 613
-        width: 185
-        height: 294
+        x: 345
+        y: 1740
+        width: 518
+        height: 599
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,19 +148,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4efb1aab5f110c94787ff81f24aab85f
+      spriteID: 86dc69f14a0a8ef4c9b647b5f515f104
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_1
+      name: corridor-01_1
       rect:
         serializedVersion: 2
-        x: 298
-        y: 597
-        width: 231
-        height: 347
+        x: 1099
+        y: 1940
+        width: 738
+        height: 252
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,19 +168,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf1003066d88fd54cac69ffdfdcd6fdf
+      spriteID: 7be398756b966d6449f916f3e8c15741
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_2
+      name: corridor-01_2
       rect:
         serializedVersion: 2
-        x: 560
-        y: 597
-        width: 200
-        height: 435
+        x: 2034
+        y: 1943
+        width: 198
+        height: 223
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -194,19 +188,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dab891690df95444f88bca0e9f3a1b41
+      spriteID: 558dbcaab4c69aa4390d2284f8a5b221
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_3
+      name: corridor-01_3
       rect:
         serializedVersion: 2
-        x: 797
-        y: 593
-        width: 472
-        height: 354
+        x: 2361
+        y: 1828
+        width: 411
+        height: 559
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -214,19 +208,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 66c1a5caa43a7bb4dbcb031764cf5a47
+      spriteID: 865d2c7757b88714b87aa4b3b2bfc547
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_4
+      name: corridor-01_4
       rect:
         serializedVersion: 2
-        x: 1304
-        y: 593
-        width: 477
-        height: 512
+        x: 331
+        y: 174
+        width: 713
+        height: 1375
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,19 +228,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fbf2f0cfed5cbb47b3aecf0034ec895
+      spriteID: 80149359e55605141a50d21cb929aab7
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: windows_5
+      name: corridor-01_5
       rect:
         serializedVersion: 2
-        x: 1930
-        y: 528
-        width: 537
-        height: 857
+        x: 1364
+        y: 69
+        width: 216
+        height: 1662
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -254,127 +248,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9912582b1ab7239409ad01a6e6359bea
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_6
-      rect:
-        serializedVersion: 2
-        x: 90
-        y: 52
-        width: 186
-        height: 294
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5b51af8af015ceb4c9e7d1a207010a71
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_7
-      rect:
-        serializedVersion: 2
-        x: 359
-        y: 32
-        width: 232
-        height: 347
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1601fb338cb3c51438ebe6cfe599540f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_8
-      rect:
-        serializedVersion: 2
-        x: 647
-        y: 32
-        width: 233
-        height: 348
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1e860f1af0b535a47af872e26bc186ca
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_9
-      rect:
-        serializedVersion: 2
-        x: 910
-        y: 30
-        width: 197
-        height: 436
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 33866078948f01647950fe18b2f9335e
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_10
-      rect:
-        serializedVersion: 2
-        x: 1245
-        y: 21
-        width: 477
-        height: 514
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d686580d888c83540827ffe449a3c23a
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: windows_11
-      rect:
-        serializedVersion: 2
-        x: 1802
-        y: 23
-        width: 474
-        height: 359
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 97ec7d923f89c974db948d4b503fd555
+      spriteID: 8101369fb451ea745b285651359c0116
       vertices: []
       indices: 
       edges: []
@@ -382,7 +256,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 2c2103586dd6aa84b9a1bfc54fe98918
+    spriteID: d69fe58940511e549a773a4ab8049435
     vertices: []
     indices: 
     edges: []

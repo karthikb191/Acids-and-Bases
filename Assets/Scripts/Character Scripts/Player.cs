@@ -417,19 +417,32 @@ public class PlayerStatus
     public void SetpHIndicator(PH newIndicator)
     {
         //Add the event and raise an event to notify subscribers that pH indicator has changed
-        pHIndicator = newIndicator;
-        //Set the image in the button
-        SetpHIndicatorImage(newIndicator.PHIndicatorImage);
+        if(pHIndicator == null || pHIndicator.indicator != newIndicator.indicator)
+        {
+            pHIndicator = newIndicator;
 
-        //TODO: Must be changed to reflect the pH use counter to the number of items of same type in the inventory
-        //Increment the pH use counter
-        pHUseCounter = newIndicator.GetUseCount();
-        pHIndicatorName.text = newIndicator.indicator.ToString();
-        pHUseCounterText.text = pHUseCounter.ToString();
+            //Set the image in the button
+            SetpHIndicatorImage(newIndicator.PHIndicatorImage);
 
-        if (PHIndicatorChangedEvent != null)
-            PHIndicatorChangedEvent();
+            //TODO: Must be changed to reflect the pH use counter to the number of items of same type in the inventory
+            //Increment the pH use counter
+            pHUseCounter = newIndicator.GetUseCount();
+            pHIndicatorName.text = newIndicator.indicator.ToString();
+            pHUseCounterText.text = pHUseCounter.ToString();
+
+
+            if (PHIndicatorChangedEvent != null)
+                PHIndicatorChangedEvent();
+
+        }
+        else
+        {
+            pHUseCounter += newIndicator.GetUseCount();
+            pHUseCounterText.text = pHUseCounter.ToString();
+        }
+        
     }
+
     void SetpHIndicatorImage(Sprite pHImage)
     {
         if(pHIndicatorImage != null)

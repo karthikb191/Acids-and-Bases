@@ -126,7 +126,7 @@ public class DialogueSystem : MonoBehaviour {
         }
     }
 
-    void ChangeDialogueSequenceTo(int index)
+    public void ChangeDialogueSequenceTo(int index)
     {
         isOver = false; skip = false;
         currSequenceIndex = index;
@@ -152,7 +152,6 @@ public class DialogueSystem : MonoBehaviour {
         }
         yield return new WaitForSeconds(nextDialogueWait);
         currDialogueIndex++;    //Increment current dialogue
-
         
 
         //Preparing for the next dialogue
@@ -242,7 +241,7 @@ public class DialogueSystem : MonoBehaviour {
         {
             if (!isOver)
             {
-                paraText.text = allActors[actorId].GetComponent<ActorScript>().actorName + " : " + sentence;
+                paraText.text = allActors[actorId].name + " : " + sentence;
                 while (true)
                 {
                     if (Input.GetMouseButtonDown(0))

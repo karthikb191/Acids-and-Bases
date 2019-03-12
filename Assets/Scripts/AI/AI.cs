@@ -1156,8 +1156,8 @@ public class AI : MonoBehaviour {
         float result = 0;
         Vector3 directionToTarget = targetNode.position - gameObject.transform.position;
 
-        result = Mathf.Clamp((Mathf.Abs(directionToTarget.y) + Mathf.Abs(directionToTarget.x) - min) / (max - min), 0, 3);
-        result = maxJumpHoldTime * (result * result * (3 - 2 * result));
+        result = Mathf.Clamp((Mathf.Abs(directionToTarget.y) + Mathf.Abs(directionToTarget.x) - min) / (max - min), 0, 1);
+        result = Mathf.Abs(maxJumpHoldTime * (result * result * (3 - 2 * result)));
         Debug.Log("jump result: " + result);
         return Random.Range(result - 0.08f, result + 0.12f);
     }

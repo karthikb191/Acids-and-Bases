@@ -109,17 +109,19 @@ public class ItemSelection : MonoBehaviour {
 
     void InstantiateImages(PlayerInventory inventory)
     {
-        Debug.Log("inventory slots: " + inventory.slots.Count);
-        for (int i = 0; i < inventory.slots.Count; i++)
+        Debug.Log("inventory slots: " + inventory.activeSlotCount);
+        for (int i = 0; i < inventory.activeSlotCount; i++)
         {
             if (disabledImages.Count <= 0)
             {
                 GameObject g = Instantiate(imagePreafab, itemDisplayPanel.transform);
+                g.GetComponent<Image>().sprite = inventory.slots[i].itemStored.GetComponent<SpriteRenderer>().sprite;
                 activeContentItems.Add(g);
             }
             else
             {
                 activeContentItems.Add(disabledImages[0]);
+                disabledImages[0].GetComponent<Image>().sprite = inventory.slots[i].itemStored.GetComponent<SpriteRenderer>().sprite;
                 disabledImages[0].SetActive(true);
                 disabledImages.RemoveAt(0);
             }
