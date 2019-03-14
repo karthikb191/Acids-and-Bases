@@ -109,22 +109,7 @@ public class ItemBase : MonoBehaviour {
                 {
                     VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
-                    {
-                        /*  if((maxCount - pickedCount) > 0)
-                          {
-                              GameObject temp = Instantiate(this.gameObject) as GameObject;
-
-                              AddItem(temp.GetComponent<ItemBase>());
-                              pickedCount++;
-                          }
-
-                          else
-                          {
-                              AddItem(this);
-                              VirtualJoystick.DisableDynamicButton(d);
-                          }
-                          */
-                        
+                    {                        
                         VirtualJoystick.DisableDynamicButton(d);
                         ItemCountSelection.instance.Activate(maxCount);
                         ItemCountSelection.instance.item = this;
@@ -140,9 +125,9 @@ public class ItemBase : MonoBehaviour {
         if (collision.gameObject.GetComponent<Player>() && !isFromEnemy)
         {
             VirtualJoystick.DisableDynamicButton("tag_item");
+            ItemCountSelection.instance.Dectivate();
         }
     }
-
 
     public IEnumerator AlignPos(Vector3 targetPosition, Character c)
     {
@@ -189,7 +174,6 @@ public class ItemBase : MonoBehaviour {
         {
             yield return null;
         }
-
     }
 
     public void DropItem(Vector3 targetPosition, Character c)
@@ -201,6 +185,7 @@ public class ItemBase : MonoBehaviour {
 
         //animation for local trasform positions can come here
     }
+
     public virtual void Use(Character c)
     {
         Debug.Log("Use called on character");
@@ -227,19 +212,20 @@ public class ItemBase : MonoBehaviour {
         Debug.Log("Use called");
     }
     
-
     public void EnvironmentHit(GameObject g)
     {
         //The environment may have a use function later, which can be called from here
 
         //This must call the item's use property on the particular character that it hits
     }
+
     public void ItemHitCharacter(Character c)
     {
         //Call the character's use function here
 
         //This must call the item's use property on the particular character that it hits
     }
+
     public void Destroy()
     {
         //Destroy item after use or whenever you see fit
@@ -279,6 +265,7 @@ public class ItemBase : MonoBehaviour {
 
             yield return null;
         }
+
         if (elapse_time >= flightDuration)
         {
             transform.rotation = Quaternion.identity;
@@ -293,7 +280,8 @@ public class ItemBase : MonoBehaviour {
                 this.gameObject.SetActive(false);
                 this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
 
-            }
+           }
+
            else
            {
                 //gameObject.SetActive(false);
@@ -305,27 +293,20 @@ public class ItemBase : MonoBehaviour {
         }
     }
 
-
     public void AddItems(float count)
     {
         for(int i = 0; i<count;i++)
         {
             if((maxCount - pickedCount) > 1)
             {
-
                 GameObject temp = Instantiate(this.gameObject) as GameObject;
-
                 temp.GetComponent<ItemBase>().playerObject = playerObject;
                 temp.GetComponent<ItemBase>().pickedCount = 0;
                 temp.GetComponent<ItemBase>().maxCount = 1;               
-                AddItem(temp.GetComponent<ItemBase>());
-                
-                
+                AddItem(temp.GetComponent<ItemBase>());                                
                 pickedCount++;
-
                 Debug.Log("instantiated item" + temp.gameObject.name);
                 Debug.Log("Picked Count" + pickedCount);
-
             }
 
             else
@@ -340,10 +321,6 @@ public class ItemBase : MonoBehaviour {
 
         Debug.Log("Max COunt" + maxCount);
     }
-
-
-
-
 
     public void AddItem( ItemBase item)
     {
@@ -507,6 +484,7 @@ public class ItemBase : MonoBehaviour {
                         playerObject.gameObject.GetComponentInChildren<EnemyInventory>().AddItem(this);
                         this.gameObject.SetActive(false);
                         this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                        thrown = false;
                         break;
                     }
                     else

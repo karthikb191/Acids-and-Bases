@@ -12,12 +12,12 @@ public class EnemyInventory : Inventory {
 
     public float speedOfThrow;
     
-    ItemBase ItemStored;
+    ItemBase itemStored;
 
    
 
     // Use this for initialization
-    void Start () {
+   public void Initialize () {
 
         character = GetComponentInParent<Character>();
         CreateSlot();
@@ -33,40 +33,67 @@ public class EnemyInventory : Inventory {
         {
             Add();
         }
+        GameObject temp = Instantiate(itemPrefab, GetComponentInParent<Character>().Hand.transform.position, Quaternion.identity) as GameObject;
+
+        itemStored = temp.GetComponent<ItemBase>();
+        itemStored.GetComponent<ItemBase>().isFromEnemy = true;
 
         SetActiveItem();   
     }
+
     void SetActiveItem()
     {
-        for (int i = 0; i<slots.Count; i++)
-        {
-          
-            if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == ItemStored.itemProperties)
-            {
+        Debug.Log("Set active item is called");
 
-                for (int j = 0; j < slots[i].itemlist.Count; j++)
-                {
-                    if (!slots[i].itemlist[j].gameObject.activeSelf)
-                    {
-                        slots[i].itemlist[j].gameObject.SetActive(true);
-                        activeItem = slots[i].itemlist[j];
-                        activeItem.isFromEnemy = true;
-                        activeItem.gameObject.SetActive(true);
-                        Debug.Log(activeItem.name + "Active item set in enemy inventory");
-                        break;
-                    }
-                }
+        /*  for (int i = 0; i < slots.Count; i++)
+          {
+
+            if(slots[i].itemlist.Count > 0 && slots[i].itemStored == null)
+            {
+                slots[i].itemStored = slots[i].itemlist[0];
             }
+
+            Debug.Log("item description" + slots[i].itemStored.gameObject.GetComponent<ItemsDescription>().GetItemType());
+            Debug.Log("item description item stored" + itemStored.gameObject.GetComponent<ItemsDescription>().GetItemType());
+              if (slots[i].itemStored != null && slots[i].itemStored.gameObject.GetComponent<ItemsDescription>() == itemStored.gameObject.GetComponent<ItemsDescription>())
+              {
+
+                  for (int j = 0; j < slots[i].itemlist.Count; j++)
+                  {
+                      if (!slots[i].itemlist[j].gameObject.activeSelf)
+                      {                        
+                          slots[i].itemlist[j].gameObject.SetActive(true);
+                          activeItem = slots[i].itemlist[j];
+                          activeItem.isFromEnemy = true;
+                          activeItem.gameObject.SetActive(true);
+                          Debug.Log(activeItem.name + "Active item set in enemy inventory");
+                          break;
+                      }
+                  }
+              }
+          }*/
+
+        for (int j = 0; j < slots[0].itemlist.Count; j++)
+        {
+            if(!slots[0].itemlist[j].gameObject.activeSelf)
+            activeItem = slots[0].itemlist[j];
+            activeItem.isFromEnemy = true;
+            activeItem.gameObject.SetActive(true);
+            break;
+
         }
+
     }
 
     void Add()
     {
         GameObject temp = Instantiate(itemPrefab, GetComponentInParent<Character>().Hand.transform.position, Quaternion.identity) as GameObject;
-        ItemStored = temp.GetComponent<ItemBase>();
+
+        itemStored = temp.GetComponent<ItemBase>();
+        itemStored.GetComponent<ItemBase>().isFromEnemy = true;
+
         temp.transform.parent = GetComponentInParent<Character>().Hand.transform;
         temp.gameObject.SetActive(false);
-        ItemStored.GetComponent<ItemBase>().isFromEnemy = true;
         temp.GetComponent<ItemBase>().isFromEnemy = true;
         AddItem(temp.GetComponent<ItemBase>());
     }

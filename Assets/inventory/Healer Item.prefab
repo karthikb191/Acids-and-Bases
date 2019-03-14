@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 212709264163825716}
   - component: {fileID: 114580826641602620}
   - component: {fileID: 61129594962109562}
+  - component: {fileID: 114389663892500856}
   m_Layer: 0
   m_Name: Healer Item
   m_TagString: Untagged
@@ -36,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791576765500196}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.28, y: -24.37, z: 0}
+  m_LocalPosition: {x: -11.79, y: -11.88, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -67,6 +68,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.5027733, y: 2.7839699}
   m_EdgeRadius: 0
+--- !u!114 &114389663892500856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1791576765500196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 103e429fd8453cc4c98b60fda0ce1ad9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDescription: abfjkhdfb adhjsfkadshf jhasdfads
+  shortName: 
+  fullName: 
+  tags: 
+  itemType: 0
+  indicatorType: 0
+  acidType: 0
+  baseType: 0
+  saltType: 0
+  normalItemType: 7
+  hasPH: 0
+  pHValue: 0
+  extractionPossible: 0
+  extractQuantity: 10
 --- !u!114 &114580826641602620
 MonoBehaviour:
   m_ObjectHideFlags: 1

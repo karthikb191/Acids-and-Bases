@@ -36,9 +36,6 @@ public class ItemProperties : ScriptableObject {
 
    
 
-    public ItemType itemtype;
-
-    public ItemList itemList;
     
     
 }

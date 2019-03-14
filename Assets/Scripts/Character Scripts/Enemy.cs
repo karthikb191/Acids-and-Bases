@@ -60,6 +60,10 @@ class Enemy : EnemyBase
         StateList = new List<States>();
         StateList.Add(new IdleState());
         StateList[0].UpdateState(this, userInputs, info);
+
+        //inventory.Initialize();
+
+        inventory.GetComponent<EnemyInventory>().Initialize();
     }
 
     private void FixedUpdate()
@@ -196,17 +200,14 @@ class Enemy : EnemyBase
     public void ThrowAttack(Character c)
     {
         Debug.Log("Throwing item and attacking the proximity character");
+        Debug.Log("Enemy inventory active item000000" + inventory.activeItem.name);
         if (inventory != null)
             if (inventory.activeItem != null)
             {
-
-
                 inventory.ThrowItem(c.transform.position, 20);
-
                 inventory.GetComponent<EnemyInventory>().ReloadInventory();
-            }
 
-       
+            }
     }
 
     public void Die()
