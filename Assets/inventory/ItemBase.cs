@@ -58,12 +58,8 @@ public class ItemBase : MonoBehaviour {
         if(thrown)
         {
             CheckCollision();
-            TravelParticleEffect();
-            
+            TravelParticleEffect();           
         }
-
-
-
     }
 
     public virtual void Use()
@@ -354,12 +350,12 @@ public class ItemBase : MonoBehaviour {
         }
 
         //Get the player component. If player is null, log error.
-        if (playerObject.GetComponent<Player>())
+        if (playerObject.GetComponent<Player>() && this.gameObject.GetComponent<PH>() != null)
         {
             if (!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
                 playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
         }
-        else
+        else 
         {
             Debug.LogError("No player detected. Check your code");
         }

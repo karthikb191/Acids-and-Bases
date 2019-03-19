@@ -50,8 +50,7 @@ public class Slot
     public virtual void AddItem(ItemBase l_itemBase)
     {
         if (itemStored != null)
-        {
-            
+        {            
             if (l_itemBase.itemProperties == itemStored.itemProperties && itemlist.Count < maxStorage)
             {
                
@@ -59,7 +58,6 @@ public class Slot
                 itemlist.Add(l_itemBase);               
                // Debug.Log(this.itemCount + "___" + itemStored.name);
             }
-
             else
             {
                 Debug.Log("Item Not added");
@@ -79,9 +77,7 @@ public class Slot
             imageSlotPrefab.SetActive(true);
             displaySprite.enabled = true;
             displaySprite.sprite = itemStored.itemProperties.imageSprite;
-            //Added this..... Needs to be arranged properly
-
-           
+            //Added this..... Needs to be arranged properly          
         }
         UpdateUI();
     }
@@ -211,6 +207,7 @@ public class Inventory : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Active Item is null");
                 activeItem = null;
             }
         }
@@ -290,19 +287,13 @@ public class Inventory : MonoBehaviour {
                         activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
                         return true;
                     }
-
-
                 }
 
-              Debug.Log(slots[i].itemStored);
-                Debug.Log("Active item check call :  " + slots[i].itemlist.Count); 
-                
-
-
+                Debug.Log(slots[i].itemStored);
+                Debug.Log("Active item check call :  " + slots[i].itemlist.Count);                
             }
         }
         Debug.Log("Active item is null");
-
         return false;
     }
 
@@ -366,12 +357,10 @@ public class Inventory : MonoBehaviour {
         if (slots.Count == 0)
         {
             Debug.Log("MAx slot count"+maxSlotCount);
-          
-
+         
             for (int i = 0; i < maxSlotCount; i++)
             {
-                Slot tempSlot = new Slot();
-               
+                Slot tempSlot = new Slot();               
                 slots.Add(tempSlot);
                 GameObject temp = Instantiate(imageSlotPrefab);
                 slots[i].imageSlotPrefab = temp;

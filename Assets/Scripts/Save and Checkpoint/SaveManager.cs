@@ -161,6 +161,19 @@ public class SaveObject
         journalInformationPath = Path.Combine(folderPath, fileName);
     }
 
+
+    //////Inventory saving
+
+    public string inventoryInfoPath;
+    public void SaveInventory(InventorySaveData instance, string folderPath,string fileName)
+    {
+        WriteToFile(instance, folderPath, fileName);
+
+        inventoryInfoPath = Path.Combine(folderPath, fileName);
+
+    }
+
+
     //Create new file for binary Formatting
     void WriteToFile(System.Object o, string folderPath, string fileName)
     {

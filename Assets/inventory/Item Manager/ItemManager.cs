@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ItemManager : MonoBehaviour
 {
     public static ItemManager instance;
@@ -26,11 +25,9 @@ public class ItemManager : MonoBehaviour
         AddToDictionary(itemListScriptableObject.indicatorList, typeof(IndicatorsList));
         AddToDictionary(itemListScriptableObject.normalItemList, typeof(NormalItemList));
 
-
         Debug.Log("Getting bromythol blue: " + itemDictionary[IndicatorsList.Bromythol_Blue].ToString());
 
         Debug.Log("salt:  " + itemDictionary[SaltsList.NaCl]);
-
         
         //Debug.Log("Testing simple reaction: " + Reactions.React(IndicatorsList.Bromythol_Blue, NormalItemList.Hybiscus).ToString());
     }

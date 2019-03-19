@@ -45,6 +45,19 @@ public class EnemyInventory : Inventory {
     {
         Debug.Log("Set active item is called");
 
+        for (int j = 0; j < slots[0].itemlist.Count; j++)
+        {
+            if (!slots[0].itemlist[j].gameObject.activeSelf)
+            {
+                activeItem = slots[0].itemlist[j];
+                activeItem.isFromEnemy = true;
+                activeItem.gameObject.SetActive(true);
+                break;
+            }
+               
+
+        }
+
         /*  for (int i = 0; i < slots.Count; i++)
           {
 
@@ -73,15 +86,7 @@ public class EnemyInventory : Inventory {
               }
           }*/
 
-        for (int j = 0; j < slots[0].itemlist.Count; j++)
-        {
-            if(!slots[0].itemlist[j].gameObject.activeSelf)
-            activeItem = slots[0].itemlist[j];
-            activeItem.isFromEnemy = true;
-            activeItem.gameObject.SetActive(true);
-            break;
 
-        }
 
     }
 
