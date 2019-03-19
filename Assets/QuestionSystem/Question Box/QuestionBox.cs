@@ -37,7 +37,7 @@ public class QuestionBox : MonoBehaviour {
     public bool unlocked;
 
     //Prefab of the type of item expecting
-    public List<ItemsDescription> itemsExpecting = new List<ItemsDescription>();
+    //public List<ItemsDescription> itemsExpecting = new List<ItemsDescription>();
 
     Vector3 initialLocalPosition;
     Vector3 initialLocalRotation;
@@ -61,7 +61,7 @@ public class QuestionBox : MonoBehaviour {
                     VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
                     {
-                        dialogueSystem.StartDialogue();
+                        dialogueSystem.StartDialogue(playerOnFocus);
                     //Disable the button
                     VirtualJoystick.DisableDynamicButton(d);
                     });
@@ -74,7 +74,10 @@ public class QuestionBox : MonoBehaviour {
         if (playerOnFocus != null && collider.gameObject == playerOnFocus.gameObject)
         {
             playerOnFocus = null;
-
+            if (dialogueSystem.IsDialoguePlaying())
+            {
+                dialogueSystem.DialogueFinished();
+            }
             //Disable the button
             VirtualJoystick.DisableDynamicButton("tag_question");
         }
@@ -109,11 +112,11 @@ public class QuestionBox : MonoBehaviour {
         saveData.index = index;
         saveData.dialogueSequenceIndex = dialogueSystem.currSequenceIndex;
 
-        saveData.itemsExpecting = new string[itemsExpecting.Count];
-        for(int i = 0; i < itemsExpecting.Count; i++)
-        {
-            saveData.itemsExpecting[i] = itemsExpecting[i].GetItemType().ToString();
-        }
+        //saveData.itemsExpecting = new string[itemsExpecting.Count];
+        //for(int i = 0; i < itemsExpecting.Count; i++)
+        //{
+        //    saveData.itemsExpecting[i] = itemsExpecting[i].GetItemType().ToString();
+        //}
 
         Debug.Log("Added to the save object list successfully");
 
@@ -188,30 +191,32 @@ public class QuestionBox : MonoBehaviour {
 
     void LoadData(QuestionBoxSaveData data)
     {
-
-        for (int i = 0; i < data.itemsExpecting.Length; i++)
+        if (data.itemsExpecting != null)
         {
-            System.Object o;
-            o = System.Enum.Parse(typeof(AcidsList), data.itemsExpecting[i]);
-            if(o == null)
+            for (int i = 0; i < data.itemsExpecting.Length; i++)
             {
-                o = System.Enum.Parse(typeof(BasesList), data.itemsExpecting[i]);
-            }
-            else if (o == null)
-            {
-                o = System.Enum.Parse(typeof(IndicatorsList), data.itemsExpecting[i]);
-            }
-            else if (o == null)
-            {
-                o = System.Enum.Parse(typeof(SaltsList), data.itemsExpecting[i]);
-            }
-            else if (o == null)
-            {
-                o = System.Enum.Parse(typeof(NormalItemList), data.itemsExpecting[i]);
-            }
+                System.Object o;
+                o = System.Enum.Parse(typeof(AcidsList), data.itemsExpecting[i]);
+                if(o == null)
+                {
+                    o = System.Enum.Parse(typeof(BasesList), data.itemsExpecting[i]);
+                }
+                else if (o == null)
+                {
+                    o = System.Enum.Parse(typeof(IndicatorsList), data.itemsExpecting[i]);
+                }
+                else if (o == null)
+                {
+                    o = System.Enum.Parse(typeof(SaltsList), data.itemsExpecting[i]);
+                }
+                else if (o == null)
+                {
+                    o = System.Enum.Parse(typeof(NormalItemList), data.itemsExpecting[i]);
+                }
 
-            Debug.Log("e is: " + o.ToString());
-            itemsExpecting[i] = ItemManager.instance.itemDictionary[o].GetComponent<ItemsDescription>();
+                Debug.Log("e is: " + o.ToString());
+                //itemsExpecting[i] = ItemManager.instance.itemDictionary[o].GetComponent<ItemsDescription>();
+            }
         }
 
         unlocked = data.unlocked;
@@ -234,14 +239,15 @@ public class QuestionBox : MonoBehaviour {
             prevAnswerState = unlocked;
         }
     }
-    
 
+    int correctAnswers = 0;
     public void CorrectAnswer()
     {
         Debug.Log("Correct Answer.....Checking for items");
         //TODO: Check the player's inventory and get the item
-        if (itemsExpecting.Count > 0 && !unlocked)
+        if (!unlocked)
         {
+            
             Player p = null;
             for (int i = 0; i < dialogueSystem.allActors.Length; i++)
             {
@@ -255,8 +261,29 @@ public class QuestionBox : MonoBehaviour {
                 return;
             }
 
-            //Enable the item selection canvas and wait for check
-            InitiateItemSelection(p);
+            if (dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting.Count > 0)
+            {
+                //Enable the item selection canvas and wait for check
+                InitiateItemSelection(p);
+            }
+            else
+            {
+                correctAnswers++;
+            }
+
+            if(correctAnswers == dialogueSystem.numberOfQuestions)
+            {
+                if (!routineUnderProgress)
+                {
+                    if (blockingPlatform != null)
+                        StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
+                    else
+                        GetComponent<BoxCollider2D>().enabled = false;
+
+                    //correctAnswers = 0;
+                }
+            }
+
             return;
             //the item does not exist in the inventory
         }
@@ -264,7 +291,7 @@ public class QuestionBox : MonoBehaviour {
         if (!routineUnderProgress)
         {
             if(blockingPlatform != null)
-                    StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
+                StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
             else
                 GetComponent<BoxCollider2D>().enabled = false;
         }
@@ -278,25 +305,78 @@ public class QuestionBox : MonoBehaviour {
         dialogueSystem.haltDialogue = true;
     }
 
+
     public void SetSelectedItems(List<ItemsDescription> items)
     {
-        selectedItems = items;
-        Debug.Log("selected items: " + selectedItems.Count);
+        Debug.Log("items count: " + items.Count);
+
+        for(int i = 0; i < dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting.Count; i++)
+        {
+            for(int j = 0; j < items.Count; j++)
+            {
+                Debug.Log("type 1: " + items[j].GetItemType() + "  Type 2: " + dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting[i].GetItemType());
+                if(items[j].GetItemType().Equals(dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting[i].GetItemType()))
+                {
+                    bool itemExists = false;
+                    //Check if selected items already has this
+                    for(int k = 0; k < selectedItems.Count; k++)
+                    {
+                        if (selectedItems[k].GetItemType() == items[j].GetItemType())
+                            itemExists = true;
+                    }
+
+                    if(!itemExists)
+                        selectedItems.Add(items[i]);
+
+                    break;
+                    //TODO Remove this item from the inventory
+                }
+            }
+        }
+
+        //selectedItems = items;
+        Debug.Log("selected items count: " + selectedItems.Count);
         CheckForRequiredItems();
     }
 
     void CheckForRequiredItems()
     {
+        if (dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting.Count > 0)
+        {
+            Debug.Log("1: " + dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting.Count +
+                      " 2: " + selectedItems.Count);
+            if (dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].itemsExpecting.Count == selectedItems.Count)
+            {
+                correctAnswers++;
+
+                if (correctAnswers == dialogueSystem.numberOfQuestions)
+                {
+                    if (!routineUnderProgress)
+                    {
+                        if (blockingPlatform != null)
+                            StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
+                        else
+                            GetComponent<BoxCollider2D>().enabled = false;
+
+                        //correctAnswers = 0;
+                    }
+                }
+                selectedItems.Clear();
+
+                //Change the dialogue sequence to the correct answer sequence
+                dialogueSystem.ChangeDialogueSequenceTo(dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].correctAnswerSequenceIndex, true);
+            }
+            else
+            {
+                dialogueSystem.ShowNextDialogue();
+            }
+        }
+        //else
+        //{
+        //    dialogueSystem.ChangeDialogueSequenceTo(dialogueSystem.dialogueSequence[dialogueSystem.GetCurrentSequenceIndex()].correctAnswerSequenceIndex, true);
+        //}
         //TODO: add the check logic here. If the conditions are met, the door unlocks
         dialogueSystem.haltDialogue = false;
-
-        if (!routineUnderProgress)
-        {
-            if (blockingPlatform != null)
-                StartCoroutine(SimplePlatformInterpolation(targetLocalPosition, targetLocalRotation));
-            else
-                GetComponent<BoxCollider2D>().enabled = false;
-        }
     }
 
     

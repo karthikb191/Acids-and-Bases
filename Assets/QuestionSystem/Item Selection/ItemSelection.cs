@@ -52,9 +52,9 @@ public class ItemSelection : MonoBehaviour {
     {
         for (int i = 0; i < selectedIndices.Count; i++)
         {
-            if(inventory.slots[i].itemStored != null)
+            if(inventory.slots[selectedIndices[i]].itemStored != null)
             {
-                ItemsDescription des = inventory.slots[i].itemStored.GetComponent<ItemsDescription>();
+                ItemsDescription des = inventory.slots[selectedIndices[i]].itemStored.GetComponent<ItemsDescription>();
                 if(des != null)
                 {
                     itemDescriptions.Add(des);
@@ -64,8 +64,10 @@ public class ItemSelection : MonoBehaviour {
 
         if (targetQuestionBox != null)
         {
+            //Sets the selected items in the question box
             targetQuestionBox.SetSelectedItems(itemDescriptions);
         }
+
         ToggleActivation(inventory, targetQuestionBox);
     }
 
@@ -224,6 +226,7 @@ public class ItemSelection : MonoBehaviour {
                     {
                         activeContentItems[indexnumber].GetComponent<Image>().color = Color.green;
                         selectedIndices.Add(indexnumber);
+                        Debug.Log("selected : " + inventory.slots[indexnumber].itemStored.GetComponent<ItemsDescription>().GetItemType());
                     }
 
                     //Debug.Log("partition: " + partition);
@@ -246,8 +249,14 @@ public class ItemSelection : MonoBehaviour {
 
     public void DeactivateCanvas()
     {
+        while(selectedIndices.Count > 0)
+        {
+            activeContentItems[selectedIndices[0]].GetComponent<Image>().color = Color.white;
+            selectedIndices.RemoveAt(0);
+        }
+        itemDescriptions.Clear();
         //TODO: Flush out all the items
-        while(activeContentItems.Count > 0)
+        while (activeContentItems.Count > 0)
         { 
             activeContentItems[0].SetActive(false);
             disabledImages.Add(activeContentItems[0]);

@@ -13,9 +13,11 @@ public class DialogueSystem : MonoBehaviour {
     public float nextDialogueWait = 0.2f;
 
     public GameObject[] allActors;
+    
 
     public List<DialogueSequence> dialogueSequence;
-    
+
+    public int numberOfQuestions;
 
     public int currSequenceIndex = 0;
     public int currDialogueIndex = 0;
@@ -29,6 +31,10 @@ public class DialogueSystem : MonoBehaviour {
     private float nextClickTime;
     private float clickTimeGap = 1.0f;
 
+    Player playerOnFocus;
+
+    List<ItemsDescription> itemsObtained = new List<ItemsDescription>();
+
     void Start()
     {
         dialogueUI = GameManager.Instance.DialogueCanvas.transform.Find("DialoguePanel").gameObject;
@@ -36,14 +42,33 @@ public class DialogueSystem : MonoBehaviour {
         buttonHolder = dialogueUI.transform.Find("ButtonHolder").gameObject;
         
         ChangeDialogueSequenceTo(currSequenceIndex);
+
+        numberOfQuestions = GetNumberOfQuestions();
         //paraText.text = "";
         //AddDialogue("1 Hey Bitch", true, new string[] { "Nigger", "digger" }, 1);
         //AddDialogue("");
-        
     }
-    public bool IsDialoguePlaying() { return dialoguePlaying; }
-    public void StartDialogue()
+
+    int GetNumberOfQuestions()
     {
+        int count = 0;
+        for(int i = 0; i < dialogueSequence.Count; i++)
+        {
+            for(int j = 0; j < dialogueSequence[i].allDialogues.Count; j++)
+            {
+                if (dialogueSequence[i].allDialogues[j].isQuestion)
+                    count++;
+            }
+        }
+        return count;
+    }
+
+    public bool IsDialoguePlaying() { return dialoguePlaying; }
+
+    public void StartDialogue(Player p)
+    {
+        playerOnFocus = p;
+        p.StopMovement();
         GameManager.Instance.DialogueCanvas.SetActive(true);
         BreakDialogue(allDialoguesInCurrentSequence[currDialogueIndex].dialogue);
         dialoguePlaying = true;
@@ -51,6 +76,8 @@ public class DialogueSystem : MonoBehaviour {
 
     public void DialogueFinished()
     {
+        Debug.Log("dialogue finished");
+        playerOnFocus.ResumeMovement();
         GameManager.Instance.DialogueCanvas.SetActive(false);
         //Dialogue index must be reset once the dialogue has been delivered to start the dialogue again
         currDialogueIndex = 0;
@@ -126,12 +153,20 @@ public class DialogueSystem : MonoBehaviour {
         }
     }
 
-    public void ChangeDialogueSequenceTo(int index)
+    public void ChangeDialogueSequenceTo(int index, bool breakDialogue = false)
     {
+        Debug.Log("Dialogue sequence changed to: " + index);
         isOver = false; skip = false;
         currSequenceIndex = index;
         currDialogueIndex = 0;
         allDialoguesInCurrentSequence = dialogueSequence[currSequenceIndex].allDialogues;
+        if (breakDialogue)
+            BreakDialogue(allDialoguesInCurrentSequence[0].dialogue);
+    }
+
+    public void ShowNextDialogue()
+    {
+        StartCoroutine(NextDialogue());
     }
 
     IEnumerator NextDialogue()
@@ -139,6 +174,7 @@ public class DialogueSystem : MonoBehaviour {
         //Dialogue deactivation logic
         if (allDialoguesInCurrentSequence[currDialogueIndex].dialogue == "" || currDialogueIndex == allDialoguesInCurrentSequence.Count)
         {
+            Debug.Log("Dialogue finished: " + currDialogueIndex);
             DialogueFinished();
             yield break;
         }
@@ -150,9 +186,11 @@ public class DialogueSystem : MonoBehaviour {
         {
             buttonHolder.SetActive(false);
         }
+
         yield return new WaitForSeconds(nextDialogueWait);
         currDialogueIndex++;    //Increment current dialogue
-        
+
+        Debug.Log("Incremented current index");
 
         //Preparing for the next dialogue
         if (currDialogueIndex < allDialoguesInCurrentSequence.Count)
@@ -177,7 +215,6 @@ public class DialogueSystem : MonoBehaviour {
     void BreakDialogue(string dialg)
     {
         //Get the first occurance of space in the dialogue. This is used to identify the actors of the dialogue
-
         int firstSpace = dialg.IndexOf(" ");
         //Get the actor index ID by getting the substring
 
@@ -210,11 +247,13 @@ public class DialogueSystem : MonoBehaviour {
                 go.transform.GetChild(0).GetComponent<Text>().text = allDialoguesInCurrentSequence[currDialogueIndex].answerOptions[x];
             }
         }
+
         string dialogue = dialg.Substring(firstSpace + 1, dialg.Length - firstSpace - 1);
 
         //routine to animate lines of the dialogue
         StartCoroutine(WriteLines(dialogue, actorId));
     }
+
 
 
     IEnumerator WriteLines(string sentence, int actorId)
@@ -227,18 +266,25 @@ public class DialogueSystem : MonoBehaviour {
             index++;
             if (index == sentence.Length)
             {
+                //Waiting for mouse input to go to next dialogue
                 while (true)
                 {
                     if (Input.GetMouseButtonDown(0))
                         break;
+                    //Debug.Log("inner while");
                     yield return new WaitForFixedUpdate();
                 }
+
                 isOver = true;
                 break;
             }
         }
+
+
+
         if (skip)
         {
+            skip = false;
             if (!isOver)
             {
                 paraText.text = allActors[actorId].name + " : " + sentence;
@@ -246,12 +292,16 @@ public class DialogueSystem : MonoBehaviour {
                 {
                     if (Input.GetMouseButtonDown(0))
                         break;
+                    Debug.Log("inner skip while");
                     yield return new WaitForFixedUpdate();
                 }
                 isOver = true;
+                
             }
         }
     }
+
+
 
     OptionSelected AnswerMCQ(int i)
     {
@@ -269,18 +319,34 @@ public class DialogueSystem : MonoBehaviour {
 
         if (i == allDialoguesInCurrentSequence[currDialogueIndex].currentAnswerVal)
         {
-            OptionSelected answer = AnswerOBJ(i);
-            ChangeDialogueSequenceTo(dialogueSequence[currSequenceIndex].correctAnswerSequenceIndex);
-            print("Correct Answer " + currDialogueIndex);
+            if(dialogueSequence[currSequenceIndex].itemsExpecting.Count > 0)
+            {
+                if (CorrectAnswerEvent != null)
+                    CorrectAnswerEvent();
 
-            //A Call to the subscribers that a correct answer has been recorded
-            if (CorrectAnswerEvent != null)
-                CorrectAnswerEvent();
+                return null;
+            }
+            else
+            {
+                OptionSelected answer = AnswerOBJ(i);
+                ChangeDialogueSequenceTo(dialogueSequence[currSequenceIndex].correctAnswerSequenceIndex);
 
-            BreakDialogue(allDialoguesInCurrentSequence[currDialogueIndex].dialogue);
-            return answer;
+                print("Correct Answer " + currDialogueIndex);
+
+
+                //A Call to the subscribers that a correct answer has been recorded
+                if (CorrectAnswerEvent != null)
+                    CorrectAnswerEvent();
+
+                //StartCoroutine(NextDialogue());
+                BreakDialogue(allDialoguesInCurrentSequence[currDialogueIndex].dialogue);
+                return answer;
+            }
         }
-        StartCoroutine(NextDialogue());
+        else
+        {
+            StartCoroutine(NextDialogue());
+        }
         //Object with dialogue number and answer number
         return null;
     }
@@ -298,4 +364,7 @@ public class DialogueSystem : MonoBehaviour {
         correctAnswer = op;
         return op;
     }
+
+    public int GetCurrentSequenceIndex() { return currSequenceIndex; }
+
 }

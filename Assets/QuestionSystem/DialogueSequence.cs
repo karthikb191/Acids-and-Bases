@@ -23,5 +23,6 @@ public class OptionSelected{
 public class DialogueSequence{
     public int correctAnswerSequenceIndex;
     public int wrongAnswerSequenceIndex;
+    public List<ItemsDescription> itemsExpecting;
 	public List<Dialogues> allDialogues=new List<Dialogues>();
 }

@@ -58,6 +58,7 @@ public class DialoguesDrawer : PropertyDrawer {
         }
         EditorGUI.EndProperty();
 	}
+
     public override float GetPropertyHeight (SerializedProperty property, GUIContent label) {
 		//return property.FindPropertyRelative("isQuestion").boolValue?52f:34f;
         int options=property.FindPropertyRelative("currentChoice").enumValueIndex+2;
