@@ -22,3 +22,5 @@ MonoBehaviour:
   HealthRestore: 0
   itemSound: {fileID: 0}
   isThrowable: 1
+  itemtype: 4
+  itemList: 0

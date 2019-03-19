@@ -16,6 +16,7 @@ public class SerializableRect
         this.width = width;
         this.height = height;
     }
+
     public float x;
     public float y;
     public float width;

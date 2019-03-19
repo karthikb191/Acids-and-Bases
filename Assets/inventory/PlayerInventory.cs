@@ -2,13 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+[System.Serializable]
+public class InventorySaveData
+{
+    public List<SlotSaveData> slots = new List<SlotSaveData>();
+    public string activeItem;
+    public int activeDisplayCount;
+    
+}
+
+[System.Serializable]
+public class SlotSaveData
+{
+    public string itemStored;
+    public int numberOfItemsStored;
+    public string parent;
+    public List<System.Object> itemsList = new List<object>();
+    public bool isActive;
+    public int siblingIndex;
+    public SerializableRect position;
+}
+
+
 public class PlayerInventory : Inventory
 {
     Player player;
-
-
-////////////////////////////////////////Inventory animation//////////////////////////////////////////
-
 
     bool inventoryShown = false;
 
@@ -30,8 +49,10 @@ public class PlayerInventory : Inventory
 
     public Button swapButton;
     public Button combineButton;
+    public Button specialActionButton;
 
     public Animator inventoryHolderAnimator;
+
     public Animator extendedInventoyHolderAnimator;
 
     public int maxDisplaySlots;
@@ -42,16 +63,18 @@ public class PlayerInventory : Inventory
 
     public bool allowSwap = false;
 
-
     public Slot selectedSlot1;
 
     public Slot selectedSlot2;
 
+    public GameObject highlightSelection1;
+    public GameObject highlightSelection2;
 
+    public bool allowCombine = false;
+    public bool allowExtract = false;
+    public bool allowRemove = false;
 
-    ////////////////////////////////////////Inventory animation//////////////////////////////////////////
-
-
+    public List<GameObject> highLightGameObjectList;
 
     // Use this for initialization
     void Start()
@@ -79,10 +102,15 @@ public class PlayerInventory : Inventory
 
         selectButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(0).GetComponent<Button>();
         extractButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(1).GetComponent<Button>();
-        removeButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(2).GetComponent<Button>();
-        swapButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(3).GetComponent<Button>();
-        combineButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(4).GetComponent<Button>();
+        swapButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(2).GetComponent<Button>();
+        combineButton = inventoryUI.transform.GetChild(2).GetChild(2).GetChild(3).GetComponent<Button>();
 
+        specialActionButton = inventoryUI.transform.GetChild(2).GetChild(3).GetComponent<Button>();
+        removeButton = inventoryUI.transform.GetChild(2).GetChild(4).GetComponent<Button>();
+
+        highlightSelection1 = inventoryUI.transform.GetChild(4).gameObject;
+
+        highlightSelection2 = inventoryUI.transform.GetChild(5).gameObject;
 
         ///////////////////////////buttons end//////////
 
@@ -92,6 +120,8 @@ public class PlayerInventory : Inventory
         {
             slots[i].imageSlotPrefab.transform.SetParent(extendedPanel);
         }
+
+        SelectButtonIsPressed();
 
     }
 
@@ -113,27 +143,43 @@ public class PlayerInventory : Inventory
         if (showInventoryItems)
         {
             ShowDisplayItems();
-            ButtonActivation();
+            Debug.Log(" Getting called" + extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"));
+
+            if (extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"))
+            {
+            ShowAllItems();
+
+            }
            
+            // ButtonActivation();
+
         }
+
         else
         {
             HideDisplayItems();
         }
 
-        if (allowSelection)
+        if (allowSelection || allowExtract || allowRemove)
         {
-            SelectFromSmallInventory();
+            SelectOneItem();
 
-            if(selectedSlot1 != null && selectedSlot2 != null)
+            if (allowSelection && selectedSlot1 != null)
             {
-                SwapSlots();
+                // set as active item
+
+                SelectSpecialActionButton();
             }
         }
 
-        if(allowSwap)
+        if (allowSwap)
         {
-            SelectSwapItems();
+            SelectTwoItems();
+
+            if (selectedSlot1 != null && selectedSlot2 != null)
+            {
+                SwapSlots();
+            }
         }
 
     }
@@ -163,7 +209,6 @@ public class PlayerInventory : Inventory
             float timer = tempController.animationClips.Length;
             Invoke("DisplayPanelShow", timer);
         }
-
 
     }
 
@@ -197,7 +242,7 @@ public class PlayerInventory : Inventory
         {
             extendedInventoyHolderAnimator.SetBool("ExtendedInventoryShow", true);
             verticalScrollBar.gameObject.SetActive(true);
-           allowSelection = false;
+            allowSelection = false;
             ShowAllItems();
         }
 
@@ -230,18 +275,46 @@ public class PlayerInventory : Inventory
                     slots[i].imageSlotPrefab.transform.SetParent(displayPanel);
                     // slots[i].imageSlotPrefab.SetActive(false);
                     count++;
-                    
+
+                }
+
+                else
+                {
+                    slots[i].imageSlotPrefab.transform.SetParent(extendedPanel);
+                    if (extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"))
+                    {
+                        Debug.Log("Function is getting called");
+
+                        slots[i].imageSlotPrefab.SetActive(true);
+                    }
+                    else
+                    {
+                        slots[i].imageSlotPrefab.SetActive(false);
+                    }
                 }
             }
-            displaySlotCount = count;
-           
-        }
-        
-
+            SetDisplayCount();          
+        }       
     ///display count shuld be updated.....  
 
     }
 
+
+    public void SetDisplayCount()
+    {
+        int c = 0;
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if(slots[i].isActive && slots[i].imageSlotPrefab.transform.parent == displayPanel)
+            {
+                c++;
+            }
+
+        }
+
+        displaySlotCount = c;
+    }
+   
     public void ShowDisplayItems()
     {
         for (int i = 0; i < slots.Count; i++)
@@ -254,6 +327,7 @@ public class PlayerInventory : Inventory
 
         }
     }
+
     public void ShowAllItems()
     {
         for (int i = 0; i < slots.Count; i++)
@@ -266,56 +340,125 @@ public class PlayerInventory : Inventory
 
         }
     }
+
     public void HideDisplayItems()
     {
         for (int i = 0; i < slots.Count; i++)
         {
-            if (slots[i].isActive && slots[i].imageSlotPrefab.transform.parent == displayPanel)
+            if (slots[i].isActive)
             {
                 slots[i].imageSlotPrefab.SetActive(false);
             }
-
-
         }
     }
 
-
-    public void SelectFromSmallInventory()
+    public void SelectOneItem()
     {
         if(Input.GetMouseButtonDown(0))
         {
-
-            if (RectTransformUtility.RectangleContainsScreenPoint(displayPanel, Input.mousePosition))
+            for (int i = 0; i < slots.Count; i++)
             {
-
-                for (int i = 0; i < slots.Count; i++)
+                if (slots[i].isActive && slots[i].imageSlotPrefab.transform.parent == displayPanel)
                 {
-                    if (slots[i].isActive && slots[i].imageSlotPrefab.transform.parent == displayPanel)
-                    {
-                        Debug.Log("Active slot" + slots[i].itemStored.name);
+                    //Debug.Log("Active slot" + slots[i].itemStored.name);
 
-                        if (RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
+                    if (RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
+                    {
+                       if(selectedSlot1 == null)
+                       {
+                            selectedSlot1 = slots[i];
+                            HighLightSlot(selectedSlot1, highlightSelection1);
+                       }
+
+                       else if(selectedSlot1 != null && selectedSlot1 != slots[i])
                         {
-                            Debug.Log("Active slot inside rect transform" + slots[i].itemStored.name);
-                            if (slots[i].itemlist.Count > 0)
-                            {
-                                activeItem.gameObject.SetActive(false);
-                                activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
-                                activeItem.gameObject.SetActive(true);
-                                
-                            }
+                            selectedSlot1 = slots[i];
+                            HighLightSlot(selectedSlot1, highlightSelection1);
                         }
                     }
                 }
             }
-        }    
+        }
+    }
+    
+    public void HighLightSlot(Slot selectedSlot,GameObject hightlighter)
+    {
+        hightlighter.transform.position = selectedSlot.imageSlotPrefab.transform.position;
+        hightlighter.gameObject.SetActive(true);
+    }   
+
+    public void SelectSpecialActionButton()
+    {       
+        if (selectedSlot1.itemlist.Count > 0)
+        {
+            if(activeItem == null)
+            {
+                activeItem = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1];
+
+            }
+            else
+            {
+                activeItem.gameObject.SetActive(false);
+                activeItem = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1];
+                activeItem.gameObject.SetActive(true);
+            }
+          
+
+            if(selectedSlot1.imageSlotPrefab.transform.parent != displayPanel)
+            {
+                for (int i = 0; i < slots.Count; i++)
+                {
+                    if(slots[i].imageSlotPrefab.transform.parent == displayPanel)
+                    {
+                        selectedSlot2 = slots[i];
+                        SwapSlots();
+                    }
+                }
+            }
+
+            selectedSlot1 = null;
+         //   highlightSelection1.SetActive(false);
+
+        }
     }
 
+    public void ExtractSpecialActionButton()
+    {
+        if(selectedSlot1 != null)
+        {
+            if (selectedSlot1.itemlist.Count > 0)
+            {
+                Debug.Log( selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType());
+                selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
+                Extract(selectedObj1);
+            }
+        }
+    }
 
+    public void CombineSpecialActionButton()
+    {
+        if (selectedSlot1 != null && selectedSlot2 != null)
+        {
+            if (selectedSlot1.itemlist.Count > 0)
+            {
+                selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
+              
+            }
 
+            if (selectedSlot2.itemlist.Count > 0)
+            {
+                selectedObj2.item = selectedSlot2.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
 
+            }
+        }
+    }
 
-    public void SelectSwapItems()
+    public void RemoveSpecialActionButton()
+    {
+        ItemCountSelection.instance.RemoveItemsActivate(selectedSlot1.itemlist.Count);
+    }
+
+    public void SelectTwoItems()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -324,36 +467,34 @@ public class PlayerInventory : Inventory
                 if (slots[i].isActive && RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
                // if (RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
                 {
-                    if (selectedSlot1 == null)
+                    if (selectedSlot1 == null && selectedSlot2 != slots[i])
                     {
                         selectedSlot1 = slots[i];
-
-                        Debug.Log(selectedSlot1.itemStored.name);
-                        
+                        HighLightSlot(selectedSlot1, highlightSelection1);
+                        Debug.Log(selectedSlot1.itemStored.name);                        
                         break;
-
                     }
                     else if(selectedSlot1 != null && selectedSlot1 == slots[i])
                     {
                         selectedSlot1 = null;
+                        highlightSelection1.SetActive(false);
                         Debug.Log("Removed selection of 1");
                         break;
                     }
-
-                    else if (selectedSlot2 == null)
+                    else if (selectedSlot2 == null && selectedSlot1 != slots[i])
                     {
                         selectedSlot2 = slots[i];
-                        Debug.Log(selectedSlot2.itemStored.name);
-                     
+                        HighLightSlot(selectedSlot2, highlightSelection2);
+                        Debug.Log(selectedSlot2.itemStored.name);                     
                         break;
                     }
                     else if (selectedSlot2 != null && selectedSlot2 == slots[i])
                     {
                         selectedSlot2 = null;
+                        highlightSelection2.SetActive(false);
                         Debug.Log("Removed selection of 2");
                         break;
                     }
-
                 }
             }
         }
@@ -369,15 +510,16 @@ public class PlayerInventory : Inventory
             if (selectedSlot1.imageSlotPrefab.transform.parent != selectedSlot2.imageSlotPrefab.transform.parent)
             {                         
                 Transform temp = selectedSlot1.imageSlotPrefab.transform.parent;
-                selectedSlot1.imageSlotPrefab.transform.parent = selectedSlot2.imageSlotPrefab.transform.parent;
-                selectedSlot2.imageSlotPrefab.transform.parent = temp;
+                selectedSlot1.imageSlotPrefab.transform.SetParent(selectedSlot2.imageSlotPrefab.transform.parent);
+                selectedSlot2.imageSlotPrefab.transform.SetParent(temp);
 
             }             
             selectedSlot1.imageSlotPrefab.transform.SetSiblingIndex(clildIndex2);
             selectedSlot2.imageSlotPrefab.transform.SetSiblingIndex(clildIndex1);
 
             selectedSlot1 = selectedSlot2 = null;
-
+            highlightSelection1.SetActive(false);
+            highlightSelection2.SetActive(false);
         }
     }
 
@@ -416,39 +558,136 @@ public class PlayerInventory : Inventory
     SelectionObjectData selectedObj1;
     SelectionObjectData selectedObj2;
 
-    public void ExtractItemSample()
+    public void SelectButtonIsPressed()
     {
+        allowSelection = true;
+        allowSwap = false;
+        specialActionButton.gameObject.SetActive(false);
+        specialActionButton.GetComponentInChildren<Text>().text = "Set As Active Item";
+        selectButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
+        extractButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
+    }
 
-        selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].itemProperties.itemtype;
-        
-        //Debug.Log("count: " + slot1.countText.text + " " + slot2.countText.text);
-        //Debug.Log("Item stored: " + slot1.itemStored + " " + slot2.itemStored);
-   /*     for (int i = 0; i < displaySlotList.Count; i++)
-        {
-            if (displaySlotList[i].itemStored != null)
+    public void ExtractButtonIsPressed()
+    {
+        allowSelection = false;
+        allowSwap = false;
+        allowCombine = false;
+        allowRemove = false;
+        allowExtract = true;
+        specialActionButton.gameObject.SetActive(true);
+
+        specialActionButton.GetComponentInChildren<Text>().text = "Extract from Item";
+
+        selectButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        extractButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
+        combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+
+
+    }
+
+    public void ComineButtonIsPressed()
+    {
+        allowSelection = false;
+        allowSwap = false;
+        allowExtract = false;
+        allowCombine = true;
+        allowRemove = false;
+        specialActionButton.gameObject.SetActive(true);
+        specialActionButton.GetComponentInChildren<Text>().text = "Combine these Item";
+
+        selectButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        extractButton.GetComponent<Image>().color = new Color(255, 255, 255,0.5f);
+        combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
+        swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+
+    }
+
+
+    public void SwapButtonIsPressed()
+    {
+        allowSelection = false;
+        allowSwap = true;
+        allowExtract = false;
+        allowCombine = false;
+        allowRemove = false;
+
+        specialActionButton.gameObject.SetActive(false);
+
+        selectButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        extractButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+
+    }
+
+
+    public void RemoveButtonIsPressed()
+    {
+     /*   allowSelection = false;
+        allowSwap = false ;
+        allowExtract = false;
+        allowCombine = false;
+        allowRemove = true;
+
+
+        specialActionButton.gameObject.SetActive(true);
+        specialActionButton.GetComponentInChildren<Text>().text = "Remove item";
+        selectButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        extractButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);*/
+
+        RemoveSpecialActionButton();
+
+
+    }
+
+    public void RemoveItems(float itemCount)
+    {
+         if(selectedSlot1 != null )
+         {
+            for (int i = 0; i < itemCount; i++)
             {
-                Debug.Log("Display slot item name ><><><><><><><><>" + displaySlotList[i].itemStored);
+                selectedSlot1.RemoveItem(selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1]);
             }
-        }*/
-        //   slot2.UpdateUI();
-        // slot2.UpdateUI();
-        Extract(selectedObj1);
-        selectedSlot1.RemoveItem(selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1]);
+         }
+
+       
     }
 
-    public void CombineSample()
+    public void SpecialActionButtonPressed()
     {
-        selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].itemProperties.itemtype;
-        selectedObj2.item = selectedSlot2.itemlist[selectedSlot1.itemlist.Count - 1].itemProperties.itemtype;
+      
+        if(allowExtract)
+        {
+            // call extract functions
+            ExtractSpecialActionButton();
+        }
 
-        Combine(selectedObj1, selectedObj2);
+        else if(allowCombine)
+        {
 
-        selectedSlot1.RemoveItem(selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1]);
-        selectedSlot2.RemoveItem(selectedSlot2.itemlist[selectedSlot1.itemlist.Count - 1]);
+            //call combine function
+            CombineSpecialActionButton();
+        }
 
+       if(allowRemove)
+        {
+           // RemoveSpecialActionButton();
+        }
+       
 
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #endregion
 
     #region Player Inventory Functions
@@ -491,9 +730,19 @@ public class PlayerInventory : Inventory
     {
         ItemBase i = Extraction.Extract(item.item).GetComponent<ItemBase>();
         ItemsDescription des = i.GetComponent<ItemsDescription>();
+        des.GetItemType();
+
 
         //The extraction will take default information from the prefab object.
         //must check if the item type is already present.
+        int phVal = des.pHValue;
+
+        
+
+
+        AddItem(i); //invenetory will take care of everything checking for ph if present.
+
+        
         //IF the item type is already present, it's pH value in the description data must be checked.
         //If the pH is same, the extra volume must be added to the existing item slot
     }
@@ -523,7 +772,10 @@ public class PlayerInventory : Inventory
             //If player already has a liquid in him, react
             System.Enum result = player.React(item);
             //If the result is not null, place it in the inventory
-
+            if(result != null)
+            {
+          //      if(player.GetComponent<PlayerMechanics>().volume == result)
+            }
             //If the player doesn't have liquid in him, then change the liquid type, volume and pH of player appropriately
         }
     }

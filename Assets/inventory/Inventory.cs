@@ -51,45 +51,40 @@ public class Slot
     {
         if (itemStored != null)
         {
-         //   if (l_itemBase.itemProperties.name == itemStored.itemProperties.name && itemCount < maxStorage)
-                ////Changes//////
-            if (l_itemBase.itemProperties.name == itemStored.itemProperties.name && itemCount < maxStorage)
+            
+            if (l_itemBase.itemProperties == itemStored.itemProperties && itemlist.Count < maxStorage)
             {
+               
                 itemCount++;
-                itemlist.Add(l_itemBase);
-                
+                itemlist.Add(l_itemBase);               
                // Debug.Log(this.itemCount + "___" + itemStored.name);
+            }
 
+            else
+            {
+                Debug.Log("Item Not added");
+
+                l_itemBase.gameObject.SetActive(true);
+                l_itemBase.transform.parent = null;
+              //return;
             }
         }
         else
         {
             itemlist.Add(l_itemBase);
-            itemCount++;
-
-           
+            itemCount++;          
             isActive = true;
             itemStored = l_itemBase;
-           // Debug.Log("Item in slot" + itemStored.itemProperties.name);
-             imageSlotPrefab.SetActive(true);
-
+           //Debug.Log("Item in slot" + itemStored.itemProperties.name);
+            imageSlotPrefab.SetActive(true);
             displaySprite.enabled = true;
             displaySprite.sprite = itemStored.itemProperties.imageSprite;
             //Added this..... Needs to be arranged properly
 
-            if (l_itemBase.GetComponent<PH>())
-            {
-                Debug.Log("PH item");
-                return;
-            }
-
-            Debug.Log("Out of PH Block");
-
+           
         }
         UpdateUI();
     }
-
-
 
     public virtual void RemoveItem(ItemBase l_itemBase)
     {
@@ -111,8 +106,7 @@ public class Slot
     }
 
     public virtual void UpdateUI()
-    {
-        
+    {        
        // countText.text = "" + itemCount;
         countText.text = "" + itemlist.Count;
       // Debug.Log("UI Text" + itemlist.Count);
@@ -131,7 +125,6 @@ public class Slot
         itemlist.Clear();
     }
 
-
 }
 
 public class Inventory : MonoBehaviour {
@@ -143,8 +136,6 @@ public class Inventory : MonoBehaviour {
 
     public Character character;    //The character the inventory belongs to
 
-
-
     public List<Slot> slots = new List<Slot>();
 
     public GameObject imageSlotPrefab;
@@ -154,9 +145,7 @@ public class Inventory : MonoBehaviour {
     [SerializeField]
     Sprite sampleTestSprite;
 
-    public int maxSlotCount = 6;
-    
-    public int activeSlotCount;
+    public int maxSlotCount =30;
 
     private void Start()
     {
@@ -232,32 +221,32 @@ public class Inventory : MonoBehaviour {
         Debug.Log("Update slot called");
         for (int i = 0; i < activeSlotCount; i++)
         {
-            if (slots[i].itemStored != null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties && slots[i].itemlist.Count > 0)
+
+            if( slots[i].itemlist.Count > 0 && slots[i].itemStored == null)
+            {
+                slots[i].itemStored = slots[i].itemlist[0];
+            }
+
+            if (slots[i].itemStored != null  && slots[i].itemStored.gameObject.GetComponent<ItemsDescription>() == l_ItemBase.gameObject.GetComponent<ItemsDescription>() )
             {
                 Debug.Log("Remove item called");
                 Debug.Log("Itemstored : " + slots[i].itemStored.name);
 
                 slots[i].RemoveItem(l_ItemBase);
 
-                if(slots[i].itemStored == null)
+                if(slots[i].itemlist.Count > 0)
                 {
-                    slots[i].itemStored = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                    if (slots[i].itemStored == null)
+                    {
+                        slots[i].itemStored = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                    }
                 }
+                
 
 
                 activeSlotCount = ActiveSlotCount();
 
-               /* Debug.Log("Remove item player call");
-                Debug.Log(character.gameObject.name + "<<<<<<<------Character name");
-                Debug.Log(character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>() + "<<<<<<< Player inventory>>>>>>");*/
-
-                 if (character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>()!= null)
-                 {
-                     Debug.Log(character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>() + "<<<<<<< Player inventory>>>>>>");
-
-                 //    character.gameObject.GetComponent<Player>().GetComponentInChildren<PlayerInventory>().DeactivateSlotInExtendedDisplay();
-
-                 }
+   
                 Debug.Log("Remove item player call end");
                 break;
             }
@@ -269,24 +258,47 @@ public class Inventory : MonoBehaviour {
     {
         for (int i = 0; i < slots.Count; i++)
         {   
-
+          
             
-            if(l_activeItem != null && slots[i].itemStored != null && slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties )
+            if(slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties)
             {
-              Debug.Log(slots[i].itemStored);
-                Debug.Log("Active item check call :  " + slots[i].itemlist.Count); 
-                if(slots[i].itemlist.Count > 0)
+               if (slots[i].itemStored.GetComponent<ItemsDescription>().hasPH &&  l_activeItem.gameObject.GetComponent<ItemsDescription>().hasPH)
                 {
-                    slots[i].itemStored = slots[i].itemlist[0];
-                    activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
-                    activeItem.gameObject.SetActive(true);
+                    if(CheckForPhValues(slots[i].itemStored,l_activeItem))
+                    {
+                        Debug.Log("Has ph value and it is checked");
+                        if (slots[i].itemlist.Count > 0)
+                        {
+                            slots[i].itemStored = slots[i].itemlist[0];
+                            activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                            activeItem.gameObject.SetActive(true);
+                            activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
+                            activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
+                            return true;
+                        }
+                    }                
+                }
+               else
+                {
+                    Debug.Log("active item doesnt have ph");
+                    if (slots[i].itemlist.Count > 0)
+                    {
+                        slots[i].itemStored = slots[i].itemlist[0];
+                        activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                        activeItem.gameObject.SetActive(true);
+                        activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
+                        activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
+                        return true;
+                    }
 
-                    return true;
 
                 }
 
-                 activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
-                  activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
+              Debug.Log(slots[i].itemStored);
+                Debug.Log("Active item check call :  " + slots[i].itemlist.Count); 
+                
+
+
             }
         }
         Debug.Log("Active item is null");
@@ -377,6 +389,18 @@ public class Inventory : MonoBehaviour {
         }
     }
   
+    public bool CheckForPhValues(ItemBase item1, ItemBase item2)
+    {
+        if(item1.gameObject.GetComponent<ItemsDescription>().hasPH && item2.gameObject.GetComponent<ItemsDescription>().hasPH)
+        {
+            if(item1.gameObject.GetComponent<ItemsDescription>().pHValue == item2.gameObject.GetComponent<ItemsDescription>().pHValue)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public virtual void AddItem(ItemBase l_ItemBase)
     {
@@ -387,19 +411,36 @@ public class Inventory : MonoBehaviour {
           
                 for (int i = 0; i < activeSlotCount; i++)
                 {
-                    if(slots[i].itemStored!=null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
+                    if(slots[i].itemStored!=null)
                     {
+                        if(slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
+                        {
+                            if (slots[i].itemStored.transform.GetComponent<ItemsDescription>().itemType == l_ItemBase.transform.GetComponent<ItemsDescription>().itemType &&
+                            slots[i].itemStored.transform.GetComponent<ItemsDescription>().hasPH == l_ItemBase.transform.GetComponent<ItemsDescription>().hasPH
+                        && slots[i].itemStored.transform.GetComponent<ItemsDescription>().pHValue == l_ItemBase.transform.GetComponent<ItemsDescription>().pHValue)
 
-                    
-                    Debug.Log("Added to already present slot");
-                        slots[i].AddItem(l_ItemBase);
-                    assigned = true;
-                        break;
-                    }
+                        {
+                            Debug.Log("Added to already present slot");
+                            slots[i].AddItem(l_ItemBase);
+                            assigned = true;
+                            break;
 
+                        }
+                               
+                            
+                        }                     
+                     /*   else
+                        {
+                            Debug.Log("Added to already present slot");
+                            slots[i].AddItem(l_ItemBase);
+                            assigned = true;
+                            break;
+                        }*/
+
+                    }                  
                     
                 }
-           // Debug.Log("Active Slot Count :  " + activeSlotCount);
+            Debug.Log("Active Slot Count :  " + activeSlotCount);
 
            if( activeSlotCount < maxSlotCount && !assigned)
            {
@@ -439,6 +480,7 @@ public class Inventory : MonoBehaviour {
         SetActiveSlotCount();
     }
 
+  public  int activeSlotCount;
 
     public virtual int ActiveSlotCount()
     {

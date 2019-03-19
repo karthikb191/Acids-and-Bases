@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 212498842860357256}
   - component: {fileID: 61174396677707910}
   - component: {fileID: 114293269257880368}
-  - component: {fileID: 114601921205383870}
   - component: {fileID: 114160974686420142}
+  - component: {fileID: 114905179975982970}
   m_Layer: 0
   m_Name: ItemROck
   m_TagString: Untagged
@@ -89,9 +89,9 @@ MonoBehaviour:
   acidType: 0
   baseType: 0
   saltType: 0
-  normalItemType: 7
-  hasPH: 0
-  pHValue: 7
+  normalItemType: 8
+  hasPH: 1
+  pHValue: 8
   extractionPossible: 0
   extractQuantity: 15
 --- !u!114 &114293269257880368
@@ -111,7 +111,7 @@ MonoBehaviour:
   destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
     type: 2}
   pickedCount: 0
-  maxCount: 0
+  maxCount: 10
   playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: 005a17f93caf30c478065ff7c85ac351, type: 2}
   speed: 30
@@ -125,7 +125,7 @@ MonoBehaviour:
   timeToReach: 0
   targetToHit: {x: 0, y: 0, z: 0}
   throwVelocity: 0
---- !u!114 &114601921205383870
+--- !u!114 &114905179975982970
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,14 +137,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrown: 0
-  travelParticles: {fileID: 198549758489193066, guid: 1c522a1013d318e4c99542c9a74e2a5b,
-    type: 2}
-  destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
-    type: 2}
+  travelParticles: {fileID: 0}
+  destroyParticles: {fileID: 0}
   pickedCount: 0
-  maxCount: 5
+  maxCount: 0
   playerObject: {fileID: 0}
-  itemProperties: {fileID: 11400000, guid: c2a2457a63fcd894f84b72bcb69f0946, type: 2}
+  itemProperties: {fileID: 0}
   speed: 20
   targetScale: {x: 1, y: 1, z: 1}
   isFromEnemy: 0
