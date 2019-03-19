@@ -21,6 +21,8 @@ public abstract class Character : MonoBehaviour, ICharacter
     public float currentLinearSpeed = 0;
     public float currentJumpSpeed = 0;
 
+    [Range(0.01f, 1.0f)]
+    public float externalForceDamp = 0.1f;
     public float externalHorizontalMovementDamp;
     public float externalVerticalMovementDamp;
 
@@ -128,11 +130,15 @@ public abstract class Character : MonoBehaviour, ICharacter
 
     public virtual void UseItem() { }
 
+    [HideInInspector]
+    public float groundCollisionCorrection = 0;
+
     protected virtual void MoveCharacter()
     {
         int horizontalBlockValue = 0;
         int verticalBlockValue = 0;
-        externalForce = Vector3.zero;
+
+        //externalForce = Vector3.zero;
         velocity = Vector3.zero;
         externalHorizontalMovementDamp = externalVerticalMovementDamp = 1.0f;
         if (!GameManager.Instance.paused)
@@ -156,15 +162,43 @@ public abstract class Character : MonoBehaviour, ICharacter
 
             //0.001f moves the character slightly downwards so that it's always touching platform
             velocity = gameObject.transform.right * velocity.x * externalHorizontalMovementDamp * horizontalBlockValue +
-                                                jumpDirection * (velocity.y - 0.001f) * externalVerticalMovementDamp * verticalBlockValue +
+                                                jumpDirection * (velocity.y + groundCollisionCorrection) * externalVerticalMovementDamp * verticalBlockValue +
                                                 externalSpeed;
             
             gameObject.transform.up = playerUpOrientation;
 
             gameObject.transform.position += velocity;
-            
+
+            DampExternalForce();
         }
     }
+
+    public virtual void Stun(float duration)
+    {
+        BlockInputs(duration, true, false);
+
+        //Create a new stun state and pass this character
+        new StunState(duration, this);
+    }
+
+    #region External Force Functions
+    void DampExternalForce()
+    {
+        if(externalForce.sqrMagnitude > 30)
+        {
+            externalForce -= externalForce * externalForceDamp;
+        }
+        else
+        {
+            externalForce = Vector3.zero;
+        }
+    }
+    
+    public void AddExternalForce(Vector3 forceAmount)
+    {
+        externalForce = forceAmount;
+    }
+    #endregion
 
     public void SetSoundEffect(AudioClip clipToPlay = null, bool loop = false, bool playOneShot = false, float delay = 0.0f)
     {
@@ -383,19 +417,32 @@ public class PlayerStatus
     public void SetpHIndicator(PH newIndicator)
     {
         //Add the event and raise an event to notify subscribers that pH indicator has changed
-        pHIndicator = newIndicator;
-        //Set the image in the button
-        SetpHIndicatorImage(newIndicator.PHIndicatorImage);
+        if(pHIndicator == null || pHIndicator.indicator != newIndicator.indicator)
+        {
+            pHIndicator = newIndicator;
 
-        //TODO: Must be changed to reflect the pH use counter to the number of items of same type in the inventory
-        //Increment the pH use counter
-        pHUseCounter = newIndicator.GetUseCount();
-        pHIndicatorName.text = newIndicator.indicator.ToString();
-        pHUseCounterText.text = pHUseCounter.ToString();
+            //Set the image in the button
+            SetpHIndicatorImage(newIndicator.PHIndicatorImage);
 
-        if (PHIndicatorChangedEvent != null)
-            PHIndicatorChangedEvent();
+            //TODO: Must be changed to reflect the pH use counter to the number of items of same type in the inventory
+            //Increment the pH use counter
+            pHUseCounter = newIndicator.GetUseCount();
+            pHIndicatorName.text = newIndicator.indicator.ToString();
+            pHUseCounterText.text = pHUseCounter.ToString();
+
+
+            if (PHIndicatorChangedEvent != null)
+                PHIndicatorChangedEvent();
+
+        }
+        else
+        {
+            pHUseCounter += newIndicator.GetUseCount();
+            pHUseCounterText.text = pHUseCounter.ToString();
+        }
+        
     }
+
     void SetpHIndicatorImage(Sprite pHImage)
     {
         if(pHIndicatorImage != null)
@@ -481,7 +528,7 @@ public class Player : Character
         audioSource = GetComponent<AudioSource>();
 
         StateList = new List<States>();
-        StateList.Add(new IdleState());
+        StateList.Add(State);
 
         //Input objects
         tapInput = new ThrowTapInput(this, GameManager.Instance.virtualJoystick.GetComponent<Canvas>());
@@ -498,7 +545,13 @@ public class Player : Character
         if (Input.GetKeyDown(KeyCode.O))
         {
             Debug.Log("Pressed P....Opening Journal");
-            Journal.Instance.ToggleJournal();
+            if(Journal.Instance != null)
+                Journal.Instance.ToggleJournal();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            ItemSelection.Instance.ToggleActivation(GetComponentInChildren<PlayerInventory>());
         }
 
 

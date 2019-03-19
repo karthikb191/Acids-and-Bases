@@ -77,7 +77,7 @@ public class CharacterUtility : MonoBehaviour
         angle = 0;
         //Debug.Log("collider is: " + hit.collider);
 
-        if (hit.HasValue)
+        if (hit.HasValue && hit.Value.transform.tag != "tag_ladder" && c.State.GetType() != typeof(ClimbingState))
         {
             //Debug.Log("Hit has value");
             if (hit.Value.collider != null)
@@ -96,7 +96,6 @@ public class CharacterUtility : MonoBehaviour
                         c.playerUpOrientation = dir;
                     }
                 }
-
             }
             else
             {
@@ -105,11 +104,13 @@ public class CharacterUtility : MonoBehaviour
                 c.playerUpOrientation = dir;
             }
 
-            if (c.State.GetType() != typeof(FallingState))
+            if (c.State.GetType() != typeof(FallingState) && c.State.GetType() != typeof(JumpingState))
             {
                 //Debug.Log("Distance to ground is: " + Vector3.Distance(hit.point, gameObject.transform.position));
 
-                yCorr = -(c.gameObject.transform.position.y - hit.Value.point.y);
+                yCorr = -((c.gameObject.transform.position.y - hit.Value.point.y) - c.groundCheckCircleRadius * 0.5f);
+                //Debug.Log("Y Correction is: " + yCorr);
+                //Debug.Log("Hit point: " + hit.Value.point.y);
             }
 
         }

@@ -84,8 +84,8 @@ MonoBehaviour:
   shortName: 
   fullName: 
   tags: 
-  itemType: 0
-  indicatorType: 3
+  itemType: 1
+  indicatorType: 0
   acidType: 0
   baseType: 0
   saltType: 0

@@ -48,7 +48,7 @@ public class AI : MonoBehaviour {
     Node destinationNode;
     
     int directionFacing = 1;
-    float maxJumpHeight = 4.0f;
+    float maxJumpHeight = 5.0f;
 
     Vector3 directionToTarget;
     Vector3 directionToTargetNormalized;
@@ -110,15 +110,15 @@ public class AI : MonoBehaviour {
             //Debug.Log("Halt movement: " + haltMovement);
 
             //TODO: Remove comments later while still enabling testing
-            if (Input.GetMouseButtonDown(0) && !CharacterManager.Instance.characterClicked)
-            {
-                //TODO: change this
-                targetNodePath.Clear();
-                nodesPassed.Clear();
-                targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-                //CalculateNodePath(currentNode, player.transform.position);
-                CalculateNodePath(targetLocation);
-            }
+            //if (Input.GetMouseButtonDown(0))// && !CharacterManager.Instance.characterClicked)
+            //{
+            //    //TODO: change this
+            //    targetNodePath.Clear();
+            //    nodesPassed.Clear();
+            //    targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+            //    //CalculateNodePath(currentNode, player.transform.position);
+            //    CalculateNodePath(targetLocation);
+            //}
             if (haltMovement)
                 return;
 
@@ -148,11 +148,53 @@ public class AI : MonoBehaviour {
             }
             
             Move();
-
+            //TODO: Consider adding this funciton later for better resolution
+            //TrackMovementAndResolve();
             previousDirection = gameObject.transform.right;
         }
     }
-    
+
+    //float trackTime;
+    //Vector3 trackPosition;
+    public void ResolveEnemyCollision(List<Character> enemiesList)
+    {
+        for(int i = 0; i < enemiesList.Count; i++)
+        {
+            Enemy e = enemiesList[i].GetComponent<Enemy>();
+            if (e != null)
+            {
+                if(e.characterType == enemy.characterType || ignoreOtherEnemies)
+                {
+                    Debug.Log("Resoving stuff between enemies");
+                    //if(Vector3.SqrMagnitude(enemiesList[i].transform.position - gameObject.transform.position) < 5f)
+                    if(Vector3.SqrMagnitude(enemiesList[i].transform.position - gameObject.transform.position) < 5f)
+                        if (Vector3.Dot( (targetNode.position - gameObject.transform.position),
+                                        (e.transform.position - gameObject.transform.position)) > 0)
+                        {
+                            if(-directionFacing == e.GetComponent<AI>().directionFacing)
+                            {
+                                if(directionFacing == 1)
+                                {
+                                    Node n = GetBestLeftNode(targetNode);
+                                    if (targetNodePath.Count == 0 && n != null)
+                                        targetNode = n;
+                                    HaltMovement(0.5f, true, false);
+                                }
+                                else
+                                {
+                                    Node n = GetBestRightNode(targetNode);
+                                    if (targetNodePath.Count == 0 && n != null)
+                                        targetNode = n;
+                                    HaltMovement(0.5f, true, false);
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    }
+
+    Node GetTargetNode() { return targetNode; }
 
     void UpdateCurrentNode()
     {
@@ -216,7 +258,7 @@ public class AI : MonoBehaviour {
                     Debug.Log("Character is able to climb.....AI is set");
                     //The following variable is passed to the Enemy class and this determines if the character should climb
                     characterCanClimb = true;
-                    if (!haltMovement && !enemy.State.Equals(typeof(ClimbingState)))
+                    if (!haltMovement && !enemy.State.Equals(typeof(ClimbingState)) && !enemy.State.Equals(typeof(LandState)))
                     {
                         HaltMovement(0.5f, true, false);
                         //StartCoroutine(PauseMovement());
@@ -232,8 +274,7 @@ public class AI : MonoBehaviour {
             }
         }
     }
-
-
+    
     void CalculateNodePath(Vector3 targetLocation)
     {
         targetNodePath.Clear();
@@ -241,7 +282,7 @@ public class AI : MonoBehaviour {
         //TODO: Check this
         Node tempTarget = targetNode;
         targetNode = DecideDestinationNodeBasedOnPosition(targetLocation);
-
+        Debug.Log("Calculating node path");
         //If there's no target found, raycast to find the floor and return
         if (targetNode == null)
         {
@@ -468,7 +509,6 @@ public class AI : MonoBehaviour {
                     {
                         currentNode = targetNode;
                         StartCoroutine(PauseMovement(true));
-
                     }
                 }
             }
@@ -602,12 +642,19 @@ public class AI : MonoBehaviour {
             {
                 if (targetNode.platform != null)
                     if (targetNode.platform.tag == "tag_ladder")
+                    {
+                        if(targetNodePath.Count > 1)
+                        {
+                            if (targetNodePath[targetNodePath.Count - 2].platform.tag == "tag_ladder")
+                                TargetNodeChanged();
+                        }
                         return;
+                    }
                 if (targetNodePath.Count >= 2)
                 {
                     if (directionToTarget.y > maxJumpHeight + 1.5f)
                     {
-                        targetNodePath.RemoveAt(targetNodePath.Count - 1);
+                        //targetNodePath.RemoveAt(targetNodePath.Count - 1);
                         Debug.Log("Removed 2");
                         TargetNodeChanged();
                         //directionToTarget = targetNode.position - gameObject.transform.position;
@@ -618,7 +665,7 @@ public class AI : MonoBehaviour {
                 {
                     float sqDistanceBetweenNodes = Vector3.SqrMagnitude(targetNodePath[targetNodePath.Count - 1].position -
                                                                         targetNodePath[targetNodePath.Count - 2].position);
-                    if (sqDistanceBetweenNodes < 2.5f)
+                    if (sqDistanceBetweenNodes < 1.0f)
                     {
                         //targetNodePath.RemoveAt(targetNodePath.Count - 1);
                         TargetNodeChanged();
@@ -682,26 +729,29 @@ public class AI : MonoBehaviour {
                     //the target node will be checked again in the next frame
                     Node bestLeftNode = null; float leftYDist = Mathf.Infinity;
                     Node bestRightNode = null; float rightYDist = Mathf.Infinity;
-                    for (int i = 0; i < targetNode.leftConnections.Count; i++)
-                    {
-                        Vector3 dir = targetNode.leftConnections[i].position - gameObject.transform.position;
-                        if (Mathf.Abs(dir.y) < leftYDist)
-                        {
-                            //Debug.LogError("Added node");
-                            bestLeftNode = targetNode.leftConnections[i];
-                            leftYDist = dir.y;
-                        }
-                    }
-                    for (int i = 0; i < targetNode.rightConnections.Count; i++)
-                    {
-                        Vector3 dir = targetNode.rightConnections[i].position - gameObject.transform.position;
-                        if (Mathf.Abs(dir.y) < rightYDist)
-                        {
-                            //Debug.LogError("Added node");
-                            bestRightNode = targetNode.rightConnections[i];
-                            rightYDist = dir.y;
-                        }
-                    }
+                    bestLeftNode = GetBestLeftNode(targetNode);
+                    bestRightNode = GetBestRightNode(targetNode);
+                    //TODO: Changed this portion. If the code doesn;t work as expected, consider changing this
+                    //for (int i = 0; i < targetNode.leftConnections.Count; i++)
+                    //{
+                    //    Vector3 dir = targetNode.leftConnections[i].position - gameObject.transform.position;
+                    //    if (Mathf.Abs(dir.y) < leftYDist)
+                    //    {
+                    //        //Debug.LogError("Added node");
+                    //        bestLeftNode = targetNode.leftConnections[i];
+                    //        leftYDist = dir.y;
+                    //    }
+                    //}
+                    //for (int i = 0; i < targetNode.rightConnections.Count; i++)
+                    //{
+                    //    Vector3 dir = targetNode.rightConnections[i].position - gameObject.transform.position;
+                    //    if (Mathf.Abs(dir.y) < rightYDist)
+                    //    {
+                    //        //Debug.LogError("Added node");
+                    //        bestRightNode = targetNode.rightConnections[i];
+                    //        rightYDist = dir.y;
+                    //    }
+                    //}
                     if (leftYDist <= rightYDist && bestLeftNode != null)
                     {
                         Debug.LogError("Added node");
@@ -718,6 +768,38 @@ public class AI : MonoBehaviour {
                 }
             }
         }
+    }
+
+    Node GetBestLeftNode(Node node)
+    {
+        Node bestLeftNode = null; float leftYDist = Mathf.Infinity;
+        for (int i = 0; i < targetNode.leftConnections.Count; i++)
+        {
+            Vector3 dir = targetNode.leftConnections[i].position - gameObject.transform.position;
+            if (Mathf.Abs(dir.y) < leftYDist)
+            {
+                //Debug.LogError("Added node");
+                bestLeftNode = targetNode.leftConnections[i];
+                leftYDist = dir.y;
+            }
+        }
+        return bestLeftNode;
+    }
+
+    Node GetBestRightNode(Node node)
+    {
+        Node bestRightNode = null; float rightYDist = Mathf.Infinity;
+        for (int i = 0; i < targetNode.rightConnections.Count; i++)
+        {
+            Vector3 dir = targetNode.rightConnections[i].position - gameObject.transform.position;
+            if (Mathf.Abs(dir.y) < rightYDist)
+            {
+                //Debug.LogError("Added node");
+                bestRightNode = targetNode.rightConnections[i];
+                rightYDist = dir.y;
+            }
+        }
+        return bestRightNode;
     }
 
     void TargetNodeChanged()
@@ -756,7 +838,7 @@ public class AI : MonoBehaviour {
 
                 currentNode = targetNode;
                 destinationNode = targetNode;
-                backupPlatformNode = targetNode;
+                //backupPlatformNode = targetNode;
                 break;
             }
             else
@@ -773,21 +855,23 @@ public class AI : MonoBehaviour {
             nodesPassed.Clear();
             
             CalculateNodePath (targetLocation);
-            if (targetNode == null)
-            {
-                targetNode = backupPlatformNode;
-                currentNode = targetNode;
-            }
-            else
-            {
-                currentNode = targetNode;
-            }
+            currentNode = targetNode;
+            //if (targetNode == null)
+            //{
+            //    targetNode = backupPlatformNode;
+            //    currentNode = targetNode;
+            //}
+            //else
+            //{
+            //    currentNode = targetNode;
+            //}
             //currentNode = targetNode;
         }
     }
 
     void Move()
     {
+        //Debug.Log("target node: " + targetNode.position);
         Debug.DrawLine(new Vector3(10, 10, 0), targetNode.position, Color.green);
         
         //this is for the jump speed multiplier
@@ -829,12 +913,12 @@ public class AI : MonoBehaviour {
                         if (targetNodePath[targetNodePath.Count - 2].position.y > enemy.transform.position.y)
                         {
                             horizontalMovement = 1;
-                            //Debug.Log("Climbing up");
+                            Debug.Log("Climbing up");
                         }
                         else
                         {
                             horizontalMovement = -1;
-                            //Debug.Log("Climbing Down");
+                            Debug.Log("Climbing Down");
                         }
                         return;
                     }
@@ -900,7 +984,7 @@ public class AI : MonoBehaviour {
                 //Jump check conditions - enabling or disabling jump
                 if (jumpRoutine == null)// && !enemy.State.Equals(typeof(ClimbingState)))
                 {
-                    if (Mathf.Abs(directionVector.y) > 0.2f && Mathf.Abs(directionVector.y) < maxJumpHeight)
+                    if (Mathf.Abs(directionVector.y) > -0.02f && Mathf.Abs(directionVector.y) < maxJumpHeight)
                     {
                         bool skip = false;
                         //Check where the character is with respect to the platform
@@ -965,7 +1049,7 @@ public class AI : MonoBehaviour {
                         }
 
                         
-                        if (Mathf.Abs(directionVector.x) < 4.0f && !skip)
+                        if (Mathf.Abs(directionVector.x) < 12.0f && !skip)
                         {
                             EnableJump(EvaluateJumpTarget());
                         }
@@ -989,8 +1073,8 @@ public class AI : MonoBehaviour {
                                 //Disable jump if the target node is a ladder
                                 if (currentNode.platform != targetNode.platform)
                                 {
-                                    if (Mathf.Abs(targetNode.position.y - currentNode.position.y) < 0.3f)
-                                        EnableJump(EvaluateJumpTarget());
+                                    //if (Mathf.Abs(targetNode.position.y - currentNode.position.y) < 0.3f)
+                                    EnableJump(EvaluateJumpTarget());
                                 }
                             }
                         }
@@ -1066,15 +1150,15 @@ public class AI : MonoBehaviour {
     //This function sets the appropritate jump Hold time. This determines how long the character jumps
     float EvaluateJumpTarget()
     {
-        float maxJumpHoldTime = 0.35f;
+        float maxJumpHoldTime = 1.0f;
         float min = 0.05f;
         float max = maxJumpHeight;
         float result = 0;
         Vector3 directionToTarget = targetNode.position - gameObject.transform.position;
 
-        result = Mathf.Clamp((directionToTarget.y - min) / (max - min), 0, 1);
-        //Debug.Log("jump result: " + result);
-        result = maxJumpHoldTime * (result * result * (3 - 2 * result));
+        result = Mathf.Clamp((Mathf.Abs(directionToTarget.y) + Mathf.Abs(directionToTarget.x) - min) / (max - min), 0, 1);
+        result = Mathf.Abs(maxJumpHoldTime * (result * result * (3 - 2 * result)));
+        Debug.Log("jump result: " + result);
         return Random.Range(result - 0.08f, result + 0.12f);
     }
 
@@ -1191,16 +1275,14 @@ public class AI : MonoBehaviour {
 
             //TODO: Optimize the persistent chase code
             //This block is for persistently chasing the character
-            if (persistentChase &&
-                        (Mathf.Abs(directionToCharacter.x) > visibilityDistance &&
-                        Mathf.Abs(directionToCharacter.y) > visibilityDistance / 6))
+            if (persistentChase && directionToCharacter.magnitude > visibilityDistance)
             {
-                Debug.Log("Executing block");
+                //Debug.Log("Executing block");
                 chasingCharacterWithinProximity = false;
                 Player p = chasingCharacter.GetComponent<Player>();
                 bool layoutPath = false;
                 if (player != null) {
-                    //if // && enemy.State.GetType() != typeof(ClimbingState))
+                    //if(enemy.State.GetType() != typeof(ClimbingState))
                     //{
                         //Try to reach the player's current node
                         if (lastKnownPlayerNode == null)
@@ -1230,7 +1312,7 @@ public class AI : MonoBehaviour {
                 return;
             }
 
-            if (enemy.State.GetType() == typeof(ClimbingState))
+            if (enemy.State.Equals(typeof(ClimbingState)))
                 return;
 
             
@@ -1303,6 +1385,7 @@ public class AI : MonoBehaviour {
     {
         if (chaseStarted)
         {
+            Debug.Log("Chase reset");
             RaycastAndFindFloor(false);
 
             targetNodePath.Clear();
@@ -1441,6 +1524,8 @@ public class AI : MonoBehaviour {
         if (!resetFinished)
             RaycastAndFindFloor(false);
     }
+
+    public bool IsHalted() { return haltMovement; }
 
     private void OnDrawGizmos()
     {

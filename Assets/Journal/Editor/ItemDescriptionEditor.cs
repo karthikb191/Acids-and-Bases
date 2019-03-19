@@ -46,6 +46,8 @@ public class ItemDescriptionEditor : Editor{
         description.extractionPossible = EditorGUILayout.BeginToggleGroup("Extraction Quantity", description.extractionPossible);
         if (description.extractionPossible)
             description.extractQuantity = EditorGUILayout.IntSlider(description.extractQuantity, 1, 50);
+
+        EditorUtility.SetDirty(target);
     }
 	
 }

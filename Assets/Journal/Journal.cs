@@ -182,7 +182,7 @@ public class Journal : MonoBehaviour {
                     float partition = (float)1 / activeContentItems.Count;
                     int indexnumber = Mathf.FloorToInt(-localPoint.y / partition);
                     //Debug.Log("partition: " + partition);
-                    //Debug.Log("local point:  " + localPoint);
+                    Debug.Log("local point:  " + localPoint);
                     //Debug.Log("Index number is: " + indexnumber);
                     //select the content item of specified index
                     if (activeContentItems[indexnumber] != activeContentItem)

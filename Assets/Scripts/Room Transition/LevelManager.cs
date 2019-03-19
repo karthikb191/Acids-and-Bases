@@ -73,8 +73,10 @@ public class LevelManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            //CheckPointManager.LoadCheckPoint();
-            SaveManager.Load();
+            CheckPointManager.LoadCheckPoint();
+
+            if(SaveManager.Instance.enabled)
+                SaveManager.Load();
         }
     }
 

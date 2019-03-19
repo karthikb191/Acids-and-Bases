@@ -352,8 +352,10 @@ public class ItemBase : MonoBehaviour {
         //Get the player component. If player is null, log error.
         if (playerObject.GetComponent<Player>() && this.gameObject.GetComponent<PH>() != null)
         {
-            if (!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator())
-                playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+            if(GetComponent<PH>())
+                if (!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator() ||
+                    playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator().indicator == GetComponent<PH>().indicator)
+                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
         }
         else 
         {

@@ -8,19 +8,15 @@ using UnityEditor;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Linq;
-using System.Linq;
+
+[XmlInclude(typeof(SaveData))]
+[XmlInclude(typeof(QuestionBoxSaveData))]
+public class SaveData{}
 
 public class MemoryManager
 {
-    //public static string localStoragePath = Application.persistentDataPath;
-    
     static string localStoragePath;
-
-    //public static void SetLocalStoragePath(string path)
-    //{
-    //    localStoragePath = path;
-    //}
-
+    
     public static XDocument SearchDirectoryForXML(string localPath, string xmlFileName)
     {
         localStoragePath = localPath;
@@ -98,12 +94,13 @@ public class MemoryManager
     {
         
         //Serialize the save object to an xml file
-        XmlSerializer serializer = new XmlSerializer(typeof(T));
+        XmlSerializer serializer = new XmlSerializer(typeof(T), new Type[] { typeof(SaveData) });
         StringWriter writer = new StringWriter();
         serializer.Serialize(writer, obj);
 
         //Converting it to text
         string data = writer.ToString();
+
         Debug.Log("data: " + data);
 
         MemoryManager.SaveDocument(data, ref xmlDocument, fileName);
@@ -143,6 +140,19 @@ public class MemoryManager
 
 }
 
+[System.Serializable]
+public class SaveObjectType
+{
+    public string type;
+    public List<object> values = new List<object>();
+
+    public void SetType(System.Type t)
+    {
+        type = t.ToString();
+    }
+}
+
+
 /// <summary>
 /// This class contains information about all the information that must be saved to the xml file
 /// </summary>
@@ -150,10 +160,31 @@ public class SaveObject
 {
     public List<Level> levelsInfo = new List<Level>();
 
+    public List<SaveObjectType> types = new List<SaveObjectType>();
+    
     //Journal Contents
     //public List<Sprite> itemsImages = new List<Sprite>();
     public string journalInformationPath;
     
+    public void AddObject(System.Object obj)
+    {
+        for(int i = 0; i < types.Count; i++)
+        {
+            if(obj.GetType().ToString() == types[0].type)
+            {
+                types[i].values.Add(obj);
+                return;
+            }
+        }
+
+        //Create new type and add object
+        SaveObjectType o = new SaveObjectType();
+        types.Add(o);
+        o.type = obj.GetType().ToString();
+        o.values.Add(obj);
+    }
+
+
     public void SaveJournal(JournalSaveData instance, string folderPath, string fileName)
     {
         WriteToFile(instance, folderPath, fileName);
@@ -179,6 +210,7 @@ public class SaveObject
     {
         if (o == null)
             return;
+
         BinaryFormatter bf = new BinaryFormatter();
 
         FileStream f = File.Open(Path.Combine(folderPath, fileName), FileMode.OpenOrCreate);
@@ -192,11 +224,16 @@ public class SaveObject
 public class SaveManager : MonoBehaviour {
     public static SaveManager Instance { set; get; }
 
+    public static SaveObject saveObject;
+
     static string localStoragePath;
     static string folderName = "Save Data";
     static string saveFileName = "SaveData.xml";
 
     static XDocument xmlDocument;
+
+    public delegate void SaveDelegate(System.Type t);
+    public static event SaveDelegate SaveEvent;
 
     private void Awake()
     {
@@ -215,41 +252,47 @@ public class SaveManager : MonoBehaviour {
 
         xmlDocument = MemoryManager.SearchDirectoryForXML(localStoragePath, saveFileName);
     }
-    
+
 
     //TODO: Add error checking code
     public static void Save()
     {
-        SaveObject s = new SaveObject();
-        s.levelsInfo = GameManager.Instance.levelsCleared;
+        saveObject = new SaveObject();
+
+        SaveEvent(typeof(SaveManager));
+
+        saveObject.levelsInfo = GameManager.Instance.levelsCleared;
 
         //Save the journal
         JournalSaveData js = new JournalSaveData();
-        js.itemsInJournal = Journal.Instance.GetAllItemsInJournal();
-
-        //TODO: Add all acids, bases and neutral items as separate images in the resources folder.
-        //Change how the images are being referenced
-        //for storing the sprites, store all the textures.
-        for (int i = 0; i < Journal.Instance.GetAllItemIconsInJournal().Count; i++)
+        if(Journal.Instance != null)
         {
-            js.itemIconsPath.Add(AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
+            js.itemsInJournal = Journal.Instance.GetAllItemsInJournal();
+
+            //TODO: Add all acids, bases and neutral items as separate images in the resources folder.
+            //Change how the images are being referenced
+            //for storing the sprites, store all the textures.
+            for (int i = 0; i < Journal.Instance.GetAllItemIconsInJournal().Count; i++)
+            {
+                js.itemIconsPath.Add(AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
             
-            SerializableRect r = new SerializableRect(Journal.Instance.GetAllItemIconsInJournal()[i].rect.x,
-                                                        Journal.Instance.GetAllItemIconsInJournal()[i].rect.y,
-                                                        Journal.Instance.GetAllItemIconsInJournal()[i].rect.width,
-                                                        Journal.Instance.GetAllItemIconsInJournal()[i].rect.height);
+                SerializableRect r = new SerializableRect(Journal.Instance.GetAllItemIconsInJournal()[i].rect.x,
+                                                            Journal.Instance.GetAllItemIconsInJournal()[i].rect.y,
+                                                            Journal.Instance.GetAllItemIconsInJournal()[i].rect.width,
+                                                            Journal.Instance.GetAllItemIconsInJournal()[i].rect.height);
 
             
-            Debug.Log("Path: " + AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
-            Debug.Log("x: " + r.x + "y: " + r.y + "width: " + r.width + "Height " + r.height);
-            js.spriteRect.Add(r);
+                Debug.Log("Path: " + AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
+                Debug.Log("x: " + r.x + "y: " + r.y + "width: " + r.width + "Height " + r.height);
+                js.spriteRect.Add(r);
+            }
+
+            js.itemsDescriptions = Journal.Instance.GetAllItemDescriptionsInJournal();
+
+            saveObject.SaveJournal(js, localStoragePath, "Journal");
         }
 
-        js.itemsDescriptions = Journal.Instance.GetAllItemDescriptionsInJournal();
-
-        s.SaveJournal(js, localStoragePath, "Journal");
-
-        MemoryManager.Save<SaveObject>(s, xmlDocument, localStoragePath, saveFileName);
+        MemoryManager.Save<SaveObject>(saveObject, xmlDocument, localStoragePath, saveFileName);
         
     }
 

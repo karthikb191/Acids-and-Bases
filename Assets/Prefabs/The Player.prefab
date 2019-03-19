@@ -2396,6 +2396,7 @@ MonoBehaviour:
     m_Bits: 768
   currentLinearSpeed: 0
   currentJumpSpeed: 0
+  externalForceDamp: 0.1
   externalHorizontalMovementDamp: 0
   externalVerticalMovementDamp: 0
   externalForce: {x: 0, y: 0, z: 0}
@@ -2424,6 +2425,7 @@ MonoBehaviour:
     specialButtonPressed: 0
     specialButtonReleased: 1
   phMeterShow: {fileID: 0}
+  groundCollisionCorrection: 0
   maxHealth: 100
   playerManagedControls:
   - tag_ladder
@@ -2971,12 +2973,19 @@ MonoBehaviour:
   removeButton: {fileID: 0}
   swapButton: {fileID: 0}
   combineButton: {fileID: 0}
+  specialActionButton: {fileID: 0}
   inventoryHolderAnimator: {fileID: 0}
   extendedInventoyHolderAnimator: {fileID: 0}
   maxDisplaySlots: 6
   showInventoryItems: 0
   allowSelection: 0
   allowSwap: 0
+  highlightSelection1: {fileID: 0}
+  highlightSelection2: {fileID: 0}
+  allowCombine: 0
+  allowExtract: 0
+  allowRemove: 0
+  highLightGameObjectList: []
 --- !u!114 &114645224620739274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3136,6 +3145,11 @@ MonoBehaviour:
   grabAnimationInfo:
     grabStartAnimationClip: {fileID: 7400000, guid: d40002899022d91438a976aa2a2dae9b,
       type: 2}
+  phScanVisualInfo:
+    scanVisual: {fileID: 0}
+    visualScaleMultiplier: 1
+    finalFadeMultiplier: 4
+    ignorepHLimit: 1
 --- !u!114 &114710837570011932
 MonoBehaviour:
   m_ObjectHideFlags: 1

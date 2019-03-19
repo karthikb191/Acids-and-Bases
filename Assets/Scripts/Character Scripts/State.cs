@@ -18,7 +18,9 @@ public abstract class States : IEquals<System.Type>
 
     public virtual void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
     {
+        yCorr = 0;
         CharacterUtility.CastRayAndOrientPlayer(c, info, out angle, out yCorr);
+        c.groundCollisionCorrection = yCorr;
         //Animation for touching the ground is false by default
         c.playerSprite.GetComponent<Animator>().SetFloat("JumpSpeed", c.currentJumpSpeed);
         
@@ -231,7 +233,7 @@ public class JumpingState : States
             Collider2D upwardCollision = Physics2D.OverlapCircle(c.ceilingCheck.transform.position, c.groundCheckCircleRadius, LayerMask.GetMask("Platform"));
             //Debug.Log("upward collision: " + upwardCollision);
             
-            if (upwardCollision != null && c.currentJumpSpeed > 0)
+            if (upwardCollision != null && c.currentJumpSpeed > 0 && !upwardCollision.isTrigger)
             {
                 Debug.Log("Upward collision is not null");
                 c.currentJumpSpeed = 0;
@@ -315,12 +317,15 @@ public class FallingState : States
         if (info.Length > 0)
         {
             int count = 0;
+
             for (int i = 0; i < info.Length; i++)
             {
-                if(info[i].collider.gameObject.layer != LayerMask.NameToLayer("Platform"))
+                if (info[i].collider.gameObject.layer != LayerMask.NameToLayer("Platform"))
                 {
                     count++;
                 }
+                else if (info[i].collider.tag == "tag_ladder")
+                    count++;
             }
             if (count == info.Length)
                 return;
@@ -410,7 +415,6 @@ public class LandState : States
 
 public class ClimbingState : States
 {
-
     Platform ladder;
     public ClimbingState(Platform l, Character c)
     {
@@ -497,6 +501,9 @@ public class ClimbingState : States
         c.currentLinearSpeed = 0;
         c.currentJumpSpeed = 0;
 
+        if (c.transform.position.y > topNode.position.y - 0.2f)
+            return;
+
         if (Mathf.Abs(ladder.transform.position.x - c.transform.position.x) > 0.02f)
         {
             c.currentLinearSpeed = (ladder.transform.position.x - c.transform.position.x) * 5 * GameManager.Instance.DeltaTime;
@@ -545,19 +552,72 @@ public class ClimbingState : States
             nextState.index = c.StateList.Count + 1;
             c.StateList.Add(nextState);
         }
-        else if(Mathf.Abs(topNode.position.y - c.transform.position.y) < minimumDifference || c.transform.position.y > topNode.position.y)
-        {
-            Debug.Log("reached top");
-            VirtualJoystick.ResetArrows(c);
-            //Player state is set to falling if he attempts to go beyond the ladder proximity
-            c.StateList.RemoveAt(c.StateList.Count - 1);
-            c.currentJumpSpeed = 0;
-            //Add the falling state
-            States nextState = new FallingState(1);
-            //States nextState = new FallingState(1);
-            nextState.index = c.StateList.Count + 1;
-            c.StateList.Add(nextState);
-        }
+        //else if(Mathf.Abs(topNode.position.y - c.transform.position.y) < minimumDifference || c.transform.position.y > topNode.position.y)
+        //{
+        //    Debug.Log("reached top");
+        //    VirtualJoystick.ResetArrows(c);
+        //    //Player state is set to falling if he attempts to go beyond the ladder proximity
+        //    c.StateList.RemoveAt(c.StateList.Count - 1);
+        //    c.currentJumpSpeed = 0;
+        //    //Add the falling state
+        //    States nextState = new FallingState(1);
+        //    //States nextState = new FallingState(1);
+        //    nextState.index = c.StateList.Count + 1;
+        //    c.StateList.Add(nextState);
+        //}
+    }
+}
+
+/// <summary>
+/// A container class for all the special states
+/// </summary>
+public abstract class SpecialState : States
+{
+
+}
+
+/// <summary>
+/// This is a special state. The state will be set on the character by the external events
+/// </summary>
+public class StunState : SpecialState
+{
+    float duration;
+    Character c;
+    public StunState(float duration, Character c)
+    {
+        this.c = c;
+        this.duration = duration;
+
+        //This is a special state. So, the state list must be added to the character from the constructor and must be removed later
+        c.StateList.Add(this);
+
+        index = c.StateList.Count + 1;
     }
 
+    float timeElapsed = 0;
+    public override void UpdateState(Character c, UserInput input, RaycastHit2D[] info)
+    {
+        Debug.Log("Stun Update");
+        timeElapsed += GameManager.Instance.DeltaTime;
+
+        //TODO: Add the animation here
+
+        StateExitConditions(info);
+    }
+    void StateExitConditions(RaycastHit2D[] info)
+    {
+        if(timeElapsed > duration)
+        {
+            c.StateList.RemoveAt(c.StateList.Count - 1);
+        }
+
+        else if (info.Length == 0 && c.StateList[c.StateList.Count - 1].GetType() != typeof(FallingState))
+        {
+            Debug.Log("fallllllllllll" + c.StateList[c.StateList.Count - 1].GetType());
+            States nextState = new FallingState(1);
+            nextState.index = c.StateList.Count + 1;
+            c.StateList.Add(nextState);
+            return;
+        }
+    }
 }
