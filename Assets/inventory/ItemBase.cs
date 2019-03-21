@@ -109,6 +109,12 @@ public class ItemBase : MonoBehaviour {
                         VirtualJoystick.DisableDynamicButton(d);
                         ItemCountSelection.instance.Activate(maxCount);
                         ItemCountSelection.instance.item = this;
+                        
+                        if(playerObject.GetComponent<Player>())
+                        {
+                            CheckPointManager.RegisterCheckPointEvent += playerObject.GetComponentInChildren<PlayerInventory>().Save;
+                        }
+
                     });
                 }
             }
@@ -122,6 +128,12 @@ public class ItemBase : MonoBehaviour {
         {
             VirtualJoystick.DisableDynamicButton("tag_item");
             ItemCountSelection.instance.Dectivate();
+            ///Testing purpose to be removed later
+            if(playerObject.GetComponentInChildren<PlayerInventory>() != null)
+            {
+              //  playerObject.GetComponentInChildren<PlayerInventory>().SaveInventoryData();
+            }
+            //////
         }
     }
 
@@ -152,11 +164,9 @@ public class ItemBase : MonoBehaviour {
             gameObject.SetActive(false);
             yield break;
         }
-
         else
         {
             gameObject.transform.position = targetPosition;
-
         }
         Debug.Log("Parented");
 
@@ -173,12 +183,10 @@ public class ItemBase : MonoBehaviour {
     }
 
     public void DropItem(Vector3 targetPosition, Character c)
-    {
-        
+    {        
         targetScale = Vector3.one;
         transform.position = targetPosition;
         transform.parent = null;
-
         //animation for local trasform positions can come here
     }
 
@@ -188,14 +196,12 @@ public class ItemBase : MonoBehaviour {
 
         if(itemProperties.isThrowable && itemProperties.damageDealt != 0 && isFromEnemy)
         {
-            c.TakeDamage(itemProperties.damageDealt);
-           
+            c.TakeDamage(itemProperties.damageDealt);           
         }
 
         if(itemProperties.isThrowable && !isFromEnemy)
         {
-            c.gameObject.GetComponent<Enemy>().UseItem();
-      
+            c.gameObject.GetComponent<Enemy>().UseItem();      
             Debug.Log("Stun is called");
         }
     }
@@ -229,9 +235,9 @@ public class ItemBase : MonoBehaviour {
 
     IEnumerator ThrowProjectile(Vector3 Target, float firingAngle)
     {      
-        Debug.Log("Target to reach"+Target);
+       // Debug.Log("Target to reach"+Target);
         float target_Distance = Vector3.Distance(gameObject.transform.position, Target);
-        Debug.Log("target_Distance" + target_Distance);
+      //  Debug.Log("target_Distance" + target_Distance);
         float projectile_Velocity = target_Distance / (Mathf.Sin(2 * firingAngle * Mathf.Deg2Rad) / speed);
         float Vx = Mathf.Sqrt(projectile_Velocity) * Mathf.Cos(firingAngle * Mathf.Deg2Rad);
         float Vy = Mathf.Sqrt(projectile_Velocity) * Mathf.Sin(firingAngle * Mathf.Deg2Rad);
@@ -359,7 +365,7 @@ public class ItemBase : MonoBehaviour {
         }
         else 
         {
-            Debug.LogError("No player detected. Check your code");
+            Debug.LogError("Ph is not present");
         }
         //Changed......
         /* if (item.GetComponent<PH>())
@@ -411,7 +417,7 @@ public class ItemBase : MonoBehaviour {
     {
         /////////// set max range deactive later
 
-        Debug.Log("target for throw" + target + "<<<<<<====>>>>>>");
+       // Debug.Log("target for throw" + target + "<<<<<<====>>>>>>");
 
         directionOfThrow = target - gameObject.transform.position;
 

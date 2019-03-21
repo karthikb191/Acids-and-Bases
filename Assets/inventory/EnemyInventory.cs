@@ -43,7 +43,7 @@ public class EnemyInventory : Inventory {
 
     void SetActiveItem()
     {
-        Debug.Log("Set active item is called");
+        Debug.Log("Set active item is called in enemy" );
 
         for (int j = 0; j < slots[0].itemlist.Count; j++)
         {

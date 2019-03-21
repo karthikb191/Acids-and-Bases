@@ -105,6 +105,8 @@ public class CheckPointManager : MonoBehaviour {
             }
             //orderOfStorage.Clear();
         }
+
+        Debug.Log(checkPointData.types.Count + "inside check point manager");
     }
 
     void ClearCheckPointData(UnityEngine.SceneManagement.Scene scene)

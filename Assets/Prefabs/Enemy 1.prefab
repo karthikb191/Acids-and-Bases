@@ -1118,6 +1118,7 @@ MonoBehaviour:
     specialButtonPressed: 0
     specialButtonReleased: 1
   phMeterShow: {fileID: 0}
+  groundCollisionCorrection: 0
   maxHealth: 100
   promptClimb: 0
   climbing: 0

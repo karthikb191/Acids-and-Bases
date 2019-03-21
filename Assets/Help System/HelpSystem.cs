@@ -44,8 +44,9 @@ public class HelpSystem : MonoBehaviour {
         //Try to find the helper for the scene when the scene is loaded
         SceneManager.sceneLoaded += OnSceneLoad;
 
-
-      
+        displayHelp = transform.GetChild(0).gameObject;
+        displayHelp.SetActive(false);
+       
     }
 
 
@@ -98,6 +99,8 @@ public class HelpSystem : MonoBehaviour {
 
         // displayHelp.SetActive(false);
         displayHelp.GetComponent<Animator>().SetBool("PopUp", false);
+        displayHelp.SetActive(false);
+
         timer = 0;
         startTimer = false;
         Debug.Log("bjjgjgj");
@@ -121,7 +124,7 @@ public class HelpSystem : MonoBehaviour {
     bool showHint = false;
     public void ShowHint()
     {
-        // displayHelp.SetActive(true);
+         displayHelp.SetActive(true);
         GameManager.Instance.Pause();
         displayHelp.GetComponent<Animator>().SetBool("PopUp", true);
 

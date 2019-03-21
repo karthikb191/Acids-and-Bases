@@ -11,6 +11,7 @@ using System.Xml.Linq;
 
 [XmlInclude(typeof(SaveData))]
 [XmlInclude(typeof(QuestionBoxSaveData))]
+[XmlInclude(typeof(InventorySaveData))]
 public class SaveData{}
 
 public class MemoryManager
@@ -95,6 +96,7 @@ public class MemoryManager
         
         //Serialize the save object to an xml file
         XmlSerializer serializer = new XmlSerializer(typeof(T), new Type[] { typeof(SaveData) });
+       
         StringWriter writer = new StringWriter();
         serializer.Serialize(writer, obj);
 
@@ -168,7 +170,9 @@ public class SaveObject
     
     public void AddObject(System.Object obj)
     {
-        for(int i = 0; i < types.Count; i++)
+        
+
+        for (int i = 0; i < types.Count; i++)
         {
             if(obj.GetType().ToString() == types[0].type)
             {
@@ -182,6 +186,11 @@ public class SaveObject
         types.Add(o);
         o.type = obj.GetType().ToString();
         o.values.Add(obj);
+
+        for (int i = 0; i < types.Count; i++)
+        {
+           Debug.Log("Save object types  count  <><><> after: " +  types[i].type);
+        }
     }
 
 
@@ -193,16 +202,6 @@ public class SaveObject
     }
 
 
-    //////Inventory saving
-
-    public string inventoryInfoPath;
-    public void SaveInventory(InventorySaveData instance, string folderPath,string fileName)
-    {
-        WriteToFile(instance, folderPath, fileName);
-
-        inventoryInfoPath = Path.Combine(folderPath, fileName);
-
-    }
 
 
     //Create new file for binary Formatting
@@ -234,6 +233,8 @@ public class SaveManager : MonoBehaviour {
 
     public delegate void SaveDelegate(System.Type t);
     public static event SaveDelegate SaveEvent;
+
+
 
     private void Awake()
     {
