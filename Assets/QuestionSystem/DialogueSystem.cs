@@ -137,7 +137,7 @@ public class DialogueSystem : MonoBehaviour {
                     }
                 }
             }
-        }  
+        }
         else
         {
             if (currDialogueIndex < allDialoguesInCurrentSequence.Count) {

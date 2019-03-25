@@ -18,6 +18,7 @@ public class BackgroundAudio : MonoBehaviour {
         backgroundSound2.volume = 0;
 
         changingTrack = false;
+        
 	}
 	
     public static IEnumerator ChangeTracks(AudioClip audioClip)

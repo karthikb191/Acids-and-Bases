@@ -18,6 +18,7 @@ public class QuestionBoxSaveData : SaveData
     public string[] itemsExpecting;
     public bool unlocked;
     public int index;
+    public int corretAnswers;
     public int dialogueSequenceIndex;
 }
 
@@ -47,6 +48,7 @@ public class QuestionBox : MonoBehaviour {
     DialogueSystem dialogueSystem;
 
     Player playerOnFocus = null;
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (!dialogueSystem.IsDialoguePlaying())
@@ -61,6 +63,7 @@ public class QuestionBox : MonoBehaviour {
                     VirtualJoystick.EnableDynamicButton(d);
                     d.button.onClick.AddListener(() =>
                     {
+                        
                         dialogueSystem.StartDialogue(playerOnFocus);
                     //Disable the button
                     VirtualJoystick.DisableDynamicButton(d);
@@ -69,6 +72,7 @@ public class QuestionBox : MonoBehaviour {
             }
         }
     }
+
     private void OnTriggerExit2D(Collider2D collider)
     {
         if (playerOnFocus != null && collider.gameObject == playerOnFocus.gameObject)
@@ -100,6 +104,7 @@ public class QuestionBox : MonoBehaviour {
         dialogueSystem.CorrectAnswerEvent += CorrectAnswer;
 
         SaveManager.SaveEvent += Save;
+        SaveManager.LoadEvent += Load;
 
         CheckPointManager.RegisterCheckPointEvent += Save;
         CheckPointManager.LoadCheckpointEvent += Load;
@@ -111,7 +116,7 @@ public class QuestionBox : MonoBehaviour {
         saveData.unlocked = unlocked;
         saveData.index = index;
         saveData.dialogueSequenceIndex = dialogueSystem.currSequenceIndex;
-
+        saveData.corretAnswers = correctAnswers;
         //saveData.itemsExpecting = new string[itemsExpecting.Count];
         //for(int i = 0; i < itemsExpecting.Count; i++)
         //{
@@ -162,25 +167,29 @@ public class QuestionBox : MonoBehaviour {
             if (type.Equals(typeof(CheckPointManager)))
             {
                 Debug.Log("Loading the checkpoint");
-                for (int i = 0; i < CheckPointManager.checkPointData.types.Count; i++)
+                if(CheckPointManager.checkPointData != null)
                 {
-                    if (CheckPointManager.checkPointData.types[i].type == typeof(QuestionBoxSaveData).ToString())
-                    {
-                        for(int j = 0; j < CheckPointManager.checkPointData.types[i].values.Count; j++)
-                        {
-                            saveDatas.Add((QuestionBoxSaveData)CheckPointManager.checkPointData.types[i].values[j]);
-                        }
-                        break;
-                    }
-                }
 
-                for (int i = 0; i < saveDatas.Count; i++)
-                {
-                    if (saveDatas[i].index == index)
+                    for (int i = 0; i < CheckPointManager.checkPointData.types.Count; i++)
                     {
-                        LoadData(saveDatas[i]);
-                        saveDatas.RemoveAt(i);
-                        return;
+                        if (CheckPointManager.checkPointData.types[i].type == typeof(QuestionBoxSaveData).ToString())
+                        {
+                            for(int j = 0; j < CheckPointManager.checkPointData.types[i].values.Count; j++)
+                            {
+                                saveDatas.Add((QuestionBoxSaveData)CheckPointManager.checkPointData.types[i].values[j]);
+                            }
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < saveDatas.Count; i++)
+                    {
+                        if (saveDatas[i].index == index)
+                        {
+                            LoadData(saveDatas[i]);
+                            saveDatas.RemoveAt(i);
+                            return;
+                        }
                     }
                 }
             }
@@ -191,36 +200,40 @@ public class QuestionBox : MonoBehaviour {
 
     void LoadData(QuestionBoxSaveData data)
     {
-        if (data.itemsExpecting != null)
+        if(data != null)
         {
-            for (int i = 0; i < data.itemsExpecting.Length; i++)
+            if (data.itemsExpecting != null)
             {
-                System.Object o;
-                o = System.Enum.Parse(typeof(AcidsList), data.itemsExpecting[i]);
-                if(o == null)
+                for (int i = 0; i < data.itemsExpecting.Length; i++)
                 {
-                    o = System.Enum.Parse(typeof(BasesList), data.itemsExpecting[i]);
-                }
-                else if (o == null)
-                {
-                    o = System.Enum.Parse(typeof(IndicatorsList), data.itemsExpecting[i]);
-                }
-                else if (o == null)
-                {
-                    o = System.Enum.Parse(typeof(SaltsList), data.itemsExpecting[i]);
-                }
-                else if (o == null)
-                {
-                    o = System.Enum.Parse(typeof(NormalItemList), data.itemsExpecting[i]);
-                }
+                    System.Object o;
+                    o = System.Enum.Parse(typeof(AcidsList), data.itemsExpecting[i]);
+                    if(o == null)
+                    {
+                        o = System.Enum.Parse(typeof(BasesList), data.itemsExpecting[i]);
+                    }
+                    else if (o == null)
+                    {
+                        o = System.Enum.Parse(typeof(IndicatorsList), data.itemsExpecting[i]);
+                    }
+                    else if (o == null)
+                    {
+                        o = System.Enum.Parse(typeof(SaltsList), data.itemsExpecting[i]);
+                    }
+                    else if (o == null)
+                    {
+                        o = System.Enum.Parse(typeof(NormalItemList), data.itemsExpecting[i]);
+                    }
 
-                Debug.Log("e is: " + o.ToString());
-                //itemsExpecting[i] = ItemManager.instance.itemDictionary[o].GetComponent<ItemsDescription>();
+                    Debug.Log("e is: " + o.ToString());
+                    //itemsExpecting[i] = ItemManager.instance.itemDictionary[o].GetComponent<ItemsDescription>();
+                }
             }
-        }
-
         unlocked = data.unlocked;
-        dialogueSystem.ChangeDialogueSequenceTo (data.dialogueSequenceIndex);
+        //prevAnswerState = unlocked;
+        dialogueSystem.ChangeDialogueSequenceTo(data.dialogueSequenceIndex);
+        correctAnswers = data.corretAnswers;
+        }
     }
 
 

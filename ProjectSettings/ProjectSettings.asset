@@ -381,8 +381,15 @@ PlayerSettings:
   - m_BuildTarget: WebGLSupport
     m_APIs: 0b000000
     m_Automatic: 1
-  m_BuildTargetVRSettings: []
-  m_BuildTargetEnableVuforiaSettings: []
+  m_BuildTargetVRSettings:
+  - m_BuildTarget: Standalone
+    m_Enabled: 1
+    m_Devices:
+    - Oculus
+    - OpenVR
+  m_BuildTargetEnableVuforiaSettings:
+  - m_BuildTarget: Standalone
+    m_Enabled: 0
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   m_TemplateCustomTags: {}
@@ -738,7 +745,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 6d6d38e7-2b1a-4e6a-9941-0995e65c3907
   projectName: Acids And Bases
   organizationId: krlaze

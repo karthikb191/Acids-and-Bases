@@ -253,7 +253,7 @@ public class AI : MonoBehaviour {
             //if (Mathf.Abs(directionToTarget.x) < 0.8f && Mathf.Abs(directionToTarget.y) < 0.8f && targetNode.platform != null)
             if (contactWithLadder && targetNode.platform != null)
             {
-                if (targetNode.platform.tag == "tag_ladder")
+                if (targetNode.platform.tag == "tag_ladder" && Mathf.Abs(directionToTarget.magnitude) < nodeReachTolerance * 5)
                 {
                     Debug.Log("Character is able to climb.....AI is set");
                     //The following variable is passed to the Enemy class and this determines if the character should climb
@@ -637,11 +637,21 @@ public class AI : MonoBehaviour {
         }
         else
         {
+            //TODO: Consider adding more conditions when raycasting might be needed
+            if (Mathf.Abs(directionToTarget.y) > maxJumpHeight + 0.5f
+                && !enemy.State.Equals(typeof(JumpingState)) && !enemy.State.Equals(typeof(FallingState)) && !enemy.State.Equals(typeof(ClimbingState)))
+            {
+                //parameter is set to true because we are still trying to find the optimal path to the destination
+                RaycastAndFindFloor(true);
+                Debug.Log("Finding floor");
+            }
+
+
             //Conditions for the chase node elimination
             if (chaseStarted)
             {
                 if (targetNode.platform != null)
-                    if (targetNode.platform.tag == "tag_ladder")
+                    if (targetNode.platform.tag == "tag_ladder" && enemy.State.Equals(typeof(ClimbingState)))
                     {
                         if(targetNodePath.Count > 1)
                         {
@@ -693,15 +703,8 @@ public class AI : MonoBehaviour {
             if (targetNode.platform != null)
                 if (targetNode.platform.tag == "tag_ladder")
                     return;
+
             
-            //TODO: Consider adding more conditions when raycasting might be needed
-            if (Mathf.Abs(directionToTarget.y) > maxJumpHeight + 0.5f
-                && !enemy.State.Equals(typeof(JumpingState)) && !enemy.State.Equals(typeof(FallingState)))
-            {
-                //parameter is set to true because we are still trying to find the optimal path to the destination
-                RaycastAndFindFloor(true);
-                Debug.Log("Finding floor");
-            }
 
             //Check if the object is too close to the target node
             //TODO: consider adding a random angle range
@@ -893,10 +896,12 @@ public class AI : MonoBehaviour {
             //Conditions for jump when character is in climbing state
             if (enemy.State.Equals(typeof(ClimbingState)))
             {
+                //Get the ladder on which the character is currently climbing using the state
+                ClimbingState cs = enemy.State as ClimbingState;
                 //If the current node is not the platform, but the character is still trying to climb
                 if (targetNode.platform != null)
                 {
-                    if(targetNode.platform.tag != "tag_ladder")
+                    if (targetNode.platform.tag != "tag_ladder" || targetNode.platform != cs.ladder)
                     {
                         horizontalMovement = Mathf.Sign(targetNode.position.x - gameObject.transform.position.x);
                         EnableJump(EvaluateJumpTarget());
@@ -920,7 +925,7 @@ public class AI : MonoBehaviour {
                             horizontalMovement = -1;
                             Debug.Log("Climbing Down");
                         }
-                        return;
+                        //return;
                     }
                 }
                 //Debug.Log("climbingggggggggggggggg");
@@ -1152,14 +1157,14 @@ public class AI : MonoBehaviour {
     {
         float maxJumpHoldTime = 1.0f;
         float min = 0.05f;
-        float max = maxJumpHeight;
+        float max = maxJumpHeight + PathGenerator.Instance.xSpacing;
         float result = 0;
         Vector3 directionToTarget = targetNode.position - gameObject.transform.position;
 
         result = Mathf.Clamp((Mathf.Abs(directionToTarget.y) + Mathf.Abs(directionToTarget.x) - min) / (max - min), 0, 1);
         result = Mathf.Abs(maxJumpHoldTime * (result * result * (3 - 2 * result)));
         Debug.Log("jump result: " + result);
-        return Random.Range(result - 0.08f, result + 0.12f);
+        return Random.Range(result - 0.2f, result + 0.2f);
     }
 
 

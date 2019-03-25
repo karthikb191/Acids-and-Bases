@@ -119,9 +119,9 @@ public class LevelManager : MonoBehaviour {
 
                 //Subscribing to game manager's fade out event so that the shift occurs at the appropriate time
                 GameManager.Instance.FadeOutStartEvent += ShiftRoom;
-                
+                Debug.Log("Shifting room");
             }
-            Debug.Log("Room shift failed.");
+            //Debug.Log("Room shift failed.");
         }
         else
         {

@@ -16,11 +16,16 @@ public class LightSystem2D : MonoBehaviour {
 
     public float emission = 1;
 
+    public int blurIterations = 4;
+
     /// <summary>
     /// This shader in this material is directly responsible for all the effects
     /// </summary>
     public Material OverlayMaterial;
     public Material pHScannerMaterial;
+
+    public Material BlurMaterial;
+    
 
     float LightPixelsPerUnit { get { return 1 / lightSize; } }
 
@@ -117,8 +122,21 @@ public class LightSystem2D : MonoBehaviour {
         lightCamera.Render();
 
         //The stuff camera sees is not stored in the render texture. Pass it as a global shader variable so that shaders can access it
+        RenderTexture rt1 = RenderTexture.GetTemporary((int)rawCameraWidth, (int)rawCameraHeight);
+        Graphics.Blit(lightsTexture, rt1);
+
+        for(int i = 0; i < blurIterations; i++)
+        {
+            RenderTexture rt2 = RenderTexture.GetTemporary((int)rawCameraWidth, (int)rawCameraHeight);
+            Graphics.Blit(rt1, rt2, BlurMaterial);
+            RenderTexture.ReleaseTemporary(rt1);
+            rt1 = rt2;
+        }
+        Graphics.Blit(rt1, lightsTexture);
+        
         Shader.SetGlobalTexture("_LightsTexture", lightsTexture);
 
+        RenderTexture.ReleaseTemporary(rt1);
         //Reset the lights camera
         lightCamera.targetTexture = null;
         lightCamera.backgroundColor = bgColor;
@@ -141,6 +159,9 @@ public class LightSystem2D : MonoBehaviour {
 
         Graphics.Blit(finalScreenBlitTexture, destination, pHScannerMaterial);
         //GL.Clear(true, true, new Color(0, 0, 0, 0));
+
+        finalScreenBlitTexture.DiscardContents();
+        lightsTexture.DiscardContents();
     }
 
 }

@@ -31,7 +31,7 @@ public class CheckPointData
 }
 
 public class CheckPointManager : MonoBehaviour {
-
+    
     static string checkPointFolderName = "Check Point";
     static string checkPointFileName = "CheckPoint.xml";
 

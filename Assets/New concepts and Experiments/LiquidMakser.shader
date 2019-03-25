@@ -68,7 +68,9 @@
 				fixed4 col = tex2D(_MainTex, i.uv);
 				fixed4 col2 = tex2D(_BodyTex, i.uv2) * _LiquidColor;
 				
-				return (1 - (col2.a + col.a)*0.85) * col + col2;
+				//fixed4 res = (1 - (col2.a + col.a)*0.85) * col + col2;
+				fixed4 res = (1 - (col2.a + col.a)*0.85) * col + col2;
+				return res;
 			}
 			ENDCG
 		}

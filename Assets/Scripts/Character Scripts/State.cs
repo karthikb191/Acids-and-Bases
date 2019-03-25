@@ -415,7 +415,7 @@ public class LandState : States
 
 public class ClimbingState : States
 {
-    Platform ladder;
+    public Platform ladder;
     public ClimbingState(Platform l, Character c)
     {
         ladder = l;
@@ -431,7 +431,7 @@ public class ClimbingState : States
 
     float climbSpeed = 3;
 
-    float minimumDifference = 0.15f;
+    float minimumDifference = 0.3f;
 
     bool firstUpdateFinished = false;
     //RaycastHit2D[] info;
@@ -501,7 +501,7 @@ public class ClimbingState : States
         c.currentLinearSpeed = 0;
         c.currentJumpSpeed = 0;
 
-        if (c.transform.position.y > topNode.position.y - 0.2f)
+        if (c.transform.position.y > topNode.position.y - minimumDifference)
             return;
 
         if (Mathf.Abs(ladder.transform.position.x - c.transform.position.x) > 0.02f)

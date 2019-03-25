@@ -92,7 +92,6 @@ public class MemoryManager
 
     public static T Save<T>(T obj, XDocument xmlDocument, string localPath, string fileName)
     {
-        
         //Serialize the save object to an xml file
         XmlSerializer serializer = new XmlSerializer(typeof(T), new Type[] { typeof(SaveData) });
         StringWriter writer = new StringWriter();
@@ -222,6 +221,9 @@ public class SaveManager : MonoBehaviour {
     public delegate void SaveDelegate(System.Type t);
     public static event SaveDelegate SaveEvent;
 
+    public delegate void LoadDelegate(System.Type t);
+    public static event LoadDelegate LoadEvent;
+
     private void Awake()
     {
         if (Instance == null)
@@ -288,6 +290,8 @@ public class SaveManager : MonoBehaviour {
         SaveObject s = new SaveObject();
 
         s = MemoryManager.Load<SaveObject>(s, xmlDocument, localStoragePath, saveFileName);
+
+        LoadEvent(typeof(SaveManager));
 
         if (s != null)
         {

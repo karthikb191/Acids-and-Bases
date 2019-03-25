@@ -6,6 +6,7 @@
 		_BrightnessMultiplier("Brightness Multiplier", Float) = 1
 		_Emission("Emission Multiplier", Float) = 1
 		_SampleRate("Ambience Sample Rate", Float) = 0.01
+		//_Interations("Iterations", Int) = 4;
 	}
 	SubShader
 	{
@@ -37,6 +38,7 @@
 
 			sampler2D _MainTex;
 			sampler2D _LightsTexture;
+			float4 _LightsTexture_TexelSize;
 			float _BrightnessMultiplier;
 			float _Emission;
 			float _SampleRate;
@@ -70,6 +72,9 @@
 				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(dist45, -dist45)));
 				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, dist45)));
 				maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, -dist45)));
+
+				
+
 				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, dist45)));
 				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(0, -dist45)));
 				//maxLight = max(maxLight, tex2D(_LightsTexture, i.uv + half2(-dist45, 0)));
@@ -78,6 +83,7 @@
 				
 				//lightsCol = lerp(lightsCol, maxLight, 0.1);
 				ambienceCol = lerp(lightsCol, maxLight, 0.8);
+				//ambienceCol = lerp(lightsCol, c, 0.8);
 				
 				col.rgb = col.rgb * _BrightnessMultiplier * (lightsCol.rgb) * ambienceCol.rgb;// *ambienceCol.rgb; // *(0, 0, 0, lightsCol.a);
 				

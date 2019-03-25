@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PathGenerator : MonoBehaviour {
 
+    public static PathGenerator Instance { get; set; }
+
     [SerializeField]
     public static List<Platform> platforms;
     //List<Platform> sortedPlatforms;
@@ -25,6 +27,12 @@ public class PathGenerator : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(this.gameObject);
+
         platforms.AddRange(FindObjectsOfType<Platform>());
 		//sort the platforms based on the x distance
         for(int i = 0; i < platforms.Count-1; i++)

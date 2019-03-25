@@ -17,18 +17,24 @@ public class Room : MonoBehaviour {
 
     [HideInInspector]
     List<Character> charactersThatMustBeSpawned;
+    
 
 	// Use this for initialization
 	void Start () {
         doorsInRoom = new List<Door>();
         doorsInRoom.AddRange(GetComponentsInChildren<Door>());
-        cameraBoundaries = gameObject.transform.Find("CameraBoundaries").gameObject;
+        if(gameObject.transform.Find("CameraBoundaries"))
+            cameraBoundaries = gameObject.transform.Find("CameraBoundaries").gameObject;
+        
         if (!initialRoom)
             gameObject.SetActive(false);
         else
             Camera.main.GetComponent<CameraScript>().boundariesContainer = cameraBoundaries;
+
+        //Testing. 
+        charactersThatMustBeSpawned.Add(this.GetComponent<Character>());
     }
-	
+
     public void ActivateRoom()
     {
         gameObject.SetActive(true);
