@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 [System.Serializable]
-public class InventorySaveData
+public class InventorySaveData : SaveData
 {
+   // public static InventorySaveData instance = new InventorySaveData();
     public List<SlotSaveData> slots = new List<SlotSaveData>();
     public string activeItem;
     public int activeDisplayCount;
@@ -18,15 +20,17 @@ public class SlotSaveData
     public string itemStored;
     public int numberOfItemsStored;
     public string parent;
-    public List<System.Object> itemsList = new List<object>();
     public bool isActive;
     public int siblingIndex;
-    public SerializableRect position;
+  //  public SerializableRect position;
 }
 
 
 public class PlayerInventory : Inventory
 {
+
+    public InventorySaveData inventorySaveData = new InventorySaveData();
+
     Player player;
 
     bool inventoryShown = false;
@@ -76,9 +80,14 @@ public class PlayerInventory : Inventory
 
     public List<GameObject> highLightGameObjectList;
 
+
+    
+
     // Use this for initialization
     void Start()
     {
+
+
 
         character = GetComponentInParent<Character>();
 
@@ -122,7 +131,13 @@ public class PlayerInventory : Inventory
         }
 
         SelectButtonIsPressed();
+        //////load inventory items///////
+        SaveManager.SaveEvent += Save;
 
+        CheckPointManager.RegisterCheckPointEvent += Save;
+        CheckPointManager.LoadCheckpointEvent += Load;
+
+        /////////////////////////////////
     }
 
     // Update is called once per frame
@@ -142,17 +157,18 @@ public class PlayerInventory : Inventory
     {
         if (showInventoryItems)
         {
-            ShowDisplayItems();
-            Debug.Log(" Getting called" + extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"));
+                ShowDisplayItems();
+           // Debug.Log(" Getting called" + extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"));
 
             if (extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"))
             {
-            ShowAllItems();
-
+                 ShowAllItems();
             }
-           
+            else
+            {
+                HideExtendedItems();
+            }
             // ButtonActivation();
-
         }
 
         else
@@ -163,11 +179,9 @@ public class PlayerInventory : Inventory
         if (allowSelection || allowExtract || allowRemove)
         {
             SelectOneItem();
-
             if (allowSelection && selectedSlot1 != null)
             {
                 // set as active item
-
                 SelectSpecialActionButton();
             }
         }
@@ -175,23 +189,19 @@ public class PlayerInventory : Inventory
         if (allowSwap)
         {
             SelectTwoItems();
-
             if (selectedSlot1 != null && selectedSlot2 != null)
             {
                 SwapSlots();
             }
         }
-
     }
 
     public void InventoryButtonPressed()
     {
-
         if(inventoryButton.GetComponent<Animator>().GetBool("InventoryButton") && extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"))
         {
             HideAll();
         }
-
         else if(inventoryButton.GetComponent<Animator>().GetBool("InventoryButton"))
         {
             inventoryHolderAnimator.SetBool("InventoryHolderShow", false);
@@ -201,7 +211,6 @@ public class PlayerInventory : Inventory
             allowSelection = false;
             Invoke("DisplayPanelHide", timer);
         }
-
         else
         {
             inventoryButton.GetComponent<Animator>().SetBool("InventoryButton", true);
@@ -209,7 +218,6 @@ public class PlayerInventory : Inventory
             float timer = tempController.animationClips.Length;
             Invoke("DisplayPanelShow", timer);
         }
-
     }
 
     private void DisplayPanelShow()
@@ -243,15 +251,13 @@ public class PlayerInventory : Inventory
             extendedInventoyHolderAnimator.SetBool("ExtendedInventoryShow", true);
             verticalScrollBar.gameObject.SetActive(true);
             allowSelection = false;
-            ShowAllItems();
+          //  ShowAllItems();
         }
-
     }
 
     public void HideAll()
     {
         verticalScrollBar.gameObject.SetActive(false);
-
         extendedInventoyHolderAnimator.SetBool("ExtendedInventoryShow", false);
         RuntimeAnimatorController tempController = extendedInventoyHolderAnimator.runtimeAnimatorController;
         float timer = tempController.animationClips.Length;       
@@ -275,15 +281,14 @@ public class PlayerInventory : Inventory
                     slots[i].imageSlotPrefab.transform.SetParent(displayPanel);
                     // slots[i].imageSlotPrefab.SetActive(false);
                     count++;
-
                 }
 
                 else
                 {
                     slots[i].imageSlotPrefab.transform.SetParent(extendedPanel);
-                    if (extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow"))
+                    if (extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow") && slots[i].isActive)
                     {
-                        Debug.Log("Function is getting called");
+                      //  Debug.Log("Function is getting called");
 
                         slots[i].imageSlotPrefab.SetActive(true);
                     }
@@ -299,7 +304,6 @@ public class PlayerInventory : Inventory
 
     }
 
-
     public void SetDisplayCount()
     {
         int c = 0;
@@ -309,9 +313,7 @@ public class PlayerInventory : Inventory
             {
                 c++;
             }
-
         }
-
         displaySlotCount = c;
     }
    
@@ -339,6 +341,19 @@ public class PlayerInventory : Inventory
 
 
         }
+    }
+    public void HideExtendedItems()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].isActive && slots[i].imageSlotPrefab.transform.parent == extendedPanel)
+            {
+                slots[i].imageSlotPrefab.SetActive(false);
+            }
+
+
+        }
+
     }
 
     public void HideDisplayItems()
@@ -441,21 +456,22 @@ public class PlayerInventory : Inventory
         {
             if (selectedSlot1.itemlist.Count > 0)
             {
-                selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
-              
+                selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();             
             }
 
             if (selectedSlot2.itemlist.Count > 0)
             {
                 selectedObj2.item = selectedSlot2.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
-
             }
         }
     }
 
     public void RemoveSpecialActionButton()
     {
-        ItemCountSelection.instance.RemoveItemsActivate(selectedSlot1.itemlist.Count);
+        if(selectedSlot1 != null)
+        {
+            ItemCountSelection.instance.RemoveItemsActivate(selectedSlot1.itemlist.Count);
+        }
     }
 
     public void SelectTwoItems()
@@ -555,8 +571,8 @@ public class PlayerInventory : Inventory
         
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    SelectionObjectData selectedObj1;
-    SelectionObjectData selectedObj2;
+    SelectionObjectData selectedObj1 = new SelectionObjectData();
+    SelectionObjectData selectedObj2 = new SelectionObjectData();
 
     public void SelectButtonIsPressed()
     {
@@ -569,6 +585,7 @@ public class PlayerInventory : Inventory
         combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
         swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
         removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
+        removeButton.gameObject.SetActive(true);
     }
 
     public void ExtractButtonIsPressed()
@@ -586,7 +603,8 @@ public class PlayerInventory : Inventory
         extractButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
         combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
         swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
-        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0f);
+        removeButton.gameObject.SetActive(false);
 
 
     }
@@ -605,7 +623,8 @@ public class PlayerInventory : Inventory
         extractButton.GetComponent<Image>().color = new Color(255, 255, 255,0.5f);
         combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
         swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
-        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0f);
+        removeButton.gameObject.SetActive(false);
 
     }
 
@@ -624,7 +643,8 @@ public class PlayerInventory : Inventory
         extractButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
         combineButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
         swapButton.GetComponent<Image>().color = new Color(255, 255, 255, 1f);
-        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0.5f);
+        removeButton.GetComponent<Image>().color = new Color(255, 255, 255, 0f);
+        removeButton.gameObject.SetActive(false);
 
     }
 
@@ -732,14 +752,10 @@ public class PlayerInventory : Inventory
         ItemsDescription des = i.GetComponent<ItemsDescription>();
         des.GetItemType();
 
-
         //The extraction will take default information from the prefab object.
         //must check if the item type is already present.
         int phVal = des.pHValue;
-
-        
-
-
+      
         AddItem(i); //invenetory will take care of everything checking for ph if present.
 
         
@@ -790,5 +806,169 @@ public class PlayerInventory : Inventory
     }
 
     #endregion
+
+
+    #region Save and Load
+
+   public void Save(System.Type type)
+    {
+        inventorySaveData = new InventorySaveData();
+    
+
+
+        
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].itemlist.Count > 0 && slots[i].isActive)
+            {
+
+                SlotSaveData slotdata = new SlotSaveData();
+                slotdata.itemStored = slots[i].itemlist[0].gameObject.GetComponent<ItemsDescription>().GetType().ToString();
+                slotdata.parent = slots[i].imageSlotPrefab.transform.parent.name;
+                
+               // slotdata.position.x = slots[i].imageSlotPrefab.transform.position.x;
+                //slotdata.position.y = slots[i].imageSlotPrefab.transform.position.y;
+                
+                slotdata.isActive = slots[i].isActive;
+                slotdata.siblingIndex = slots[i].imageSlotPrefab.transform.GetSiblingIndex();
+
+                // InventorySaveData.instance.slots.Add(slotdata);
+
+             //   inventorySaveData.slots.Add(slotdata);
+            }
+        }
+
+        for (int i = 0; i < inventorySaveData.slots.Count; i++)
+        {
+            Debug.Log(inventorySaveData.slots[i].itemStored + "Inventory slot data item stored");
+            Debug.Log(inventorySaveData.slots[i].isActive + "Inventory slot data active status");
+            Debug.Log(inventorySaveData.slots[i].numberOfItemsStored + "Inventory slot data number of items stored");
+            Debug.Log(inventorySaveData.slots[i].siblingIndex + "Inventory sibling index");
+        }
+        
+        if (activeItem != null)
+        {
+            inventorySaveData.activeItem = activeItem.gameObject.GetComponent<ItemsDescription>().GetType().ToString();
+          //  inventorySaveData.activeItem = activeItem.itemProperties.name;
+        }
+        else
+        {
+            //  Debug.LogError("Active item is null");
+            inventorySaveData.activeItem = null;
+        }
+
+      
+
+        Debug.Log("Created inventory save obj>>>>>>"  + inventorySaveData.activeItem);
+
+        if (type.Equals(typeof(SaveManager)))
+            SaveManager.saveObject.AddObject(inventorySaveData);
+        else if (type.Equals(typeof(CheckPointManager)))
+            CheckPointManager.checkPointData.AddObject(inventorySaveData);
+
+        Debug.Log("Added to the save object list successfully");
+
+       
+    }
+
+
+
+    public virtual void LoadData(InventorySaveData saveData)
+    {
+
+       // if(InventorySaveData.instance != null)
+        if(saveData != null)
+        {
+            // for (int i = 0; i < InventorySaveData.instance.slots.Count; i++)
+             for (int i = 0; i < saveData.slots.Count; i++)
+             {
+                  for (int j = 0; j < slots.Count; j++)
+                  {
+                      if(slots[j].itemStored == null)
+                      {
+                          System.Type type = System.Type.GetType(saveData.slots[i].itemStored);
+
+                          GameObject temp = ItemManager.instance.itemDictionary[type];
+
+
+                          for (int k = 0; k< saveData.slots[i].numberOfItemsStored;k++)
+                          {
+                              GameObject tempItem = Instantiate(temp);
+                              slots[j].AddItem(tempItem.GetComponent<ItemBase>());
+                              tempItem.GetComponent<ItemBase>().transform.parent = player.Hand.transform;
+                              slots[j].itemStored = slots[j].itemlist[0];
+                              slots[j].isActive = saveData.slots[i].isActive;
+                              slots[j].imageSlotPrefab.transform.parent = this.transform.Find(saveData.slots[i].parent);
+                          }
+                      }
+                  } 
+             }
+            GameObject tempActiveItem = Instantiate(ItemManager.instance.itemDictionary[saveData.activeItem]);
+            activeItem = tempActiveItem.GetComponent<ItemBase>();
+        }
+    }
+
+    void Load(System.Type type)
+    {
+        //Debug.Log(CheckPointManager.checkPointData.types.Count + "check point data count");
+
+        //Get the appropriate value from the save data
+        //TODO: This part might need a little tweaking
+
+        InventorySaveData saveData = new InventorySaveData();
+
+        if (type.Equals(typeof(SaveManager)))
+        {
+            Debug.Log("Loading");
+            for (int i = 0; i < SaveManager.saveObject.types.Count; i++)
+            {
+                if (SaveManager.saveObject.types[i].type == typeof(InventorySaveData).ToString())
+                {
+
+                    saveData = (InventorySaveData)SaveManager.saveObject.types[i].values[0];
+                    break;
+                }
+            }      
+        }
+        else
+        {
+            if (type.Equals(typeof(CheckPointManager)))
+            {
+                Debug.Log("Loading the checkpoint");
+
+                Debug.Log(CheckPointManager.checkPointData.types.Count + "check point data count");
+
+                for (int i = 0; i < CheckPointManager.checkPointData.types.Count; i++)
+                {
+
+                    if (CheckPointManager.checkPointData.types[i].type == typeof(InventorySaveData).ToString())
+                    {
+                        Debug.Log((InventorySaveData)CheckPointManager.checkPointData.types[i].values[0] + "value of check point");
+                        saveData = (InventorySaveData)CheckPointManager.checkPointData.types[i].values[0];
+
+                        break;
+                    }
+                }
+
+                LoadData(saveData);
+             
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        SaveManager.SaveEvent -= Save;
+
+        CheckPointManager.RegisterCheckPointEvent -= Save;
+
+        CheckPointManager.LoadCheckpointEvent -= Load;
+
+    }
+
+    #endregion
 }
+
+
+
 

@@ -50,16 +50,13 @@ public class Slot
     public virtual void AddItem(ItemBase l_itemBase)
     {
         if (itemStored != null)
-        {
-            
+        {            
             if (l_itemBase.itemProperties == itemStored.itemProperties && itemlist.Count < maxStorage)
             {
-               
                 itemCount++;
                 itemlist.Add(l_itemBase);               
                // Debug.Log(this.itemCount + "___" + itemStored.name);
             }
-
             else
             {
                 Debug.Log("Item Not added");
@@ -79,9 +76,7 @@ public class Slot
             imageSlotPrefab.SetActive(true);
             displaySprite.enabled = true;
             displaySprite.sprite = itemStored.itemProperties.imageSprite;
-            //Added this..... Needs to be arranged properly
-
-           
+            //Added this..... Needs to be arranged properly          
         }
         UpdateUI();
     }
@@ -129,10 +124,6 @@ public class Slot
 
 public class Inventory : MonoBehaviour {
 
-  /*  [SerializeField]
-    Canvas inventoryUI;
-    [SerializeField]
-    RectTransform panel;   */ //Panel within which the slots are stored
 
     public Character character;    //The character the inventory belongs to
 
@@ -154,6 +145,8 @@ public class Inventory : MonoBehaviour {
        
         Debug.Log(character.name + "<<<<<--Character name in Start");
         slots = new List<Slot>(maxSlotCount);
+
+        character = this.transform.GetComponentInParent<Character>();
     }
 
     public virtual void SetActiveSlotCount()
@@ -178,14 +171,20 @@ public class Inventory : MonoBehaviour {
         UpdateSlotData(activeItem);
        
         activeSlotCount = ActiveSlotCount();
-        if (ActiveItemCheck(activeItem))
+
+if(character.gameObject.GetComponent<Player>() != null)
         {
-            Debug.Log("Active Item is present");
+            if (ActiveItemCheck(activeItem))
+            {
+                Debug.Log("Active Item is present");
+            }
+            else
+            {
+                activeItem = null;
+            }
+
         }
-        else
-        {
-            activeItem = null;
-        }      
+             
     }
 
     public virtual void ThrowItem(Vector3 Target, float speed)
@@ -200,37 +199,40 @@ public class Inventory : MonoBehaviour {
             UpdateSlotData(activeItem);
        
             activeSlotCount = ActiveSlotCount();
-            Debug.Log("Active slot Count: " + activeSlotCount);
+            // Debug.Log("Active slot Count: " + activeSlotCount);
 
-            Debug.Log("Active item name:   " + activeItem.name);
+            //   Debug.Log("Active item name:   " + activeItem.name);
 
-            if (ActiveItemCheck(activeItem))
+            if (character.gameObject.GetComponent<Player>() != null)
             {
-                Debug.Log("Active Item is present");
+                if (ActiveItemCheck(activeItem))
+                {
+                    Debug.Log("Active Item is present");
+                }
+                else
+                {
+                    activeItem = null;
+                }
 
-            }
-            else
-            {
-                activeItem = null;
             }
         }
     }
 
     public void UpdateSlotData(ItemBase l_ItemBase)
     {
-        Debug.Log("Update slot called");
+       // Debug.Log("Update slot called");
         for (int i = 0; i < activeSlotCount; i++)
         {
 
-            if( slots[i].itemlist.Count > 0 && slots[i].itemStored == null)
+      /*      if( slots[i].itemlist.Count > 0 && slots[i].itemStored == null)
             {
                 slots[i].itemStored = slots[i].itemlist[0];
-            }
+            }*/
 
-            if (slots[i].itemStored != null  && slots[i].itemStored.gameObject.GetComponent<ItemsDescription>() == l_ItemBase.gameObject.GetComponent<ItemsDescription>() )
+            if (slots[i].itemStored != null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
             {
                 Debug.Log("Remove item called");
-                Debug.Log("Itemstored : " + slots[i].itemStored.name);
+                Debug.Log("Itemstored : " + slots[i].itemStored.transform.GetComponent<ItemsDescription>().GetItemType());
 
                 slots[i].RemoveItem(l_ItemBase);
 
@@ -257,55 +259,62 @@ public class Inventory : MonoBehaviour {
     public bool ActiveItemCheck(ItemBase l_activeItem)
     {
         for (int i = 0; i < slots.Count; i++)
-        {   
-          
-            
-            if(slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties)
+        {
+           
+
+
+            //  if(slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties)
+            if (slots[i].itemStored != null && slots[i].itemlist.Count > 0 && slots[i].itemStored.itemProperties.name == l_activeItem.itemProperties.name  )
             {
-               if (slots[i].itemStored.GetComponent<ItemsDescription>().hasPH &&  l_activeItem.gameObject.GetComponent<ItemsDescription>().hasPH)
+               if (slots[i].itemStored.transform.GetComponent<ItemsDescription>().hasPH &&  l_activeItem.transform.GetComponent<ItemsDescription>().hasPH)
                 {
                     if(CheckForPhValues(slots[i].itemStored,l_activeItem))
                     {
                         Debug.Log("Has ph value and it is checked");
-                        if (slots[i].itemlist.Count > 0)
+                      //  if (slots[i].itemlist.Count > 0)
                         {
-                            slots[i].itemStored = slots[i].itemlist[0];
                             activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
                             activeItem.gameObject.SetActive(true);
                             activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
                             activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
+                            if (slots[i].itemStored == null)
+                            {
+                                slots[i].itemStored = slots[i].itemlist[0];
+                                Debug.Log(slots[i].itemStored.name + "::::: item not present assigned");
+
+                            }
+                            else
+                            {
+                                Debug.Log(slots[i].itemStored.name + "::::: item present");
+
+                            }
+
                             return true;
                         }
                     }                
                 }
                else
-                {
+               {
                     Debug.Log("active item doesnt have ph");
-                    if (slots[i].itemlist.Count > 0)
+                   // if (slots[i].itemlist.Count > 0 && slots[i].itemStored.GetComponent<ItemsDescription>().GetType() == l_activeItem.gameObject.GetComponent<ItemsDescription>().GetType())
                     {
                         slots[i].itemStored = slots[i].itemlist[0];
                         activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
                         activeItem.gameObject.SetActive(true);
                         activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
                         activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
+                        activeItem.gameObject.SetActive(true);
                         return true;
                     }
+               }
 
-
-                }
-
-              Debug.Log(slots[i].itemStored);
-                Debug.Log("Active item check call :  " + slots[i].itemlist.Count); 
-                
-
-
+                Debug.Log(slots[i].itemStored);
+                Debug.Log("Active item check call :  " + slots[i].itemlist.Count);                
             }
         }
         Debug.Log("Active item is null");
-
         return false;
     }
-
     
     public ItemBase GetActiveItem()
     {
@@ -329,7 +338,7 @@ public class Inventory : MonoBehaviour {
 
        
         activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());   
-             activeItem.transform.parent = null;
+        activeItem.transform.parent = null;
         activeItem = null;
 
     }
@@ -366,12 +375,10 @@ public class Inventory : MonoBehaviour {
         if (slots.Count == 0)
         {
             Debug.Log("MAx slot count"+maxSlotCount);
-          
-
+            
             for (int i = 0; i < maxSlotCount; i++)
             {
-                Slot tempSlot = new Slot();
-               
+                Slot tempSlot = new Slot();               
                 slots.Add(tempSlot);
                 GameObject temp = Instantiate(imageSlotPrefab);
                 slots[i].imageSlotPrefab = temp;
@@ -385,7 +392,6 @@ public class Inventory : MonoBehaviour {
                 slots[i].imageSlotPrefab.transform.localScale = Vector3.one;
                 //Debug.Log(slots[i].countText.text + "_____" + i);
             }
-
         }
     }
   

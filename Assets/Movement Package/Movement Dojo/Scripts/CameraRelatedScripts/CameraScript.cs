@@ -30,6 +30,7 @@ public class CameraScript : MonoBehaviour {
     public GameObject boundariesContainer;
 
     //camera move properties
+    public Vector3 CameraMovementSpeed { get; set; }
 
     [Range(0, 1)]
     public float speed;
@@ -118,6 +119,8 @@ public class CameraScript : MonoBehaviour {
 
             if (shakeObject != null)
                 positionToReach += shakeObject.ShakeUpdate(ref shakeObject);
+
+            CameraMovementSpeed = (positionToReach - oldPosition) / GameManager.Instance.DeltaTime;
 
             gameObject.transform.position = positionToReach;
 

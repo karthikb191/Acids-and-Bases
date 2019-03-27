@@ -269,7 +269,7 @@ public class SaveManager : MonoBehaviour {
                                                             Journal.Instance.GetAllItemIconsInJournal()[i].rect.y,
                                                             Journal.Instance.GetAllItemIconsInJournal()[i].rect.width,
                                                             Journal.Instance.GetAllItemIconsInJournal()[i].rect.height);
-
+            
             
                 Debug.Log("Path: " + AssetDatabase.GetAssetPath(Journal.Instance.GetAllItemIconsInJournal()[i]));
                 Debug.Log("x: " + r.x + "y: " + r.y + "width: " + r.width + "Height " + r.height);

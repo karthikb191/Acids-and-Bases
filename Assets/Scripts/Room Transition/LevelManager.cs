@@ -48,27 +48,28 @@ public class LevelManager : MonoBehaviour {
         Scene s = SceneManager.GetActiveScene();
         if (Input.GetKeyDown(KeyCode.P))
         {
-            Debug.Log("Attempting to save");
-            if(s.buildIndex < GameManager.Instance.levelsCleared.Count)
-            {
-                Debug.Log("This level was already played. Checking high scores");
-                if(timer < GameManager.Instance.levelsCleared[s.buildIndex].bestTime)
-                {
-                    GameManager.Instance.levelsCleared[s.buildIndex].bestTime = timer;
-                    GameManager.Instance.levelsCleared[s.buildIndex].stars = 1;
-                }
-            }
-            else
-            {
-                Debug.Log("NO entry found. Trying to add it");
-                GameManager.Instance.levelsCleared.Add(new Level()
-                {
-                    bestTime = timer,
-                    stars = 1
-                });
-            }
+              Debug.Log("Attempting to save");
+              if(s.buildIndex < GameManager.Instance.levelsCleared.Count)
+              {
+                  Debug.Log("This level was already played. Checking high scores");
+                  if(timer < GameManager.Instance.levelsCleared[s.buildIndex].bestTime)
+                  {
+                      GameManager.Instance.levelsCleared[s.buildIndex].bestTime = timer;
+                      GameManager.Instance.levelsCleared[s.buildIndex].stars = 1;
+                  }
+              }
+              else
+              {
+                  Debug.Log("NO entry found. Trying to add it");
+                  GameManager.Instance.levelsCleared.Add(new Level()
+                  {
+                      bestTime = timer,
+                      stars = 1
+                  });
+              }
+          //CheckPointManager.RegisterCheckPoint();
             SaveManager.Save();
-            //CheckPointManager.RegisterCheckPoint();
+
         }
 
         if (Input.GetKeyDown(KeyCode.L))

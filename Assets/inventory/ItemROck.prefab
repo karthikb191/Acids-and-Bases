@@ -89,8 +89,8 @@ MonoBehaviour:
   acidType: 0
   baseType: 0
   saltType: 0
-  normalItemType: 8
-  hasPH: 1
+  normalItemType: 7
+  hasPH: 0
   pHValue: 8
   extractionPossible: 0
   extractQuantity: 15
@@ -111,7 +111,7 @@ MonoBehaviour:
   destroyParticles: {fileID: 198540812356561270, guid: 08150a1ec8a3d7047a4d2df4e63cfbd5,
     type: 2}
   pickedCount: 0
-  maxCount: 10
+  maxCount: 1
   playerObject: {fileID: 0}
   itemProperties: {fileID: 11400000, guid: 005a17f93caf30c478065ff7c85ac351, type: 2}
   speed: 30
