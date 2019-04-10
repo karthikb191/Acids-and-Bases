@@ -91,6 +91,8 @@ MonoBehaviour:
   normalItemType: 0
   hasPH: 1
   pHValue: 2
+  IsApHItem: 0
+  useCount: 3
   extractionPossible: 0
   extractQuantity: 10
 --- !u!114 &114293269257880368

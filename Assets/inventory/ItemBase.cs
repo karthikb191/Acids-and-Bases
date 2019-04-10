@@ -272,8 +272,8 @@ public class ItemBase : MonoBehaviour {
         {
             transform.rotation = Quaternion.identity;
             elapse_time = 0;
-           if(isFromEnemy)
-           {
+            if(isFromEnemy)
+            {
                 this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
                 this.AlignPos(playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position, playerObject.gameObject.GetComponentInParent<Character>());
                 this.transform.position = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position;
@@ -282,14 +282,14 @@ public class ItemBase : MonoBehaviour {
                 this.gameObject.SetActive(false);
                 this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
 
-           }
+            }
 
-           else
-           {
+            else
+            {
                 //gameObject.SetActive(false);
                 DestroyParticleEffect();
                 transform.parent = null;
-           }
+            }
           
             yield break;
         }
@@ -304,13 +304,12 @@ public class ItemBase : MonoBehaviour {
                 GameObject temp = Instantiate(this.gameObject) as GameObject;
                 temp.GetComponent<ItemBase>().playerObject = playerObject;
                 temp.GetComponent<ItemBase>().pickedCount = 0;
-                temp.GetComponent<ItemBase>().maxCount = 1;               
-                AddItem(temp.GetComponent<ItemBase>());                                
+                temp.GetComponent<ItemBase>().maxCount = 1;          
+                AddItem(temp.GetComponent<ItemBase>());                   
                 pickedCount++;
                 Debug.Log("instantiated item" + temp.gameObject.name);
                 Debug.Log("Picked Count" + pickedCount);
             }
-
             else
             {
                 Debug.Log("LastItem");
@@ -331,8 +330,6 @@ public class ItemBase : MonoBehaviour {
 
         if (playerObject.GetComponentInChildren<PlayerInventory>().activeItem == null)
         {
-
-
             playerObject.GetComponentInChildren<PlayerInventory>().activeItem = item;
             playerObject.GetComponentInChildren<PlayerInventory>().AddItem(item);
          //   item.StartCoroutine(AlignPos(playerObject.GetComponent<Character>().Hand.transform.position, playerObject.GetComponentInChildren<Character>()));
@@ -352,16 +349,15 @@ public class ItemBase : MonoBehaviour {
             item.transform.parent = playerObject.GetComponentInChildren<Character>().Hand.transform;
             item.gameObject.transform.localScale = targetScale;
             item.gameObject.SetActive(false);
-            
         }
 
         //Get the player component. If player is null, log error.
-        if (playerObject.GetComponent<Player>() && this.gameObject.GetComponent<PH>() != null)
+        if (playerObject.GetComponent<Player>() && this.gameObject.GetComponent<ItemsDescription>() != null)
         {
-            if(GetComponent<PH>())
-                if (!playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator() ||
-                    playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator().indicator == GetComponent<PH>().indicator)
-                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<PH>());
+            if(gameObject.GetComponent<ItemsDescription>().itemType == ItemType.Indicator)
+                if (//TODO: this is needed (moidfy) !playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator() ||
+                    playerObject.GetComponent<Player>().GetPlayerStatus().GetpHIndicator().indicatorType == GetComponent<ItemsDescription>().indicatorType)
+                    playerObject.GetComponent<Player>().GetPlayerStatus().SetpHIndicator(GetComponent<ItemsDescription>());
         }
         else 
         {
@@ -443,15 +439,14 @@ public class ItemBase : MonoBehaviour {
     void OnDrawGizmosSelected()
     {
 #if (UNITY_EDITOR)
-            UnityEditor.Handles.color = Color.green;
-            UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
+        UnityEditor.Handles.color = Color.green;
+        UnityEditor.Handles.DrawWireDisc(this.transform.position, new Vector3(0, 0,1), colliderRadius);
 #endif
     }
 
 
     void CheckCollision()
     {
-
         timeElapsed += Time.deltaTime;
         RaycastHit2D[] collidedWith = Physics2D.CircleCastAll(new Vector2(transform.position.x, transform.position.y), colliderRadius, new Vector2(0, 1));
 
@@ -476,28 +471,28 @@ public class ItemBase : MonoBehaviour {
 
             if (collidedWith[i].transform.GetComponent<Character>() != null && collidedWith[i].transform.GetComponent<Character>().gameObject != playerObject.gameObject)
             {                 
-                    Use(collidedWith[i].transform.GetComponent<Character>());
-                    if(isFromEnemy)
-                    {
-                        Debug.Log("Used called from:   " + playerObject.name);
-                        Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponentInParent<Character>().gameObject);
-                        this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
-                        this.AlignPos(playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position, playerObject.gameObject.GetComponentInParent<Character>());
-                        this.transform.position = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position;
-                        this.transform.parent= playerObject.gameObject.GetComponentInParent<Character>().Hand.transform;
-                        playerObject.gameObject.GetComponentInChildren<EnemyInventory>().AddItem(this);
-                        this.gameObject.SetActive(false);
-                        this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-                        thrown = false;
-                        break;
-                    }
-                    else
-                    {
-                        DestroyParticleEffect();
-                        break;
-                    }             
+                Use(collidedWith[i].transform.GetComponent<Character>());
+                if(isFromEnemy)
+                {
+                    Debug.Log("Used called from:   " + playerObject.name);
+                    Debug.Log("Used on  :    " + collidedWith[i].transform.GetComponentInParent<Character>().gameObject);
+                    this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                    this.AlignPos(playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position, playerObject.gameObject.GetComponentInParent<Character>());
+                    this.transform.position = playerObject.gameObject.GetComponentInParent<Character>().Hand.transform.position;
+                    this.transform.parent= playerObject.gameObject.GetComponentInParent<Character>().Hand.transform;
+                    playerObject.gameObject.GetComponentInChildren<EnemyInventory>().AddItem(this);
+                    this.gameObject.SetActive(false);
+                    this.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                    thrown = false;
+                    break;
+                }
+                else
+                {
+                    DestroyParticleEffect();
+                    break;
+                }     
             }
-        }      
+        }
     }
 
     void TravelParticleEffect()

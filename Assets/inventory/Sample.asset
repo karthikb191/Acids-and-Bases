@@ -16,12 +16,26 @@ MonoBehaviour:
   imageSprite: {fileID: 21300006, guid: 75effc999b9525940a63e8291c271920, type: 3}
   isEquipable: 1
   isAnInventoryItem: 1
-  isAssignedToSlot: 1
-  isActiveItem: 0
   isConsumable: 0
-  slotIn: 0
   itemLifeTime: 0
   damageDealt: 0
   HealthRestore: 0
   itemSound: {fileID: 0}
   isThrowable: 1
+  descriptionOfItem:
+    itemDescription: 
+    shortName: 
+    fullName: 
+    tags: 
+    itemType: 0
+    indicatorType: 0
+    acidType: 0
+    baseType: 0
+    saltType: 0
+    normalItemType: 0
+    hasPH: 0
+    pHValue: 0
+    IsApHItem: 0
+    useCount: 3
+    extractionPossible: 1
+    extractQuantity: 10

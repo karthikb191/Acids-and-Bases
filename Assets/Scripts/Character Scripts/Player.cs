@@ -375,7 +375,7 @@ public class PlayerStatus
     public Button phShowButton;
 
     
-    public PH pHIndicator;
+    public ItemsDescription pHIndicator;
     public delegate void PHIndicatorChanged();
     public event PHIndicatorChanged PHIndicatorChangedEvent;
 
@@ -414,20 +414,20 @@ public class PlayerStatus
     }
 
 
-    public void SetpHIndicator(PH newIndicator)
+    public void SetpHIndicator(ItemsDescription newIndicator)
     {
         //Add the event and raise an event to notify subscribers that pH indicator has changed
-        if(pHIndicator == null || pHIndicator.indicator != newIndicator.indicator)
+        if(pHIndicator == null || pHIndicator.indicatorType != newIndicator.indicatorType)
         {
             pHIndicator = newIndicator;
 
             //Set the image in the button
-            SetpHIndicatorImage(newIndicator.PHIndicatorImage);
+            SetpHIndicatorImage(newIndicator.PhIndicatorImage);
 
             //TODO: Must be changed to reflect the pH use counter to the number of items of same type in the inventory
             //Increment the pH use counter
-            pHUseCounter = newIndicator.GetUseCount();
-            pHIndicatorName.text = newIndicator.indicator.ToString();
+            pHUseCounter = newIndicator.useCount;
+            pHIndicatorName.text = newIndicator.indicatorType.ToString();
             pHUseCounterText.text = pHUseCounter.ToString();
 
 
@@ -437,7 +437,7 @@ public class PlayerStatus
         }
         else
         {
-            pHUseCounter += newIndicator.GetUseCount();
+            pHUseCounter += newIndicator.useCount;
             pHUseCounterText.text = pHUseCounter.ToString();
         }
         
@@ -455,7 +455,7 @@ public class PlayerStatus
         }
     }
 
-    public PH GetpHIndicator()
+    public ItemsDescription GetpHIndicator()
     {
         return pHIndicator;
     }

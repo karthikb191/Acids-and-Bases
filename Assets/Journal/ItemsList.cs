@@ -24,30 +24,30 @@ public enum ItemList
 
 public enum IndicatorsList
 {
-    pH_Paper = ItemList.pH_Paper,
-    Turmeric = ItemList.Turmeric,
-    Vermilion = ItemList.Vermilion,
-    Bromythol_Blue = ItemList.Bromythol_Blue
+    pH_Paper,
+    Turmeric,
+    Vermilion,
+    Bromythol_Blue
 }
 
 public enum AcidsList
 {
-    HCl = ItemList.HCl,
+    HCl,
     H2SO4,
     C6H8O7
 }
 public enum BasesList
 {
-    NaOH = ItemList.NaOh
+    NaOH
 }
 public enum SaltsList
 {
     Null,
-    NaCl = ItemList.NaCl
+    NaCl
 }
 public enum NormalItemList
 {
-    Hybiscus = ItemList.Hybiscus,
+    Hybiscus,
     Lemon
 }
 

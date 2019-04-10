@@ -15,10 +15,10 @@ public static class Descriptions
         }
         return result;
     }
-
 }
 
-public class ItemsDescription : MonoBehaviour{
+[System.Serializable]
+public class ItemsDescription{
     //TODO: Consider moving the item description to a separate class
     public string itemDescription;
 
@@ -36,9 +36,19 @@ public class ItemsDescription : MonoBehaviour{
     public bool hasPH = false;
     public int pHValue = 0;
 
+    public bool IsApHItem = false;
+    public int useCount = 3;
+    public Sprite PhIndicatorImage { get; set; }
+
     public bool extractionPossible = false;
     public int extractQuantity = 10;
-    
+
+    //private void Start()
+    //{
+    //    if (itemType == ItemType.Indicator)
+    //        PhIndicatorImage = GetComponent<SpriteRenderer>().sprite;
+    //}
+
     public System.Enum GetItemType()
     {
         switch (itemType)

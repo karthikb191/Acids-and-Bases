@@ -79,16 +79,11 @@ public class PlayerInventory : Inventory
     public bool allowRemove = false;
 
     public List<GameObject> highLightGameObjectList;
-
-
     
 
     // Use this for initialization
     void Start()
     {
-
-
-
         character = GetComponentInParent<Character>();
 
         player = GetComponentInParent<Player>();
@@ -136,8 +131,6 @@ public class PlayerInventory : Inventory
 
         CheckPointManager.RegisterCheckPointEvent += Save;
         CheckPointManager.LoadCheckpointEvent += Load;
-
-        /////////////////////////////////
     }
 
     // Update is called once per frame
@@ -145,11 +138,7 @@ public class PlayerInventory : Inventory
     {
         DisplaySlotUpdate();
         InventoryAnimate();
-        
     }
-
-
-
 
     #region Inventory Display and animation functions
 
@@ -251,7 +240,7 @@ public class PlayerInventory : Inventory
             extendedInventoyHolderAnimator.SetBool("ExtendedInventoryShow", true);
             verticalScrollBar.gameObject.SetActive(true);
             allowSelection = false;
-          //  ShowAllItems();
+            //ShowAllItems();
         }
     }
 
@@ -288,7 +277,7 @@ public class PlayerInventory : Inventory
                     slots[i].imageSlotPrefab.transform.SetParent(extendedPanel);
                     if (extendedInventoyHolderAnimator.GetBool("ExtendedInventoryShow") && slots[i].isActive)
                     {
-                      //  Debug.Log("Function is getting called");
+                        //Debug.Log("Function is getting called");
 
                         slots[i].imageSlotPrefab.SetActive(true);
                     }
@@ -325,8 +314,6 @@ public class PlayerInventory : Inventory
             {
                 slots[i].imageSlotPrefab.SetActive(true);
             }
-
-
         }
     }
 
@@ -338,10 +325,9 @@ public class PlayerInventory : Inventory
             {
                 slots[i].imageSlotPrefab.SetActive(true);
             }
-
-
         }
     }
+
     public void HideExtendedItems()
     {
         for (int i = 0; i < slots.Count; i++)
@@ -350,10 +336,7 @@ public class PlayerInventory : Inventory
             {
                 slots[i].imageSlotPrefab.SetActive(false);
             }
-
-
         }
-
     }
 
     public void HideDisplayItems()
@@ -379,13 +362,12 @@ public class PlayerInventory : Inventory
 
                     if (RectTransformUtility.RectangleContainsScreenPoint(slots[i].panel, Input.mousePosition))
                     {
-                       if(selectedSlot1 == null)
-                       {
+                        if(selectedSlot1 == null)
+                        {
                             selectedSlot1 = slots[i];
                             HighLightSlot(selectedSlot1, highlightSelection1);
-                       }
-
-                       else if(selectedSlot1 != null && selectedSlot1 != slots[i])
+                        }
+                        else if(selectedSlot1 != null && selectedSlot1 != slots[i])
                         {
                             selectedSlot1 = slots[i];
                             HighLightSlot(selectedSlot1, highlightSelection1);
@@ -570,7 +552,7 @@ public class PlayerInventory : Inventory
         }
         
     }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     SelectionObjectData selectedObj1 = new SelectionObjectData();
     SelectionObjectData selectedObj2 = new SelectionObjectData();
 
@@ -707,7 +689,7 @@ public class PlayerInventory : Inventory
        
 
     }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     #endregion
 
     #region Player Inventory Functions

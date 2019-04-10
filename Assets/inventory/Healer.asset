@@ -22,3 +22,20 @@ MonoBehaviour:
   HealthRestore: 10
   itemSound: {fileID: 0}
   isThrowable: 1
+  descriptionOfItem:
+    itemDescription: 'Hello '
+    shortName: 
+    fullName: 
+    tags: 
+    itemType: 0
+    indicatorType: 1
+    acidType: 0
+    baseType: 0
+    saltType: 0
+    normalItemType: 0
+    hasPH: 1
+    pHValue: 0
+    IsApHItem: 1
+    useCount: 3
+    extractionPossible: 1
+    extractQuantity: 0

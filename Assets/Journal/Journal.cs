@@ -243,7 +243,7 @@ public class Journal : MonoBehaviour {
 
     void AddItemDetails(ItemsDescription des)
     {
-        itemsIcons.Add(des.GetComponent<SpriteRenderer>().sprite);
+        //TODO: NEEDED itemsIcons.Add(des.GetComponent<SpriteRenderer>().sprite);
         itemsDescriptions.Add(des.itemDescription);
     }
 
