@@ -102,23 +102,7 @@ public class AI : MonoBehaviour {
             if(enemy.playerSprite != null)
                 directionFacing = (int)enemy.playerSprite.transform.localScale.x;
 
-            //Debug.Log("node path count: " + targetNodePath.Count);
-            //Set the target position
-
-            //TODO: Check this code again
-            //UpdateCurrentNode();
-            //Debug.Log("Halt movement: " + haltMovement);
-
-            //TODO: Remove comments later while still enabling testing
-            //if (Input.GetMouseButtonDown(0))// && !CharacterManager.Instance.characterClicked)
-            //{
-            //    //TODO: change this
-            //    targetNodePath.Clear();
-            //    nodesPassed.Clear();
-            //    targetLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-            //    //CalculateNodePath(currentNode, player.transform.position);
-            //    CalculateNodePath(targetLocation);
-            //}
+            
             if (haltMovement)
                 return;
 
@@ -809,7 +793,7 @@ public class AI : MonoBehaviour {
     {
         Debug.Log("target node cahnged");
         currentNode = targetNode;
-        if (targetNodePath.Count != 0)
+        if (targetNodePath.Count > 1)
         {
             targetNodePath.RemoveAt(targetNodePath.Count - 1);
             targetNode = targetNodePath[targetNodePath.Count - 1];

@@ -386,17 +386,19 @@ public class PlayerInventory : Inventory
 
     public void SelectSpecialActionButton()
     {       
-        if (selectedSlot1.itemlist.Count > 0)
+        if (selectedSlot1.itemCount > 0)
         {
             if(activeItem == null)
             {
-                activeItem = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1];
+                //activeItem = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1];
+                activeItem = GetItemFromPool(selectedSlot1.itemStored.itemProperties, true);
 
             }
             else
             {
                 activeItem.gameObject.SetActive(false);
-                activeItem = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1];
+                //activeItem = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1];
+                activeItem = GetItemFromPool(selectedSlot1.itemStored.itemProperties, true);
                 activeItem.gameObject.SetActive(true);
             }
           
@@ -423,10 +425,11 @@ public class PlayerInventory : Inventory
     {
         if(selectedSlot1 != null)
         {
-            if (selectedSlot1.itemlist.Count > 0)
+            if (selectedSlot1.itemCount > 0)
             {
-                Debug.Log( selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType());
-                selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
+                //Debug.Log( selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType());
+                //selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
+                selectedObj1.item = selectedSlot1.itemStored.itemProperties.itemDescription.GetItemType();
                 Extract(selectedObj1);
             }
         }
@@ -436,14 +439,16 @@ public class PlayerInventory : Inventory
     {
         if (selectedSlot1 != null && selectedSlot2 != null)
         {
-            if (selectedSlot1.itemlist.Count > 0)
+            if (selectedSlot1.itemCount > 0)
             {
-                selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();             
+                //selectedObj1.item = selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();             
+                selectedObj1.item = selectedSlot1.itemStored.itemProperties.itemDescription.GetItemType();
             }
 
-            if (selectedSlot2.itemlist.Count > 0)
+            if (selectedSlot2.itemCount > 0)
             {
-                selectedObj2.item = selectedSlot2.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
+                //selectedObj2.item = selectedSlot2.itemlist[selectedSlot1.itemlist.Count - 1].gameObject.GetComponent<ItemsDescription>().GetItemType();
+                selectedObj2.item = selectedSlot2.itemStored.itemProperties.itemDescription.GetItemType();
             }
         }
     }
@@ -452,7 +457,7 @@ public class PlayerInventory : Inventory
     {
         if(selectedSlot1 != null)
         {
-            ItemCountSelection.instance.RemoveItemsActivate(selectedSlot1.itemlist.Count);
+            ItemCountSelection.instance.RemoveItemsActivate(selectedSlot1.itemCount);
         }
     }
 
@@ -655,15 +660,14 @@ public class PlayerInventory : Inventory
 
     public void RemoveItems(float itemCount)
     {
-         if(selectedSlot1 != null )
-         {
+        if(selectedSlot1 != null )
+        {
             for (int i = 0; i < itemCount; i++)
             {
-                selectedSlot1.RemoveItem(selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1]);
+                //selectedSlot1.RemoveItem(selectedSlot1.itemlist[selectedSlot1.itemlist.Count - 1]);
+                selectedSlot1.RemoveItem(selectedSlot1.itemStored);
             }
-         }
-
-       
+        }
     }
 
     public void SpecialActionButtonPressed()
@@ -711,7 +715,7 @@ public class PlayerInventory : Inventory
 
         //Get the item description from the item manager
         ItemBase item = ItemManager.instance.itemDictionary[result].GetComponent<ItemBase>();
-        ItemsDescription description = item.GetComponent<ItemsDescription>();
+        ItemsDescription description = item.itemProperties.itemDescription;
         
 
         //Perform the volume and pH calculations here. 
@@ -731,7 +735,7 @@ public class PlayerInventory : Inventory
     public void Extract(SelectionObjectData item)
     {
         ItemBase i = Extraction.Extract(item.item).GetComponent<ItemBase>();
-        ItemsDescription des = i.GetComponent<ItemsDescription>();
+        ItemsDescription des = i.itemProperties.itemDescription;
         des.GetItemType();
 
         //The extraction will take default information from the prefab object.
@@ -796,27 +800,25 @@ public class PlayerInventory : Inventory
     {
         inventorySaveData = new InventorySaveData();
     
-
-
         
         for (int i = 0; i < slots.Count; i++)
         {
-            if (slots[i].itemlist.Count > 0 && slots[i].isActive)
+            if (slots[i].itemCount > 0 && slots[i].isActive)
             {
 
                 SlotSaveData slotdata = new SlotSaveData();
-                slotdata.itemStored = slots[i].itemlist[0].gameObject.GetComponent<ItemsDescription>().GetType().ToString();
+                //slotdata.itemStored = slots[i].itemlist[0].gameObject.GetComponent<ItemsDescription>().GetType().ToString();
+                slotdata.itemStored = slots[i].itemStored.itemProperties.itemDescription.GetItemType().ToString();
                 slotdata.parent = slots[i].imageSlotPrefab.transform.parent.name;
                 
-               // slotdata.position.x = slots[i].imageSlotPrefab.transform.position.x;
+                //slotdata.position.x = slots[i].imageSlotPrefab.transform.position.x;
                 //slotdata.position.y = slots[i].imageSlotPrefab.transform.position.y;
                 
                 slotdata.isActive = slots[i].isActive;
                 slotdata.siblingIndex = slots[i].imageSlotPrefab.transform.GetSiblingIndex();
 
-                // InventorySaveData.instance.slots.Add(slotdata);
-
-             //   inventorySaveData.slots.Add(slotdata);
+                //InventorySaveData.instance.slots.Add(slotdata);
+                //inventorySaveData.slots.Add(slotdata);
             }
         }
 
@@ -830,7 +832,7 @@ public class PlayerInventory : Inventory
         
         if (activeItem != null)
         {
-            inventorySaveData.activeItem = activeItem.gameObject.GetComponent<ItemsDescription>().GetType().ToString();
+            inventorySaveData.activeItem = activeItem.itemProperties.itemDescription.GetType().ToString();
           //  inventorySaveData.activeItem = activeItem.itemProperties.name;
         }
         else
@@ -866,27 +868,28 @@ public class PlayerInventory : Inventory
              {
                   for (int j = 0; j < slots.Count; j++)
                   {
-                      if(slots[j].itemStored == null)
-                      {
-                          System.Type type = System.Type.GetType(saveData.slots[i].itemStored);
+                        if(slots[j].itemStored == null)
+                        {
+                            System.Type type = System.Type.GetType(saveData.slots[i].itemStored);
 
-                          GameObject temp = ItemManager.instance.itemDictionary[type];
+                            GameObject temp = ItemManager.instance.itemDictionary[type].gameObject;
 
+                            //TODO: Write a proper load logic
 
-                          for (int k = 0; k< saveData.slots[i].numberOfItemsStored;k++)
-                          {
-                              GameObject tempItem = Instantiate(temp);
-                              slots[j].AddItem(tempItem.GetComponent<ItemBase>());
-                              tempItem.GetComponent<ItemBase>().transform.parent = player.Hand.transform;
-                              slots[j].itemStored = slots[j].itemlist[0];
-                              slots[j].isActive = saveData.slots[i].isActive;
-                              slots[j].imageSlotPrefab.transform.parent = this.transform.Find(saveData.slots[i].parent);
-                          }
-                      }
+                            //for (int k = 0; k< saveData.slots[i].numberOfItemsStored;k++)
+                            //{
+                            //    GameObject tempItem = Instantiate(temp);
+                            //    slots[j].AddItem(tempItem.GetComponent<ItemBase>());
+                            //    tempItem.GetComponent<ItemBase>().transform.parent = player.Hand.transform;
+                            //    slots[j].itemStored = slots[j].itemlist[0];
+                            //    slots[j].isActive = saveData.slots[i].isActive;
+                            //    slots[j].imageSlotPrefab.transform.parent = this.transform.Find(saveData.slots[i].parent);
+                            //}
+                        }
                   } 
              }
-            GameObject tempActiveItem = Instantiate(ItemManager.instance.itemDictionary[saveData.activeItem]);
-            activeItem = tempActiveItem.GetComponent<ItemBase>();
+            //GameObject tempActiveItem = Instantiate(ItemManager.instance.itemDictionary[saveData.activeItem]);
+            //activeItem = tempActiveItem.GetComponent<ItemBase>();
         }
     }
 

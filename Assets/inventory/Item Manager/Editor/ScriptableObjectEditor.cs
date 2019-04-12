@@ -80,8 +80,8 @@ public class ScriptableObjectEditor : Editor {
                 EditorGUILayout.BeginHorizontal(GUIStyle.none);
 
                 EditorGUILayout.LabelField(objects[i].ToString());
-                itemTemplates[i].itemPrefab = EditorGUILayout.ObjectField(itemTemplates[i].itemPrefab,
-                                                    typeof(GameObject), false) as UnityEngine.GameObject;
+                itemTemplates[i].itemProperty = EditorGUILayout.ObjectField(itemTemplates[i].itemProperty,
+                                                    typeof(ItemProperties), false) as ItemProperties;//UnityEngine.GameObject;
                 itemTemplates[i].enumObject = objects[i].ToString();
                 itemTemplates[i].type = objects[i].GetType();
                 //Debug.Log("asdfasfasdfasdfasdfasdfadfasdfasdfasdfasdf: " + objects[i].ToString());

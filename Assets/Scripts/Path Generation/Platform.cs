@@ -170,7 +170,7 @@ public class Platform : MonoBehaviour {
         if (item != null)
         {
             Debug.Log("Item is: " + item);
-            ItemsDescription description = item.gameObject.GetComponent<ItemsDescription>();
+            ItemsDescription description = item.itemProperties.itemDescription;
             Corrosion c = GetComponentInParent<Corrosion>();
             if (c != null && description != null)
             {

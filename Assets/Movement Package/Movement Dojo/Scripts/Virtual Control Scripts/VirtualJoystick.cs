@@ -102,7 +102,7 @@ public class VirtualJoystick : MonoBehaviour {
         pickUpButtonUp = true;
 
         itemSpecialActionButtonUp = true;
-        
+
         
         DontDestroyOnLoad(this.gameObject);
 

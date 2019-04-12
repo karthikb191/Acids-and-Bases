@@ -21,6 +21,9 @@ public class ItemClassificationValues
 public class Slot
 {
     public Image displaySprite;
+
+    //Item stored is just a reference to the type of item stored. This item must not be instantiated in any way
+    //To instantiate an item to the character's hand, use the items from the object pool
     public ItemBase itemStored;
 
     //The description of stored item. When a new item is added, this must be checked and the item must be added to the new slot
@@ -43,7 +46,7 @@ public class Slot
 
     public int slotNumber;
 
-    public List<ItemBase> itemlist = new List<ItemBase>();
+    //public List<ItemBase> itemlist = new List<ItemBase>();
 
     public bool isActive = false;
 
@@ -56,12 +59,11 @@ public class Slot
             if (l_itemBase.itemProperties == itemStored.itemProperties && itemCount < maxStorage)
             {
                 itemCount++;
-                itemlist.Add(l_itemBase);               
-                //Debug.Log(this.itemCount + "___" + itemStored.name);
+                Debug.Log("Item has been added to the slot");
             }
             else
             {
-                Debug.Log("Item Not added");
+                Debug.Log("Item is of different type. So, it's not added");
 
                 l_itemBase.gameObject.SetActive(true);
                 l_itemBase.transform.parent = null;
@@ -70,28 +72,34 @@ public class Slot
         }
         else
         {
-            itemlist.Add(l_itemBase);
+            Debug.Log("Item reference is null. Adding the reference");
             itemCount++;          
             isActive = true;
-            itemStored = l_itemBase;
-           //Debug.Log("Item in slot" + itemStored.itemProperties.name);
+
+            //Placing a new item in the slot. The item stored will be a reference to an item that is somewhere in the scene.
+            //NOTE: It is just a reference. It should not be instantiated. Get the reference from the itemManager
+            //itemStored = l_itemBase;
+            itemStored = ItemManager.instance.GetItemReference(l_itemBase.itemProperties.itemDescription.GetItemType());
+            
+            //Debug.Log("Item in slot" + itemStored.itemProperties.name);
             imageSlotPrefab.SetActive(true);
             displaySprite.enabled = true;
             displaySprite.sprite = itemStored.itemProperties.imageSprite;
             //Added this..... Needs to be arranged properly          
         }
+
         UpdateUI();
     }
 
     public virtual void RemoveItem(ItemBase l_itemBase)
     {
+        Debug.Log("item list count Before : " + itemCount);
         itemCount--;
-        Debug.Log("item list count Before : " + itemlist.Count);
         //   Debug.Log("Remove Item called");
-        itemlist.Remove(l_itemBase);
-        Debug.Log("item list count after : " + itemlist.Count);
+        //itemlist.Remove(l_itemBase);
+        Debug.Log("item list count after : " + itemCount);
 
-        if (itemlist.Count < 1)
+        if (itemCount < 1)
         {
             FlushOut();
         }
@@ -103,9 +111,8 @@ public class Slot
 
     public virtual void UpdateUI()
     {        
-       // countText.text = "" + itemCount;
-        countText.text = itemlist.Count.ToString();
-      // Debug.Log("UI Text" + itemlist.Count);
+        countText.text = "" + itemCount;
+        //countText.text = itemlist.Count.ToString();
     }
 
     public void FlushOut()
@@ -118,7 +125,7 @@ public class Slot
         imageSlotPrefab.gameObject.SetActive(false);
         countText.text = "";
         isActive = false;
-        itemlist.Clear();
+        //itemlist.Clear();
     }
 }
 
@@ -143,15 +150,19 @@ public class Inventory : MonoBehaviour {
     //Change the scriptable object on the item to alter the item
     public static List<ItemBase> itemsPool = new List<ItemBase>();
 
+    private void Awake()
+    {
+        slots = new List<Slot>(maxSlotCount);
+    }
+
     private void Start()
     {
         //  CreateSlot();
-        Debug.Log(character.name + "<<<<<--Character name in Start");
-       
-        Debug.Log(character.name + "<<<<<--Character name in Start");
-        slots = new List<Slot>(maxSlotCount);
-
         character = this.transform.GetComponentInParent<Character>();
+
+        Debug.Log(character.name + "<<<<<--Character name in Start");
+
+        Debug.Log(character.name + "<<<<<--Character name in Start");
     }
 
     public virtual void SetActiveSlotCount()
@@ -165,21 +176,21 @@ public class Inventory : MonoBehaviour {
 
         //activeItem.Use();
 
-        if(activeItem.itemProperties.isConsumable)
+        if (activeItem.itemProperties.isConsumable)
         {
-           // activeItem.gameObject.transform.parent = null;
+            // activeItem.gameObject.transform.parent = null;
 
-           // Debug.Log(gameObject.transform.GetComponentInParent<Character>());
-           activeItem.Use(gameObject.transform.GetComponentInParent<Character>());
+            // Debug.Log(gameObject.transform.GetComponentInParent<Character>());
+            activeItem.Use(gameObject.transform.GetComponentInParent<Character>());
         }
 
-        UpdateSlotData(activeItem);
-       
+        RemoveItem(activeItem);
+
         activeSlotCount = ActiveSlotCount();
 
-        if(character.gameObject.GetComponent<Player>() != null)
+        if (character.gameObject.GetComponent<Player>() != null)
         {
-            if (ActiveItemCheck(activeItem))
+            if (UpdateActiveItemOnCharacter(activeItem))
             {
                 Debug.Log("Active Item is present");
             }
@@ -190,107 +201,124 @@ public class Inventory : MonoBehaviour {
         }
     }
 
+    //This function depends on the activeItem. So, if this function is called, and there are enough items in the
+    //slot, active item must have been set before
     public virtual void ThrowItem(Vector3 Target, float speed)
     {
-        //Throw the item and check the slots
-
-        if (activeItem.itemProperties.isThrowable && activeItem != null)
+        if(activeItem == null)
         {
+            Debug.Log("Active item is null. Select the item first and then throw");
+            return;
+        }
 
-            activeItem.Throw(Target,speed);
-            UpdateSlotData(activeItem);
-       
+        //Throw the item and check the slots
+        if (activeItem.itemProperties.isThrowable)
+        {
+            //Setting the active item's parent to null so that it doesn't depend on the character anymore
+            activeItem.Throw(Target, speed);
+
+            //Parent is set to null in the throw function of the ItemBase
+            //activeItem.transform.parent = null;
+
+            RemoveItem(activeItem);
+
             activeSlotCount = ActiveSlotCount();
-            // Debug.Log("Active slot Count: " + activeSlotCount);
 
-            //   Debug.Log("Active item name:   " + activeItem.name);
 
-            if (character.gameObject.GetComponent<Player>() != null)
+            //After throwing the item, we must update the active item on the character's hand
+            if (character != null)
             {
-                if (ActiveItemCheck(activeItem))
+                if (UpdateActiveItemOnCharacter(activeItem))
                 {
-                    Debug.Log("Active Item is present");
+                    Debug.Log("Updated the active item");
                 }
                 else
                 {
+                    Debug.Log("Active item is null. Select a different slot");
                     activeItem = null;
                 }
             }
         }
     }
 
-    //TODO: Change the name of this function to something meaningful
-    public void UpdateSlotData(ItemBase l_ItemBase)
+    //Now, active item still refers to the last item. That must change
+    public void RemoveItem(ItemBase l_ItemBase)
     {
-       // Debug.Log("Update slot called");
+        // Debug.Log("Update slot called");
         for (int i = 0; i < activeSlotCount; i++)
         {
-            if (slots[i].itemStored != null  && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
+            if (slots[i].itemStored != null && slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
             {
                 Debug.Log("Remove item called");
-                Debug.Log("Itemstored : " + slots[i].itemStored.transform.GetComponent<ItemsDescription>().GetItemType());
+                Debug.Log("Itemstored : " + slots[i].itemStored.itemProperties.itemDescription.GetItemType());
 
+                //Decrement the item count in the slot data
                 slots[i].RemoveItem(l_ItemBase);
 
-                if(slots[i].itemlist.Count > 0)
+                if (slots[i].itemCount > 0)
                 {
                     if (slots[i].itemStored == null)
                     {
-                        slots[i].itemStored = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                        //slots[i].itemStored = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                        //If the item stored has a null reference for some reason, Get the reference back by checking the dictionary
+                        slots[i].itemStored = ItemManager.instance.GetItemReference(l_ItemBase.itemProperties.itemDescription.GetItemType());
                     }
                 }
 
                 activeSlotCount = ActiveSlotCount();
 
-                
                 Debug.Log("Remove item player call end");
                 break;
             }
         }
     }
 
-
-    public bool ActiveItemCheck(ItemBase l_activeItem)
+    //TODO: Convert this into a virtual function. Player inventory should be able to override it
+    public bool UpdateActiveItemOnCharacter(ItemBase l_activeItem)
     {
         for (int i = 0; i < slots.Count; i++)
         {
-            //  if(slots[i].itemlist.Count > 0  && slots[i].itemStored.itemProperties == l_activeItem.itemProperties)
-            if (slots[i].itemStored != null && slots[i].itemlist.Count > 0 && slots[i].itemStored.itemProperties.name == l_activeItem.itemProperties.name  )
+            if (slots[i].itemStored != null && slots[i].itemCount > 0 && slots[i].itemStored.itemProperties.name == l_activeItem.itemProperties.name)
             {
-                if (slots[i].itemStored.itemProperties.itemDescription.hasPH &&  l_activeItem.itemProperties.itemDescription.hasPH)
+                if (slots[i].itemStored.itemProperties.itemDescription.hasPH && l_activeItem.itemProperties.itemDescription.hasPH)
                 {
-                    if(CheckForPhValues(slots[i].itemStored,l_activeItem))
+                    if (CheckForPhValues(slots[i].itemStored, l_activeItem))
                     {
                         Debug.Log("Has ph value and it is checked");
-                        if (slots[i].itemlist.Count > 0)
+                        if (slots[i].itemCount > 0)
                         {
-                            activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                            //Get the active item from the object pool. Object pool functions ensures that you receive an object from the pool
+                            activeItem = GetItemFromPool(slots[i].itemStored.itemProperties, true);
+                            //set the active item's scriptable object using the itemStored in the slot
+                            //activeItem.itemProperties = slots[i].itemStored.itemProperties;
+
+                            //activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
                             activeItem.gameObject.SetActive(true);
-                            activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
+                            activeItem.transform.position = GetComponentInParent<Character>().Hand.transform.position;
+                            //activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
                             activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
-                            if (slots[i].itemStored == null)
-                            {
-                                slots[i].itemStored = slots[i].itemlist[0];
-                                Debug.Log(slots[i].itemStored.name + "::::: item not present assigned");
-                            }
-                            else
-                            {
-                                Debug.Log(slots[i].itemStored.name + "::::: item present");
-                            }
+
+                            Debug.Log("Item on character's hand is updated");
 
                             return true;
                         }
-                    }                
+                    }
                 }
                 else
                 {
                     Debug.Log("active item doesnt have ph");
-                    // if (slots[i].itemlist.Count > 0 && slots[i].itemStored.GetComponent<ItemsDescription>().GetType() == l_activeItem.gameObject.GetComponent<ItemsDescription>().GetType())
+                    if (slots[i].itemStored.itemProperties.itemDescription.GetType() == l_activeItem.itemProperties.itemDescription.GetType())
                     {
-                        slots[i].itemStored = slots[i].itemlist[0];
-                        activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+                        //slots[i].itemStored = slots[i].itemlist[0];
+                        //activeItem = slots[i].itemlist[slots[i].itemlist.Count - 1];
+
+                        //Get the active item from the object pool
+                        activeItem = GetItemFromPool(slots[i].itemStored.itemProperties, true);
+                        //activeItem.itemProperties = slots[i].itemStored.itemProperties;
+
                         activeItem.gameObject.SetActive(true);
-                        activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
+                        activeItem.transform.position = GetComponentInParent<Character>().Hand.transform.position;
+                        //activeItem.AlignPos(GetComponentInParent<Character>().Hand.transform.position, GetComponentInParent<Character>());
                         activeItem.transform.parent = GetComponentInParent<Character>().Hand.transform;
                         activeItem.gameObject.SetActive(true);
                         return true;
@@ -298,46 +326,47 @@ public class Inventory : MonoBehaviour {
                 }
 
                 Debug.Log(slots[i].itemStored);
-                Debug.Log("Active item check call :  " + slots[i].itemlist.Count);                
+                Debug.Log("Active item check call :  " + slots[i].itemCount);
             }
         }
+
         Debug.Log("Active item is null");
         return false;
     }
-    
+
     public ItemBase GetActiveItem()
     {
         return activeItem;
     }
-   
+
 
     public void DropItem()
     {
         //Drop the active item and check the item count in the slots again
         //if the item count is less than 0, rearrange the slots
-        UpdateSlotData(activeItem);
+        RemoveItem(activeItem);
 
-       
-        activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());   
+
+        activeItem.DropItem(this.transform.position, gameObject.GetComponentInChildren<Character>());
         activeItem.transform.parent = null;
         activeItem = null;
 
     }
 
-   // public void DropBatch(System.Type type)
+    // public void DropBatch(System.Type type)
     public void DropBatch(ItemBase l_itemBase)
     {
         //Drop the items of the specified type, if found     
         for (int i = 0; i < slots.Count; i++)
         {
-            if(slots[i].itemStored.itemProperties == l_itemBase.itemProperties)
+            if (slots[i].itemStored.itemProperties == l_itemBase.itemProperties)
             {
                 slots[i].FlushOut();
                 activeSlotCount = ActiveSlotCount();
             }
         }
     }
-    
+
 
     public void CreateSlot()
     {
@@ -346,16 +375,16 @@ public class Inventory : MonoBehaviour {
 
         if (slots.Count == 0)
         {
-            Debug.Log("MAx slot count"+maxSlotCount);
-            
+            Debug.Log("MAx slot count" + maxSlotCount);
+
             for (int i = 0; i < maxSlotCount; i++)
             {
-                Slot tempSlot = new Slot();               
+                Slot tempSlot = new Slot();
                 slots.Add(tempSlot);
                 GameObject temp = Instantiate(imageSlotPrefab);
                 slots[i].imageSlotPrefab = temp;
                 slots[i].panel = slots[i].imageSlotPrefab.gameObject.GetComponent<RectTransform>();
-                slots[i].countText = slots[i].imageSlotPrefab.gameObject.GetComponent<Text>();           
+                slots[i].countText = slots[i].imageSlotPrefab.gameObject.GetComponent<Text>();
                 slots[i].displaySprite = slots[i].imageSlotPrefab.transform.Find("Slot Image").gameObject.GetComponentInChildren<Image>();
                 slots[i].imageSlotPrefab.SetActive(false);
                 slots[i].displaySprite.sprite = sampleTestSprite;
@@ -364,14 +393,15 @@ public class Inventory : MonoBehaviour {
                 slots[i].imageSlotPrefab.transform.localScale = Vector3.one;
                 //Debug.Log(slots[i].countText.text + "_____" + i);
             }
+            ActiveSlotCount();
         }
     }
-  
+
     public bool CheckForPhValues(ItemBase item1, ItemBase item2)
     {
-        if(item1.gameObject.GetComponent<ItemsDescription>().hasPH && item2.gameObject.GetComponent<ItemsDescription>().hasPH)
+        if(item1.itemProperties.itemDescription.hasPH && item2.itemProperties.itemDescription.hasPH)
         {
-            if(item1.gameObject.GetComponent<ItemsDescription>().pHValue == item2.gameObject.GetComponent<ItemsDescription>().pHValue)
+            if(item1.itemProperties.itemDescription.pHValue == item2.itemProperties.itemDescription.pHValue)
             {
                 return true;
             }
@@ -387,10 +417,14 @@ public class Inventory : MonoBehaviour {
         {
             for (int i = 0; i < activeSlotCount; i++)
             {
-                if(slots[i].itemStored!=null)
+                Debug.Log("active slot count: " + activeSlotCount);
+                Debug.Log("slot is:.................................................." + slots.Count);
+                if(slots[i].itemStored != null)
                 {
+                    Debug.Log("adding?");
                     if(slots[i].itemStored.itemProperties == l_ItemBase.itemProperties)
                     {
+                        
                         if (slots[i].itemStored.itemProperties.itemDescription.itemType == l_ItemBase.itemProperties.itemDescription.itemType &&
                         slots[i].itemStored.itemProperties.itemDescription.hasPH == l_ItemBase.itemProperties.itemDescription.hasPH
                         && slots[i].itemStored.itemProperties.itemDescription.pHValue == l_ItemBase.itemProperties.itemDescription.pHValue)
@@ -399,9 +433,9 @@ public class Inventory : MonoBehaviour {
                             slots[i].AddItem(l_ItemBase);
                             assigned = true;
                             break;
-
                         }
-                    }                     
+                       
+                    }
                     /*   else
                     {
                         Debug.Log("Added to already present slot");
@@ -409,19 +443,17 @@ public class Inventory : MonoBehaviour {
                         assigned = true;
                         break;
                     }*/
-
-                }                  
-                    
+                }
             }
             Debug.Log("Active Slot Count :  " + activeSlotCount);
 
+            //The purpose of this block is to assign the item for the first time
             if(activeSlotCount < maxSlotCount && !assigned)
             {
                 for (int i = activeSlotCount; i < slots.Count; i++)
                 {
                     if (!slots[i].imageSlotPrefab.activeSelf && slots[i].itemStored == null)
                     {
-                        
                         Debug.Log("Adding item to slot For first time");
 
                         slots[i].AddItem(l_ItemBase);
@@ -436,7 +468,6 @@ public class Inventory : MonoBehaviour {
                         break;
                     }
                 }
-
             }
             else
             {
@@ -469,32 +500,11 @@ public class Inventory : MonoBehaviour {
         
     }
 
-    //public void DisplaySlots()
-    //{
-    //    for (int i = 0; i < slots.Count; i++)
-    //    {
-    //        if(slots[i].itemStored!= null)
-    //        {
-    //            slots[i].imageSlotPrefab.SetActive(true);
-    //        }
-    //    }
-    //}
-    //
-    //
-    //public void HideSlots()
-    //{
-    //    for (int i = 0; i < slots.Count; i++)
-    //    {           
-    //        slots[i].imageSlotPrefab.SetActive(false);
-    //        
-    //    }
-    //}
 
-   
-   
-   ///////////////---------------------------------throw anime timer---------------------------///////////////////////////
-    
+    ///////////////---------------------------------throw anime timer---------------------------///////////////////////////
 
+    //Time - lag before the throw actually starts. 
+    //TODO: This throw timer must be added to the item's actual time throw timer
     public float throwAnimeTime;
     public void ThrowAnimeWaitTime(Vector3 target,float speed)
     {
@@ -512,23 +522,50 @@ public class Inventory : MonoBehaviour {
 
     ///////////////////////////////-------------------------------------------------------/////////////////////////////////////
 
-    
+
+    #region Item Pool Retrieve and store functions
     public static void AddItemToPool(ItemBase item)
     {
         //Automatically deactivate the item when placing the item in the pool
+        Debug.Log("Adding item to pool");
         item.gameObject.SetActive(false);
         itemsPool.Add(item);
     }
 
-    public static ItemBase GetItemFromPool()
+    public static ItemBase GetItemFromPool(ItemProperties properties = null, bool createObjectIfPoolIsEmpty = false)
     {
+        Debug.Log("Getting item from item pool");
         if (itemsPool.Count == 0)
+        {
+            if (createObjectIfPoolIsEmpty)
+            {
+                ItemBase item = ItemManager.GenerateItemTemplate();
+                item.gameObject.SetActive(true);
+                item.GetComponent<SpriteRenderer>().sprite = properties.imageSprite;
+                if (properties != null)
+                    item.itemProperties = properties;
+                
+                return item;
+            }
             return null;
+        }
         else
         {
+            ItemBase item = itemsPool[0];
+            //Item must be removed from the pool
+            itemsPool.RemoveAt(0);
+
             //Automatically activate the item when retrieving from the pool
-            itemsPool[0].gameObject.SetActive(true);
-            return itemsPool[0];
+            item.gameObject.SetActive(true);
+            //itemsPool[0].GetComponent<SpriteRenderer>().sprite = properties.imageSprite;
+            item.GetComponent<SpriteRenderer>().sprite = properties.imageSprite;
+
+            if (properties != null)
+                item.itemProperties = properties;
+
+            return item;
         }
     }
+    
+    #endregion
 }

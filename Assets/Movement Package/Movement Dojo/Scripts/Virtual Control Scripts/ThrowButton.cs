@@ -29,9 +29,11 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void Update()
     {
         
-       if(player == null)
+        if(player == null)
         player = FindObjectOfType<Player>();
 
+
+        //Image activation and deactivation of the throw button
         if (player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
             this.gameObject.GetComponent<Image>().enabled = true;
@@ -40,13 +42,10 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             this.gameObject.GetComponent<Image>().enabled = false;
         }
-
-      
         
 
         if(buttonPressed)
         {
-          
             ThrowItem();
             buttonPressed = false;
         }
@@ -99,7 +98,6 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         if(player.GetComponentInChildren<PlayerInventory>().activeItem != null)
         {
-
             Vector3 tempTar = player.transform.position;
             //Debug.Log(player.right + "o throw");
 
@@ -123,13 +121,11 @@ public class ThrowButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 tempTar = tempRightClickTar;
             }
            
-          //  Debug.Log("Player position" + player.Hand.transform.position + " <<>><><>" + "Temp target" + tempTarget);
            
-            {
-                player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTar, 5);
-                Debug.Log("Auto target called" + tempTar);
-
-            }
+            
+            player.GetComponentInChildren<PlayerInventory>().ThrowItem(tempTar, 5);
+            Debug.Log("Auto target called" + tempTar);
+            
         }
        
        // ResetPosition();

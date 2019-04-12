@@ -233,8 +233,8 @@ public class PickUpItem : MonoBehaviour {
                     VirtualJoystick.pickUpButton.GetComponent<UnityEngine.UI.Image>().sprite = VirtualJoystick.pickUpButton.GetComponent<PickUpButton>().pickupSprite;
                     
                     //After Dropping, disable the special actions button and activate the pickup button
-                    VirtualJoystick.itemSpecialActionButton.SetActive(false);
-                    VirtualJoystick.pickUpButton.SetActive(false);
+                    //VirtualJoystick.itemSpecialActionButton.SetActive(false);
+                    //VirtualJoystick.pickUpButton.SetActive(false);
                     //VirtualJoystick.pickUpButton.SetActive(true);
                 }
             }

@@ -92,6 +92,6 @@ class Extraction
         Enum i = extractionDictionary[item];
 
         //Get the prefab of the extracted item
-        return ItemManager.instance.itemDictionary[i];
+        return ItemManager.instance.itemDictionary[i].gameObject;
     }
 }

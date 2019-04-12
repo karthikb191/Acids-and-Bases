@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 482959f0c22a17d4c8125081ee4ce25f, type: 3}
-  m_Name: Rock
+  m_Name: pH Paper
   m_EditorClassIdentifier: 
   name: Rock
   maxHoldingCapacity: 10
@@ -22,20 +22,20 @@ MonoBehaviour:
   HealthRestore: 0
   itemSound: {fileID: 0}
   isThrowable: 1
-  descriptionOfItem:
+  itemDescription:
     itemDescription: 
     shortName: 
     fullName: 
     tags: 
-    itemType: 0
+    itemType: 1
     indicatorType: 0
     acidType: 0
     baseType: 0
     saltType: 0
     normalItemType: 0
-    hasPH: 0
+    hasPH: 1
     pHValue: 0
-    IsApHItem: 0
+    IsApHItem: 1
     useCount: 3
     extractionPossible: 1
     extractQuantity: 10

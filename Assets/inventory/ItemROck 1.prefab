@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 212498842860357256}
   - component: {fileID: 61174396677707910}
   - component: {fileID: 114293269257880368}
-  - component: {fileID: 114223825657838836}
   m_Layer: 0
   m_Name: ItemROck 1
   m_TagString: Untagged
@@ -68,33 +67,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 3.22}
   m_EdgeRadius: 0
---- !u!114 &114223825657838836
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1036012431630630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 103e429fd8453cc4c98b60fda0ce1ad9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemDescription: Papapapaapapap
-  shortName: 
-  fullName: 
-  tags: 
-  itemType: 2
-  indicatorType: 0
-  acidType: 4
-  baseType: 0
-  saltType: 0
-  normalItemType: 0
-  hasPH: 1
-  pHValue: 2
-  IsApHItem: 0
-  useCount: 3
-  extractionPossible: 0
-  extractQuantity: 10
 --- !u!114 &114293269257880368
 MonoBehaviour:
   m_ObjectHideFlags: 1

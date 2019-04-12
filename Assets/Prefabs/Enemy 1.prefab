@@ -676,7 +676,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1094445338132310}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 303.1, y: 71.54, z: 0}
+  m_LocalPosition: {x: 112.22, y: 15.688317, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4029651756312104}
@@ -1049,7 +1049,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.0039215684, g: 0.26430953, b: 1, a: 1}
-  m_Length: 0.27701417
+  m_Length: 0.27701384
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4160924469555072}
   m_AttachedIK: {fileID: 0}
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.10859266, g: 1, b: 0.0047169924, a: 1}
-  m_Length: 0.22555198
+  m_Length: 0.22555365
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4858010049072234}
   m_AttachedIK: {fileID: 0}
@@ -1082,8 +1082,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 1
   gravity: -9.8
-  maxSpeed: 250
-  maxJumpSpeed: 450
+  maxSpeed: 350
+  maxJumpSpeed: 520
   whatToDetect:
     serializedVersion: 2
     m_Bits: 768
@@ -1101,7 +1101,7 @@ MonoBehaviour:
   groundCheck: {fileID: 0}
   groundCheckCircleRadius: 0.3
   ceilingCheckCircleRadius: 0.2
-  jumpMultiplier: 1
+  jumpMultiplier: 1.2
   playerUpOrientation: {x: 0, y: 1, z: 0}
   playerSprite: {fileID: 0}
   playerAudio: {fileID: 0}
@@ -1112,7 +1112,7 @@ MonoBehaviour:
     pickUp: 0
     throwItem: 0
     useItem: 0
-    climbPressed: 1
+    climbPressed: 0
     absorbPressed: 0
     doorOpenPressed: 0
     specialButtonPressed: 0
@@ -1135,8 +1135,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visibilityDistance: 6
-  nodeReachTolerance: 0.25
-  persistentChase: 0
+  nodeReachTolerance: 0.3
+  persistentChase: 1
   ignoreOtherEnemies: 1
   targetLocation: {x: 0, y: 0, z: 0}
   runaway: 0
@@ -1291,7 +1291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.9622642, g: 0.11347453, b: 0.85811466, a: 1}
-  m_Length: 0.100000456
+  m_Length: 0.10000009
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4357955302844488}
   m_AttachedIK: {fileID: 0}
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.10859266, g: 1, b: 0.0047169924, a: 1}
-  m_Length: 0.2638903
+  m_Length: 0.26389214
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4191440027923458}
   m_AttachedIK: {fileID: 0}
@@ -1323,7 +1323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.9622642, g: 0.11347453, b: 0.85811466, a: 1}
-  m_Length: 0.42429093
+  m_Length: 0.42429075
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4868278711437792}
   m_AttachedIK: {fileID: 0}
@@ -1392,6 +1392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4e3d5888f2bb9648804a2dbc8d7dbdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemPool: []
   character: {fileID: 0}
   imageSlotPrefab: {fileID: 1632376749418770, guid: 72eac787d82795c418016c0b5c5d8135,
     type: 2}
@@ -1400,7 +1401,7 @@ MonoBehaviour:
   maxSlotCount: 1
   activeSlotCount: 0
   throwAnimeTime: 0
-  itemPrefab: {fileID: 1036012431630630, guid: 25ed00a4e576f7a4ebf807499ea45e18, type: 2}
+  itemPrefab: {fileID: 1036012431630630, guid: 15cb7b50ae569024990d34a050e9abdc, type: 2}
   maxItem: 3
   reloadTime: 0.5
   speedOfThrow: 30
@@ -1492,7 +1493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Color: {r: 0.0039215684, g: 0.26430953, b: 1, a: 1}
-  m_Length: 0.22555469
+  m_Length: 0.22555363
   m_Child: {fileID: 0}
   m_ChildTransform: {fileID: 4033808324188604}
   m_AttachedIK: {fileID: 0}

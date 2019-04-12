@@ -10,7 +10,7 @@ public class ItemTemplate
     public string enumObject;
     //public System.Object enumObject;
     [SerializeField]
-    public GameObject itemPrefab;
+    public ItemProperties itemProperty;
     public System.Type type;
 }
 

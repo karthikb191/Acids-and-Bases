@@ -298,7 +298,7 @@ public class CharacterMechanics : MonoBehaviour {
     //Overload for taking item throw into consideration
     public System.Enum StartReaction(System.Enum item)
     {
-        ItemsDescription des = ItemManager.instance.itemDictionary[item].GetComponent<ItemsDescription>();
+        ItemsDescription des = ItemManager.instance.itemDictionary[item].itemProperties.itemDescription;
         //TODO: Check the hard coded volume value.
         ChangepH(10, des.pHValue);
         return GenerateSalt(des.GetItemType());

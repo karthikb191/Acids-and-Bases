@@ -13,36 +13,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acidList:
   - enumObject: HCl
-    itemPrefab: {fileID: 1084300489906894, guid: 1f0ec1adc162ae34e9c27c846a9fd992,
-      type: 2}
+    itemProperty: {fileID: 11400000, guid: 005a17f93caf30c478065ff7c85ac351, type: 2}
   - enumObject: H2SO4
-    itemPrefab: {fileID: 1004045106539214, guid: 62ecd47dabb811d4cbae570eaba47faa,
-      type: 2}
+    itemProperty: {fileID: 0}
   - enumObject: C6H8O7
-    itemPrefab: {fileID: 0}
+    itemProperty: {fileID: 0}
   baseList:
   - enumObject: NaOH
-    itemPrefab: {fileID: 0}
+    itemProperty: {fileID: 0}
   saltList:
   - enumObject: Null
-    itemPrefab: {fileID: 1791576765500196, guid: f71f60cee0ee8174db557f6654db4f56,
-      type: 2}
+    itemProperty: {fileID: 0}
   - enumObject: NaCl
-    itemPrefab: {fileID: 1791576765500196, guid: f71f60cee0ee8174db557f6654db4f56,
-      type: 2}
+    itemProperty: {fileID: 0}
   indicatorList:
   - enumObject: pH_Paper
-    itemPrefab: {fileID: 0}
+    itemProperty: {fileID: 11400000, guid: d06534fb2c064c54681847c6c411492c, type: 2}
   - enumObject: Turmeric
-    itemPrefab: {fileID: 0}
+    itemProperty: {fileID: 0}
   - enumObject: Vermilion
-    itemPrefab: {fileID: 1027104322242278, guid: 264cf12c87e3fba4b928cc39430fe0e4,
-      type: 2}
+    itemProperty: {fileID: 0}
   - enumObject: Bromythol_Blue
-    itemPrefab: {fileID: 1632376749418770, guid: 72eac787d82795c418016c0b5c5d8135,
-      type: 2}
+    itemProperty: {fileID: 0}
   normalItemList:
   - enumObject: Hybiscus
-    itemPrefab: {fileID: 0}
+    itemProperty: {fileID: 11400000, guid: c2a2457a63fcd894f84b72bcb69f0946, type: 2}
   - enumObject: Lemon
-    itemPrefab: {fileID: 0}
+    itemProperty: {fileID: 11400000, guid: cb525d60dbbbe6b4b995044066276416, type: 2}

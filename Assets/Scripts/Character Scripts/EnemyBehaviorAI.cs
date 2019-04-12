@@ -15,6 +15,7 @@ abstract class EnemyBehaviorAI
         character = e;
         aiComponent = ai;
     }
+
     public int aggressionLevel = 1;
     public int mood = 0;    //Negative mood leads to depressions and higher positive mood leads to anger and aggression
     public abstract void BehaviorUpdate();
@@ -280,10 +281,12 @@ class RunAwayBehavior : EnemyBehaviorAI
         character = e; aiComponent = ai;
         chasingCharacter = c;
         ai.PrepareForEncounter();
+        aiComponent.ChaseReset();
     }
 
     public override void BehaviorUpdate()
     {
+        Debug.Log("Runaway Update");
         aiComponent.runaway = true;
         aiComponent.chasingCharacter = chasingCharacter;
         BehaviorExitConditions();
@@ -292,12 +295,13 @@ class RunAwayBehavior : EnemyBehaviorAI
     public override void BehaviorExitConditions()
     {
         Vector3 directionToCharacter = chasingCharacter.transform.position - character.transform.position;
-        if (Vector3.SqrMagnitude(directionToCharacter) < Random.Range(25, 35) &&
-                Vector3.SqrMagnitude(directionToCharacter) > Random.Range(20, 25))
+        if (Vector3.SqrMagnitude(directionToCharacter) < Random.Range(35, 50) &&
+                Vector3.SqrMagnitude(directionToCharacter) > Random.Range(30, 35))
         {
             //Shift to Attacking behavior
             character.behaviorAI = null;
             character.behaviorAI = new AttackingBehavior(character, aiComponent, chasingCharacter);
+            aiComponent.RunAwayReset();
             return;
         }
 
@@ -310,7 +314,11 @@ class RunAwayBehavior : EnemyBehaviorAI
             }
             else
             {
-                character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+                if(Vector3.SqrMagnitude(directionToCharacter) > 45)
+                {
+                    Debug.Log("Transitioning to chase");
+                    character.behaviorAI = new ChasingBehavior(character, aiComponent, chasingCharacter);
+                }
             }
         }
     }
@@ -422,6 +430,7 @@ class AttackingBehavior : EnemyBehaviorAI
     }
     public override void BehaviorUpdate()
     {
+        Debug.Log("Attacking state");
         if(character.State.GetType() == typeof(IdleState) || character.State.GetType() == typeof(RunningState))
             if (timeElapsed < coolDownTime)
             {
@@ -431,8 +440,8 @@ class AttackingBehavior : EnemyBehaviorAI
                     //Debug.Log("Attacked");
                     attacked = true;
 
-                    aiComponent.HaltMovement(coolDownTime, true, false);
-
+                    //aiComponent.HaltMovement(coolDownTime + 0.5f, true, false);
+                    aiComponent.HaltMovement();
                     //look at the character
                     LookAtCharacterOnFocus();
 
@@ -453,6 +462,7 @@ class AttackingBehavior : EnemyBehaviorAI
                                             character.playerSprite.transform.localScale.y, 
                                             character.playerSprite.transform.localScale.z);
     }
+
     public override void BehaviorExitConditions()
     {
         //After the cool down time is achieved, check if the character is still close 
@@ -477,8 +487,8 @@ class AttackingBehavior : EnemyBehaviorAI
         }
         else if (character.characterType == CharacterType.basic)
         {
-            if (Vector3.SqrMagnitude(directionToCharacter) < Random.Range(25, 35) &&
-                Vector3.SqrMagnitude(directionToCharacter) > Random.Range(10, 15))
+            if (Vector3.SqrMagnitude(directionToCharacter) < Random.Range(35, 50) &&
+                Vector3.SqrMagnitude(directionToCharacter) > Random.Range(30, 35))
             {
                 
                 //Debug.Log("mag: " + Vector3.SqrMagnitude(directionToCharacter));

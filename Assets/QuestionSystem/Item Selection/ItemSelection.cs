@@ -54,7 +54,7 @@ public class ItemSelection : MonoBehaviour {
         {
             if(inventory.slots[selectedIndices[i]].itemStored != null)
             {
-                ItemsDescription des = inventory.slots[selectedIndices[i]].itemStored.GetComponent<ItemsDescription>();
+                ItemsDescription des = inventory.slots[selectedIndices[i]].itemStored.itemProperties.itemDescription;
                 if(des != null)
                 {
                     itemDescriptions.Add(des);
@@ -226,7 +226,7 @@ public class ItemSelection : MonoBehaviour {
                     {
                         activeContentItems[indexnumber].GetComponent<Image>().color = Color.green;
                         selectedIndices.Add(indexnumber);
-                        Debug.Log("selected : " + inventory.slots[indexnumber].itemStored.GetComponent<ItemsDescription>().GetItemType());
+                        Debug.Log("selected : " + inventory.slots[indexnumber].itemStored.itemProperties.itemDescription.GetItemType());
                     }
 
                     //Debug.Log("partition: " + partition);

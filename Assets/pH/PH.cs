@@ -16,7 +16,7 @@ public class PH : ItemBase {
     // Use this for initialization
     void Start () {
         PHIndicatorImage = GetComponent<SpriteRenderer>().sprite;
-        indicator = (IndicatorsList)System.Enum.Parse(typeof(IndicatorsList), GetComponent<ItemsDescription>().GetItemType().ToString());
+        indicator = (IndicatorsList)System.Enum.Parse(typeof(IndicatorsList), itemProperties.itemDescription.GetItemType().ToString());
 	}
 
 	public int GetUseCount()
